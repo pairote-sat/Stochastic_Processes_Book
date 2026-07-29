@@ -1,0 +1,31 @@
+project:
+  type: book
+
+book:
+  title: "Stochastic Processes"
+  author: "Pairote Satiracoo"
+  chapters:
+    - index.qmd  
+
+format:
+  html:
+    toc: true
+    number-sections: true
+    number-depth: 3
+    code-fold: true
+
+  pdf:
+    toc: true
+    toc-depth: 3
+    number-sections: true
+    number-depth: 3
+    colorlinks: true
+    geometry:
+      - margin=1in
+      
+execute:
+  echo: true
+  warning: false
+  message: false
+
+editor: source
