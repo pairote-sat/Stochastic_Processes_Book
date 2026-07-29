@@ -1,0 +1,219 @@
+## Formal Definition of a Stochastic Process
+
+After studying several motivating examples, we are now ready to give a formal definition of a stochastic process.
+
+A **stochastic process** is a collection of random variables
+
+$$
+{X_t : t \in T},
+$$
+
+defined on a common probability space. Each random variable $X_t$ describes the state of the system at time $t$, while the collection ${X_t:t\in T}$ describes how the system evolves over time.
+
+The notation consists of three essential components:
+
+* **Index set ($T$):** The set of time points at which the process is observed. The index set is often referred to as the **time domain**. Depending on the application,
+
+  * $T={0,1,2,\ldots}$ represents **discrete time**, while
+  * $T=[0,\infty)$ represents **continuous time**.
+
+* **State space ($S$):** The set of all possible values that the random variable $X_t$ can take. The state space depends on the application. For example,
+
+  * the NCD process has a finite set of discount levels,
+  * the Poisson process has state space ${0,1,2,\ldots}$,
+  * Brownian motion has state space $\mathbb{R}$.
+
+* **Random variables ($X_t$):** For each time point $t\in T$, $X_t$ is a random variable describing the state of the system at time $t$.
+
+It is important to note that the random variables in a stochastic process are generally **dependent** and need not have identical probability distributions.
+
+## Components of a Stochastic Process
+
+The formal definition of a stochastic process contains several important components. Understanding the role of each component provides a clearer picture of how stochastic processes are constructed.
+
+### Probability space
+
+Every stochastic process is defined on a common probability space
+
+$$
+(\Omega,\mathcal{F},P),
+$$
+
+where
+
+* $\Omega$ is the sample space,
+* $\mathcal{F}$ is the collection of events,
+* $P$ is the probability measure.
+
+The probability space represents all possible outcomes of the underlying random experiment.
+
+### Index set
+
+The **index set** $T$ specifies the time points at which the process is observed.
+
+Examples include
+
+* $T={0,1,2,\ldots}$ for yearly observations in an NCD system,
+* $T=[0,\infty)$ for continuously observed claim arrivals,
+* $T=[0,\infty)$ for monitoring the survival status of an individual over time.
+
+The index set determines whether the process evolves in **discrete time** or **continuous time**.
+
+### State space
+
+The **state space** $S$ is the set of all possible values that the process may assume.
+
+For the motivating examples,
+
+| Process          | State space                                            |
+| ---------------- | ------------------------------------------------------ |
+| NCD process      | Finite set of NCD levels                               |
+| Poisson process  | ${0,1,2,\ldots}$                                       |
+| Survival process | ${0,1}$ (or equivalently ${\text{Alive},\text{Dead}}$) |
+
+The state space may be **discrete** or **continuous**, depending on the application.
+
+### Sample paths (realizations)
+
+Fix an outcome $\omega\in\Omega$. The values
+
+$$
+X_t(\omega),\qquad t\in T,
+$$
+
+form a **sample path** (or **realization**) of the stochastic process.
+
+A sample path describes one possible evolution of the system through time. Different outcomes in the sample space generally produce different sample paths.
+
+For example,
+
+* in the NCD process, one sample path records the sequence of NCD levels experienced by a particular policyholder;
+* in the Poisson process, one sample path records the cumulative number of claims observed over time;
+* in the survival process, one sample path indicates when an individual changes from the Alive state to the Dead state.
+
+Since the underlying experiment is random, infinitely many sample paths are possible, each occurring with an associated probability.
+
+
+
+
+
+I would make this section more conceptual and use the **(2\times2) classification table as the centerpiece**, rather than presenting four separate cases. This reinforces the idea that **every stochastic process is classified according to two characteristics: its time index and its state space**. The individual examples can then be discussed after the table.
+
+The following revision is suitable for your chapter and follows the concrete → abstract approach.
+
+
+##  Classification of Stochastic Processes
+
+Two fundamental characteristics determine the type of a stochastic process:
+
+* the **index set (time domain)**, which may be **discrete** or **continuous**; and
+* the **state space**, which may also be **discrete** or **continuous**.
+
+These two characteristics naturally classify stochastic processes into four categories, as shown in @tbl-process-classification.
+
+
+| **Time domain** | **Discrete state space** | **Continuous state space** |
+| :--- | :--- | :--- |
+| **Discrete time** | Discrete-time Markov chains (e.g., NCD system) | Random walks, autoregressive models |
+| **Continuous time** | Poisson processes, birth-death processes, continuous-time Markov chains | Brownian motion, diffusion processes |
+
+: Classification of stochastic processes according to their time domain and state space. {#tbl-process-classification}
+
+
+
+The three motivating examples introduced earlier can now be placed within this classification:
+
+* The **No-Claim Discount (NCD) system** is a **discrete-time, discrete-state** stochastic process.
+* The **Poisson process** is a **continuous-time, discrete-state** stochastic process.
+* The **Survival process** is also a **continuous-time, discrete-state** stochastic process.
+
+We now briefly discuss each of the four classes.
+
+### Discrete-Time, Discrete-State Processes
+
+In this class, observations are made only at discrete time points, and the process can occupy only a finite or countably infinite number of states.
+
+For example, in the No-Claim Discount (NCD) system,
+
+$$
+X_n,\qquad n=0,1,2,\ldots,
+$$
+
+denotes the discount level after the $n$th policy year. If the insurer uses three discount levels,
+
+$$
+S={0,1,2},
+$$
+
+then both the time domain and the state space are discrete.
+
+Many actuarial models, including discrete-time Markov chains, belong to this class.
+
+### Continuous-Time, Discrete-State Processes
+
+In this class, the process evolves continuously through time, but the possible states remain discrete.
+
+The Poisson process introduced earlier is an important example. If
+
+$$
+N(t)
+$$
+
+denotes the cumulative number of claims reported by time $t$, then
+
+$$
+T=[0,\infty), \qquad
+S={0,1,2,\ldots}.
+$$
+
+Similarly, the survival process
+
+$$
+X_t\in{\text{Alive},\text{Dead}}
+$$
+
+has a continuous time domain but only two possible states.
+
+Many important actuarial models, including Poisson processes, birth-death processes, and continuous-time Markov chains, belong to this category.
+
+### Continuous-Time, Continuous-State Processes
+
+In these processes, both time and the state space are continuous.
+
+For example, let
+
+$$
+S_t
+$$
+
+denote the total amount of claims accumulated by time $t$. Since claim amounts are measured on a continuous scale,
+
+$$
+T=[0,\infty),
+\qquad
+S=\mathbb{R}_{\ge0}.
+$$
+
+Brownian motion and diffusion processes are important examples of continuous-time, continuous-state stochastic processes. These models are widely used in finance, risk analysis, and credibility theory.
+
+### Discrete-Time, Continuous-State Processes
+
+Sometimes a quantity evolves continuously but is observed only at discrete time points.
+
+For example, suppose the accumulated claim amount is recorded only at the end of each day, week, or month. Then the observations form the sequence
+
+$$
+S_0,S_1,S_2,\ldots,
+$$
+
+where the time domain is discrete, while the state space remains continuous.
+
+Processes of this type commonly arise when observations are collected periodically or when continuous monitoring is impractical or expensive. Time series models such as autoregressive (AR) models belong to this class.
+
+### Modelling Considerations {.unnumbered .unlisted}
+
+The choice of state space often depends on the level of detail required in a model.
+
+For example, claim amounts are naturally continuous quantities and may therefore be modelled using a continuous state space. However, if claim amounts are recorded only to the nearest baht (or another fixed monetary unit), the process may instead be approximated by a discrete-state model.
+
+Similarly, although many real-world phenomena evolve continuously through time, they are often observed only at discrete time points. In such cases, a discrete-time stochastic process may provide an appropriate and more practical model.
