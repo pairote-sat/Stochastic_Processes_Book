@@ -725,3 +725,17 @@ The classification of a stochastic process depends on the mathematical model rat
 
 For example, claim amounts may be modelled using a **continuous** state space or approximated by a **discrete** state space if they are recorded to the nearest monetary unit. Likewise, a continuously evolving quantity may be observed only at discrete time points.
 :::
+
+
+## Roadmap of the Course
+
+The classification of stochastic processes presented in @tbl-process-classification provides a useful roadmap for the topics covered in these lecture notes. Following the Institute and Faculty of Actuaries (IFoA) CS2 syllabus (Chapters 1–5), the focus will be on stochastic processes with **discrete state spaces**, including both discrete-time and continuous-time models.
+
+The main topics covered are:
+
+- **Discrete-time Markov chains**, which model systems observed at discrete time points with transitions between a finite or countably infinite number of states.
+- **Continuous-time Markov processes**, where transitions between states may occur at any point in time.
+- **Poisson processes**, an important class of continuous-time Markov processes used to model random event occurrences.
+- **Time-homogeneous** and **time-inhomogeneous** Markov models, which distinguish whether the transition probabilities (or transition rates) remain constant over time or vary with time.
+
+By the end of these lecture notes, you will understand how these stochastic processes are constructed, analysed, and applied to actuarial modelling.
