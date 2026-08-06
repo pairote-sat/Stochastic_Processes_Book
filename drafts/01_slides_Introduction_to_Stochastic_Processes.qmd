@@ -1,0 +1,908 @@
+---
+title: "Lecture 1: Introduction to Stochastic Processes"
+
+format:
+  beamer:
+    theme: Boadilla
+    colortheme: default
+    fonttheme: professionalfonts
+    aspectratio: 169
+    pdf-engine: xelatex
+    keep-tex: true
+    toc: false
+    number-sections: false
+    
+# format:
+#   revealjs:
+#     theme: simple
+#     css: styles.css
+#     slide-number: true
+#     scrollable: true
+#     chalkboard:
+#       buttons: false
+#     preview-links: auto
+
+execute:
+  echo: false
+---
+
+# Introduction to Stochastic Processes
+
+\vspace{0.5cm}
+
+**Course:** Stochastic Processes
+
+**Reference:** IFoA CS2
+
+\vfill
+
+Department of Mathematics /Actuarial Science Program
+
+
+
+# Learning Outcomes
+
+After this lecture, you should be able to
+
+1. **Explain** why stochastic processes are used to model systems that evolve over time under uncertainty.
+
+2. **Distinguish** between a random variable and a stochastic process.
+
+3. **Identify** the stochastic process, time domain, and state space for simple actuarial applications.
+
+4. **Define** a stochastic process using the notation
+   $$
+   \{X_t:t\in T\}.
+   $$
+
+5. **Classify** a stochastic process according to its time domain and state space.
+
+
+
+# Why Study Stochastic Processes?
+
+Many quantities in actuarial science change over time.
+
+Unlike deterministic models, their future values are **uncertain**.
+
+Some common examples are
+
+- **Insurance premiums** — change according to a policyholder's claim history.
+- **Claim arrivals** — occur at random times.
+- **Survival of a life** — depends on an uncertain future lifetime.
+- **Stock prices** — fluctuate continuously over time.
+
+> **Observation:** We need mathematical models that describe both **time evolution** and **uncertainty**.
+
+
+
+# Examples from Actuarial Science
+
+| Application | Quantity of Interest |
+|:------------|:---------------------|
+| No-Claim Discount (NCD) | Discount level of a policyholder |
+| General insurance | Number of claims received |
+| Life insurance | Survival status of an individual |
+| Finance | Price of a financial asset |
+
+Each of these quantities
+
+- **Changes over time** rather than remaining fixed.
+- **Cannot be predicted with certainty** because future outcomes are random.
+- **Can be modelled** using a stochastic process.
+
+
+
+# Common Characteristics
+
+Although the applications are different, they share the same modelling framework.
+
+- **State variable** — describes the current status of the system.
+- **Time index** — specifies when the system is observed.
+- **Uncertainty** — future states cannot be known exactly.
+- **Evolution** — the state changes as time progresses.
+
+These common features motivate the formal study of **stochastic processes**.
+
+> **Key Idea:** A stochastic process is a mathematical model for a random quantity that evolves over time.
+
+
+
+# Random Variables and Stochastic Processes
+
+Many random quantities are observed repeatedly over time.
+
+Examples include
+
+- Daily stock prices.
+- Annual No-Claim Discount (NCD) levels.
+- Number of insurance claims received.
+- Survival status of an individual.
+
+Instead of studying **one** random variable, we study a **collection of random variables**, one for each time point.
+
+
+
+# Random Variable
+
+A **random variable** describes the outcome of a random experiment at a **single time point**.
+
+Examples
+
+- $X$ = claim amount from a policy.
+- $Y$ = lifetime of an individual.
+- $Z$ = number of claims reported today.
+
+A random variable provides information about **one observation** only.
+
+> **Observation:** A single random variable does not describe how a quantity changes over time.
+
+
+
+# From a Random Variable to a Stochastic Process {.smaller}
+
+Suppose the NCD level of a policyholder is recorded every year.
+
+
+Instead of defining one random variable,
+
+$$
+X,
+$$
+
+we define a sequence of random variables,
+
+$$
+X_0,\;X_1,\;X_2,\;\ldots
+$$
+
+where
+
+- $X_0$ is the initial NCD level.
+- $X_1$ is the NCD level after one year.
+- $X_2$ is the NCD level after two years, $\ldots$
+
+
+Each random variable describes the system at a different point in time.
+
+
+
+# A Collection of Random Variables
+
+The sequence
+
+$$
+X_0,\;X_1,\;X_2,\;\ldots
+$$
+
+can be written more compactly as
+
+$$
+\{X_t:t\in T\},
+$$
+
+where
+
+- $X_t$ is the random variable observed at time $t$.
+- $T$ is the collection of time points.
+
+This notation represents a **stochastic process**.
+
+
+
+# Understanding the Notation
+
+The notation
+
+$$
+\{X_t:t\in T\}
+$$
+
+has two important components.
+
+- **$X_t$** — the random variable observed at time $t$.
+- **$t$** — the time index.
+- **$T$** — the set of all time points.
+
+The value of $T$ depends on the application.
+
+For example,
+
+- $T=\{0,1,2,\ldots\}$ for annual observations.
+- $T=[0,\infty)$ for continuous-time observations.
+
+
+
+# Random Variable vs Stochastic Process
+
+| Random Variable | Stochastic Process |
+|:----------------|:-------------------|
+| Describes one random outcome. | Describes the evolution of a random quantity over time. |
+| Represented by a single variable such as $X$. | Represented by a collection $\{X_t:t\in T\}$. |
+| No time index is required. | Every random variable is indexed by time. |
+
+> **Key Idea:** A stochastic process is **not** a single random variable. It is a collection of random variables indexed by time.
+
+
+
+# Looking Ahead
+
+In the next section, we will study several stochastic processes from actuarial science.
+
+For each example, we will identify
+
+- the **stochastic process**,
+- the **time domain**,
+- the **state space**, and
+- the **type of stochastic process**.
+
+These examples provide the foundation for the formal definition introduced later.
+
+
+# Example 1: No-Claim Discount (NCD) System
+
+A **No-Claim Discount (NCD)** system rewards policyholders who do not make claims by offering lower insurance premiums.
+
+The NCD level is reviewed at the end of each policy year.
+
+Depending on the policyholder's claim history, the NCD level may
+
+- **Increase** after a claim-free year.
+- **Decrease** after one or more claims.
+- **Remain unchanged** under the insurer's rules.
+
+> **Observation:** The NCD level changes over time and its future value is uncertain.
+
+
+
+# Modelling the NCD System
+
+Suppose the insurer records the NCD level once every policy year.
+
+Let
+
+$$
+X_n=\text{NCD level after the }n\text{th policy year},
+$$
+
+where
+
+- $n=0,1,2,\ldots$ denotes the policy year.
+- $X_n$ is a random variable representing the NCD level at year $n$.
+
+The collection
+
+$$
+\{X_n:n=0,1,2,\ldots\}
+$$
+
+forms a **stochastic process**.
+
+
+
+# Why is $X_n$ Random?
+
+At the beginning of the year, the insurer does **not** know whether the policyholder will make a claim.
+
+Consequently,
+
+- a claim-free year may increase the NCD level,
+- one or more claims may reduce the NCD level, and
+- the future NCD level cannot be predicted with certainty.
+
+Therefore, each $X_n$ is a **random variable**.
+
+> **Key Idea:** The randomness comes from the policyholder's future claim experience.
+
+
+
+# Time Domain and State Space
+
+The NCD process is
+
+$$
+\{X_n:n=0,1,2,\ldots\}.
+$$
+
+Its two main components are
+
+- **Time domain**
+  
+  $$
+  T=\{0,1,2,\ldots\},
+  $$
+  
+  since the NCD level is observed once every policy year.
+
+- **State space**
+  
+  The set of all possible NCD levels defined by the insurer.
+
+  For example,
+
+  $$
+  S=\{0,1,2,3,4\}.
+  $$
+
+The exact state space depends on the insurer's NCD scheme.
+
+
+
+# Classification of the NCD Process
+
+The NCD process has the following characteristics.
+
+- **Discrete-time**
+  
+  Observations are made at distinct time points (policy years).
+
+- **Discrete-state**
+  
+  Only a finite number of NCD levels are possible.
+
+Hence,
+
+$$
+\boxed{\text{The NCD system is a discrete-time, discrete-state stochastic process.}}
+$$
+
+This type of process is studied in detail using **discrete-time Markov chains** later in the course.
+
+
+# Example 2: Insurance Claim Arrivals
+
+Insurance companies receive claims throughout the day.
+
+Examples include
+
+- Motor insurance claims.
+- Property insurance claims.
+- Health insurance claims.
+
+Unlike the NCD example, claims may occur **at any instant**.
+
+Typical actuarial questions include
+
+- How many claims will be reported today?
+- What is the probability of receiving more than 100 claims this week?
+- How long until the next claim arrives?
+
+> **Observation:** We require a model that describes random events occurring continuously over time.
+
+
+
+# Modelling Claim Arrivals
+
+Let
+
+$$
+N_t=\text{number of claims received by time }t,
+$$
+
+where
+
+- $t\ge0$ denotes time.
+- $N_t$ counts all claims reported from time $0$ up to time $t$.
+
+The collection
+
+$$
+\{N_t:t\ge0\}
+$$
+
+forms a **stochastic process**.
+
+
+
+# Why is $N_t$ Random?
+
+At the present time, the insurer cannot predict
+
+- when the next claim will occur,
+- how many claims will be received during the next hour or day, or
+- the total number of claims by a future time.
+
+Consequently,
+
+- the value of $N_t$ is uncertain for every future time $t$, and
+- each $N_t$ is a **random variable**.
+
+> **Key Idea:** The randomness comes from the unpredictable arrival times of future claims.
+
+
+
+# Time Domain and State Space 
+
+The claim-count process is
+
+$$
+\{N_t:t\ge0\}.
+$$
+
+Its two main components are
+
+- **Time domain** (claims occur at any instant)
+
+  $$
+  T=[0,\infty),
+  $$
+
+- **State space** (count of non-negative claims)
+
+  $$
+  S=\{0,1,2,\ldots\},
+  $$
+
+
+
+
+# Classification of the Claim-Count Process
+
+The process has the following characteristics.
+
+- **Continuous-time**
+
+  Time is measured continuously.
+
+- **Discrete-state**
+
+  The process records the number of claims, which is always a whole number.
+
+Hence,
+
+$$
+\boxed{\text{The claim-count process is a continuous-time, discrete-state stochastic process.}}
+$$
+
+A fundamental example of this type of process is the **Poisson process**, which will be studied in detail later in the course.
+
+
+# Example 3: Survival of a Life
+
+Life insurance contracts depend on the future lifetime of the insured individual.
+
+Actuaries are interested in questions such as
+
+- What is the probability that a life aged 70 survives for another year?
+- What is the probability that death occurs before age 71?
+- How does the survival status change over time?
+
+> **Observation:** The survival status changes over time, but the future lifetime is uncertain.
+
+
+
+# Modelling Survival Status
+
+Suppose we observe an individual continuously over time.
+
+Define
+
+$$
+X_t=
+\begin{cases}
+1, & \text{if the individual is alive at time }t,\\
+0, & \text{if the individual has died by time }t.
+\end{cases}
+$$
+
+where
+
+- $t\ge0$ denotes the time since observation begins.
+- $X_t$ represents the survival status at time $t$.
+
+The collection
+
+$$
+\{X_t:t\ge0\}
+$$
+
+forms a **stochastic process**.
+
+
+
+# Why is $X_t$ Random?
+
+At the present time, we do not know
+
+- when death will occur,
+- whether the individual will still be alive at a future time, or
+- how long the individual will survive.
+
+Therefore,
+
+- the value of $X_t$ is uncertain for every future time $t$, and
+- each $X_t$ is a **random variable**.
+
+> **Key Idea:** The randomness arises from the uncertain future lifetime of the individual.
+
+
+
+# Time Domain and State Space
+
+The survival process is
+
+$$
+\{X_t:t\ge0\}.
+$$
+
+Its two main components are
+
+- **Time domain** (survival can be monitored continuously over time)
+
+  $$
+  T=[0,\infty),
+  $$
+
+
+- **State space**
+
+  $$
+  S=\{0,1\},
+  $$
+
+  where $1$ represents **alive**, and $0$ represents **dead**.
+
+
+
+# Classification of the Survival Process
+
+The process has the following characteristics.
+
+- **Continuous-time**
+
+  The survival status is defined at every instant.
+
+- **Discrete-state**
+
+  Only two states are possible: alive or dead.
+
+Hence,
+
+$$
+\boxed{\text{The survival process is a continuous-time, discrete-state stochastic process.}}
+$$
+
+This type of process is commonly modelled using **continuous-time Markov processes**, which will be studied later in the course.
+
+
+
+# From Examples to a General Model
+
+Although the applications are different, they have the same mathematical structure.
+
+| Application | Stochastic Process |
+|:------------|:-------------------|
+| NCD system | $\{X_n:n=0,1,2,\ldots\}$ |
+| Claim arrivals | $\{N_t:t\ge0\}$ |
+| Survival status | $\{X_t:t\ge0\}$ |
+
+Each example consists of
+
+- a **collection of random variables**,
+- indexed by **time**, and
+- describing the **evolution of a system**.
+
+> **Observation:** We now introduce a general definition that applies to all stochastic processes.
+
+
+# Formal Definition
+
+A **stochastic process** is a collection of random variables
+
+$$
+\{X_t:t\in T\},
+$$
+
+defined on a common probability space
+
+$$
+(\Omega,\mathcal{F},P),
+$$
+
+where
+
+- **$X_t$** is the random variable observed at time $t$.
+- **$T$** is the index set (time domain).
+
+Each random variable describes the state of the system at a particular time.
+
+
+# Understanding the Definition
+
+The notation
+
+$$
+\{X_t:t\in T\}
+$$
+
+contains three important components.
+
+- **Random variables** $X_t$
+  
+  Describe the state of the system at time $t$.
+
+- **Time index** $t$
+  
+  Identifies a particular observation time.
+
+- **Index set** $T$
+  
+  Contains all time points for which the process is defined.
+
+Different applications may use different index sets.
+
+# Index Set vs State Space
+
+Two concepts are easily confused.
+
+| Index Set | State Space |
+|:-----------|:------------|
+| Specifies **when** the process is observed. | Specifies **what values** the process can take. |
+| Usually denoted by $T$. | Usually denoted by $S$. |
+
+Examples
+
+| Process | Index Set $T$ | State Space $S$ |
+|:---------|:--------------|:----------------|
+| NCD | $\{0,1,2,\ldots\}$ | $\{0,1,2,3,4\}$ |
+| Claim arrivals | $[0,\infty)$ | $\{0,1,2,\ldots\}$ |
+| Survival | $[0,\infty)$ | $\{0,1\}$ |
+
+> **Key Idea:** The index set describes **time**, whereas the state space describes **possible values**.
+
+# Looking Ahead
+
+The formal definition introduces several important components.
+
+- **Probability space** $(\Omega,\mathcal{F},P)$ — defines the underlying random experiment.
+- **Index set** $T$ — specifies when observations are made.
+- **State space** $S$ — contains all possible values of the process.
+- **Sample path** — represents one possible evolution of the process.
+
+In the next section, we examine each of these components in more detail.
+
+
+# Components of a Stochastic Process
+
+A stochastic process
+
+$$
+\{X_t:t\in T\}
+$$
+
+contains several important components.
+
+Throughout this course, we will identify
+
+- the **probability space** $(\Omega,\mathcal{F},P)$,
+- the **index set** $T$,
+- the **state space** $S$, and
+- the **sample path**.
+
+Understanding these components helps us describe and analyse any stochastic process.
+
+
+# Probability Space
+
+Every stochastic process is defined on a probability space
+
+$$
+(\Omega,\mathcal{F},P),
+$$
+
+where
+
+- **Sample space** $\Omega$ — contains all possible outcomes of the experiment.
+- **Sigma-algebra** $\mathcal{F}$ — specifies the events of interest.
+- **Probability measure** $P$ — assigns probabilities to those events.
+
+The probability space provides the mathematical foundation for the stochastic process.
+
+> **Remark:** In this course, we will usually focus on the stochastic process itself rather than the details of the probability space.
+
+
+# Index Set (Time Domain)
+
+The **index set** specifies the time points at which the process is defined.
+
+Common choices are
+
+- **Discrete time**: observations are made at distinct time points
+
+  $$
+  T=\{0,1,2,\ldots\},
+  $$
+
+- **Continuous time**:  the process is defined for every instant.
+
+
+  $$
+  T=[0,\infty),
+  $$
+
+
+Examples (1) NCD system: yearly observations, (2) Claim arrivals: continuous time, and (3) Survival process: continuous time.
+
+# State Space
+
+The **state space** is the set of all possible values that the process can take.
+
+Examples
+
+| Process | State Space |
+|:--------|:------------|
+| NCD system | $\{0,1,2,3,4\}$ |
+| Claim arrivals | $\{0,1,2,\ldots\}$ |
+| Survival process | $\{0,1\}$ |
+
+The choice of state space depends on the quantity being modelled.
+
+> **Key Idea:** The state space describes **what values** the process can assume, not **when** they occur.
+
+# Sample Paths
+
+A **sample path** is one possible realisation of a stochastic process.
+
+It records how the state of the process changes over time.
+
+Examples
+
+- An NCD level that changes over successive policy years.
+- A cumulative claim count observed over time.
+- The survival status of an individual over time.
+
+Each sample path corresponds to one possible outcome of the random experiment.
+
+
+
+# Example of a Sample Path
+
+Suppose
+
+$$
+X_t=
+\begin{cases}
+1, & \text{alive},\\
+0, & \text{dead}.
+\end{cases}
+$$
+
+One possible sample path is
+
+| Time $t$ | 0 | 0.5 | 1.0 | 1.5 | 2.0 |
+|:---------|:--:|:--:|:--:|:--:|:--:|
+| $X_t$ | 1 | 1 | 1 | 0 | 0 |
+
+This individual survives until sometime between $t=1.0$ and $t=1.5$, after which the process remains in state 0.
+
+
+# Summary of the Components
+
+Every stochastic process can be described by four components.
+
+| Component | Description |
+|:----------|:------------|
+| Probability space | Defines the underlying random experiment. |
+| Index set | Specifies when the process is observed. |
+| State space | Specifies the possible values of the process. |
+| Sample path | Describes one possible evolution of the process. |
+
+These components provide a common framework for studying different types of stochastic processes.
+
+
+
+# Classification of Stochastic Processes
+
+Stochastic processes can be classified according to
+
+- **Time domain** — whether time is discrete or continuous.
+- **State space** — whether the possible values are discrete or continuous.
+
+Combining these two characteristics gives four broad classes of stochastic processes.
+
+These classes provide a useful framework for selecting an appropriate model.
+
+
+
+# Classification by Time Domain and State Space
+
+| Time Domain | Discrete State Space | Continuous State Space |
+|:------------|:---------------------|:-----------------------|
+| **Discrete time** | Discrete-time Markov chains<br>NCD system | Random walks<br>Autoregressive models |
+| **Continuous time** | Poisson processes<br>Birth-death processes<br>Continuous-time Markov chains | Brownian motion<br>Diffusion processes |
+
+This classification provides a roadmap for the topics studied in this course.
+
+
+# Discrete-Time vs Continuous-Time
+
+The **time domain** specifies when the process is observed.
+
+- **Discrete-time**
+  
+  Observations are made at distinct time points.
+
+  Example: NCD levels recorded once every policy year.
+
+- **Continuous-time**
+  
+  The process is defined for every instant.
+
+  Examples: Claim arrivals and survival status.
+
+The choice depends on how the system evolves over time.
+
+
+# Discrete-State vs Continuous-State
+
+The **state space** specifies the possible values of the process.
+
+- **Discrete-state**
+  
+  The process takes countable values.
+
+  Examples: NCD level, claim count, survival status.
+
+- **Continuous-state**
+  
+  The process can take any value within an interval.
+
+  Examples: Stock prices and interest rates.
+
+Different applications require different state spaces.
+
+
+
+# Choosing an Appropriate Model
+
+The choice of stochastic process depends on the characteristics of the system.
+
+Ask the following questions.
+
+1. **When is the process observed?**
+   
+   Is time discrete or continuous?
+
+2. **What values can the process take?**
+   
+   Is the state space discrete or continuous?
+
+3. **How does the process evolve?**
+   
+   Which stochastic model best describes its behaviour?
+
+These questions guide the selection of an appropriate stochastic process.
+
+
+
+# Roadmap of This Course
+
+The remainder of the course studies several important classes of stochastic processes.
+
+| Topic | Process Type |
+|:------|:-------------|
+| Discrete-time Markov chains | Discrete time, discrete state |
+| Continuous-time Markov processes | Continuous time, discrete state |
+| Poisson processes | Continuous time, discrete state |
+| Brownian motion | Continuous time, continuous state |
+
+Each topic develops techniques for analysing the behaviour of stochastic processes.
+
+
+# Chapter Summary
+
+In this chapter, we introduced the basic ideas of stochastic processes.
+
+You should now be able to
+
+- **Explain** why stochastic processes are used to model systems that evolve over time.
+- **Distinguish** between a random variable and a stochastic process.
+- **Identify** the stochastic process, time domain, and state space in simple actuarial applications.
+- **Interpret** the notation
+  $$
+  \{X_t:t\in T\}.
+  $$
+- **Describe** the main components of a stochastic process.
+- **Classify** stochastic processes according to their time domain and state space.
+
+These ideas form the foundation for the remainder of the course.

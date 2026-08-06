@@ -1,0 +1,1445 @@
+% Options for packages loaded elsewhere
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+  ignorenonframetext,
+  aspectratio=169,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+
+\usetheme[]{Boadilla}
+\usecolortheme[]{default}
+\usefonttheme[]{professionalfonts}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+
+
+\usepackage{longtable,booktabs,array}
+\newcounter{none} % for unnumbered tables
+\usepackage{calc} % for calculating minipage widths
+\usepackage{caption}
+% Make caption package work with longtable
+\makeatletter
+\def\fnum@table{\tablename~\thetable}
+\makeatother
+\usepackage{graphicx}
+\makeatletter
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
+% Set default figure placement to htbp
+\def\fps@figure{htbp}
+\makeatother
+
+
+
+
+
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+
+
+ 
+
+
+\makeatletter
+\@ifpackageloaded{caption}{}{\usepackage{caption}}
+\AtBeginDocument{%
+\ifdefined\contentsname
+  \renewcommand*\contentsname{Table of contents}
+\else
+  \newcommand\contentsname{Table of contents}
+\fi
+\ifdefined\listfigurename
+  \renewcommand*\listfigurename{List of Figures}
+\else
+  \newcommand\listfigurename{List of Figures}
+\fi
+\ifdefined\listtablename
+  \renewcommand*\listtablename{List of Tables}
+\else
+  \newcommand\listtablename{List of Tables}
+\fi
+\ifdefined\figurename
+  \renewcommand*\figurename{Figure}
+\else
+  \newcommand\figurename{Figure}
+\fi
+\ifdefined\tablename
+  \renewcommand*\tablename{Table}
+\else
+  \newcommand\tablename{Table}
+\fi
+}
+\@ifpackageloaded{float}{}{\usepackage{float}}
+\floatstyle{ruled}
+\@ifundefined{c@chapter}{\newfloat{codelisting}{h}{lop}}{\newfloat{codelisting}{h}{lop}[chapter]}
+\floatname{codelisting}{Listing}
+\newcommand*\listoflistings{\listof{codelisting}{List of Listings}}
+\makeatother
+\makeatletter
+\makeatother
+\makeatletter
+\@ifpackageloaded{caption}{}{\usepackage{caption}}
+\@ifpackageloaded{subcaption}{}{\usepackage{subcaption}}
+\makeatother
+
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={Lecture 1: Introduction to Stochastic Processes},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+
+\title{\texorpdfstring{Lecture 1: Introduction to Stochastic
+Processes}{Lecture 1: Introduction to Stochastic Processes}}
+\author{}
+\date{}
+
+\begin{document}
+\frame{\titlepage}
+
+
+\begin{frame}{Introduction to Stochastic Processes}
+\protect\phantomsection\label{introduction-to-stochastic-processes}
+\vspace{0.5cm}
+
+\textbf{Course:} Stochastic Processes
+
+\textbf{Reference:} IFoA CS2
+
+\vfill
+
+Department of Mathematics /Actuarial Science Program
+\end{frame}
+
+\begin{frame}{Learning Outcomes}
+\protect\phantomsection\label{learning-outcomes}
+After this lecture, you should be able to
+
+\begin{enumerate}
+\item
+  \textbf{Explain} why stochastic processes are used to model systems
+  that evolve over time under uncertainty.
+\item
+  \textbf{Distinguish} between a random variable and a stochastic
+  process.
+\item
+  \textbf{Identify} the stochastic process, time domain, and state space
+  for simple actuarial applications.
+\item
+  \textbf{Define} a stochastic process using the notation \[
+  \{X_t:t\in T\}.
+  \]
+\item
+  \textbf{Classify} a stochastic process according to its time domain
+  and state space.
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{Why Study Stochastic Processes?}
+\protect\phantomsection\label{why-study-stochastic-processes}
+Many quantities in actuarial science change over time.
+
+Unlike deterministic models, their future values are \textbf{uncertain}.
+
+Some common examples are
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Insurance premiums} --- change according to a policyholder's
+  claim history.
+\item
+  \textbf{Claim arrivals} --- occur at random times.
+\item
+  \textbf{Survival of a life} --- depends on an uncertain future
+  lifetime.
+\item
+  \textbf{Stock prices} --- fluctuate continuously over time.
+\end{itemize}
+
+\begin{quote}
+\textbf{Observation:} We need mathematical models that describe both
+\textbf{time evolution} and \textbf{uncertainty}.
+\end{quote}
+\end{frame}
+
+\begin{frame}{Examples from Actuarial Science}
+\protect\phantomsection\label{examples-from-actuarial-science}
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}ll@{}}
+\toprule\noalign{}
+Application & Quantity of Interest \\
+\midrule\noalign{}
+\endhead
+No-Claim Discount (NCD) & Discount level of a policyholder \\
+General insurance & Number of claims received \\
+Life insurance & Survival status of an individual \\
+Finance & Price of a financial asset \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+
+Each of these quantities
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Changes over time} rather than remaining fixed.
+\item
+  \textbf{Cannot be predicted with certainty} because future outcomes
+  are random.
+\item
+  \textbf{Can be modelled} using a stochastic process.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Common Characteristics}
+\protect\phantomsection\label{common-characteristics}
+Although the applications are different, they share the same modelling
+framework.
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{State variable} --- describes the current status of the
+  system.
+\item
+  \textbf{Time index} --- specifies when the system is observed.
+\item
+  \textbf{Uncertainty} --- future states cannot be known exactly.
+\item
+  \textbf{Evolution} --- the state changes as time progresses.
+\end{itemize}
+
+These common features motivate the formal study of \textbf{stochastic
+processes}.
+
+\begin{quote}
+\textbf{Key Idea:} A stochastic process is a mathematical model for a
+random quantity that evolves over time.
+\end{quote}
+\end{frame}
+
+\begin{frame}{Random Variables and Stochastic Processes}
+\protect\phantomsection\label{random-variables-and-stochastic-processes}
+Many random quantities are observed repeatedly over time.
+
+Examples include
+
+\begin{itemize}
+\tightlist
+\item
+  Daily stock prices.
+\item
+  Annual No-Claim Discount (NCD) levels.
+\item
+  Number of insurance claims received.
+\item
+  Survival status of an individual.
+\end{itemize}
+
+Instead of studying \textbf{one} random variable, we study a
+\textbf{collection of random variables}, one for each time point.
+\end{frame}
+
+\begin{frame}{Random Variable}
+\protect\phantomsection\label{random-variable}
+A \textbf{random variable} describes the outcome of a random experiment
+at a \textbf{single time point}.
+
+Examples
+
+\begin{itemize}
+\tightlist
+\item
+  \(X\) = claim amount from a policy.
+\item
+  \(Y\) = lifetime of an individual.
+\item
+  \(Z\) = number of claims reported today.
+\end{itemize}
+
+A random variable provides information about \textbf{one observation}
+only.
+
+\begin{quote}
+\textbf{Observation:} A single random variable does not describe how a
+quantity changes over time.
+\end{quote}
+\end{frame}
+
+\begin{frame}{From a Random Variable to a Stochastic Process}
+\protect\phantomsection\label{from-a-random-variable-to-a-stochastic-process}
+Suppose the NCD level of a policyholder is recorded every year.
+
+Instead of defining one random variable,
+
+\[
+X,
+\]
+
+we define a sequence of random variables,
+
+\[
+X_0,\;X_1,\;X_2,\;\ldots
+\]
+
+where
+
+\begin{itemize}
+\tightlist
+\item
+  \(X_0\) is the initial NCD level.
+\item
+  \(X_1\) is the NCD level after one year.
+\item
+  \(X_2\) is the NCD level after two years, \(\ldots\)
+\end{itemize}
+
+Each random variable describes the system at a different point in time.
+\end{frame}
+
+\begin{frame}{A Collection of Random Variables}
+\protect\phantomsection\label{a-collection-of-random-variables}
+The sequence
+
+\[
+X_0,\;X_1,\;X_2,\;\ldots
+\]
+
+can be written more compactly as
+
+\[
+\{X_t:t\in T\},
+\]
+
+where
+
+\begin{itemize}
+\tightlist
+\item
+  \(X_t\) is the random variable observed at time \(t\).
+\item
+  \(T\) is the collection of time points.
+\end{itemize}
+
+This notation represents a \textbf{stochastic process}.
+\end{frame}
+
+\begin{frame}{Understanding the Notation}
+\protect\phantomsection\label{understanding-the-notation}
+The notation
+
+\[
+\{X_t:t\in T\}
+\]
+
+has two important components.
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{\(X_t\)} --- the random variable observed at time \(t\).
+\item
+  \textbf{\(t\)} --- the time index.
+\item
+  \textbf{\(T\)} --- the set of all time points.
+\end{itemize}
+
+The value of \(T\) depends on the application.
+
+For example,
+
+\begin{itemize}
+\tightlist
+\item
+  \(T=\{0,1,2,\ldots\}\) for annual observations.
+\item
+  \(T=[0,\infty)\) for continuous-time observations.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Random Variable vs Stochastic Process}
+\protect\phantomsection\label{random-variable-vs-stochastic-process}
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.4595}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.5405}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Random Variable
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Stochastic Process
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+Describes one random outcome. & Describes the evolution of a random
+quantity over time. \\
+Represented by a single variable such as \(X\). & Represented by a
+collection \(\{X_t:t\in T\}\). \\
+No time index is required. & Every random variable is indexed by
+time. \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+
+\begin{quote}
+\textbf{Key Idea:} A stochastic process is \textbf{not} a single random
+variable. It is a collection of random variables indexed by time.
+\end{quote}
+\end{frame}
+
+\begin{frame}{Looking Ahead}
+\protect\phantomsection\label{looking-ahead}
+In the next section, we will study several stochastic processes from
+actuarial science.
+
+For each example, we will identify
+
+\begin{itemize}
+\tightlist
+\item
+  the \textbf{stochastic process},
+\item
+  the \textbf{time domain},
+\item
+  the \textbf{state space}, and
+\item
+  the \textbf{type of stochastic process}.
+\end{itemize}
+
+These examples provide the foundation for the formal definition
+introduced later.
+\end{frame}
+
+\begin{frame}{Example 1: No-Claim Discount (NCD) System}
+\protect\phantomsection\label{example-1-no-claim-discount-ncd-system}
+A \textbf{No-Claim Discount (NCD)} system rewards policyholders who do
+not make claims by offering lower insurance premiums.
+
+The NCD level is reviewed at the end of each policy year.
+
+Depending on the policyholder's claim history, the NCD level may
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Increase} after a claim-free year.
+\item
+  \textbf{Decrease} after one or more claims.
+\item
+  \textbf{Remain unchanged} under the insurer's rules.
+\end{itemize}
+
+\begin{quote}
+\textbf{Observation:} The NCD level changes over time and its future
+value is uncertain.
+\end{quote}
+\end{frame}
+
+\begin{frame}{Modelling the NCD System}
+\protect\phantomsection\label{modelling-the-ncd-system}
+Suppose the insurer records the NCD level once every policy year.
+
+Let
+
+\[
+X_n=\text{NCD level after the }n\text{th policy year},
+\]
+
+where
+
+\begin{itemize}
+\tightlist
+\item
+  \(n=0,1,2,\ldots\) denotes the policy year.
+\item
+  \(X_n\) is a random variable representing the NCD level at year \(n\).
+\end{itemize}
+
+The collection
+
+\[
+\{X_n:n=0,1,2,\ldots\}
+\]
+
+forms a \textbf{stochastic process}.
+\end{frame}
+
+\begin{frame}{Why is \(X_n\) Random?}
+\protect\phantomsection\label{why-is-x_n-random}
+At the beginning of the year, the insurer does \textbf{not} know whether
+the policyholder will make a claim.
+
+Consequently,
+
+\begin{itemize}
+\tightlist
+\item
+  a claim-free year may increase the NCD level,
+\item
+  one or more claims may reduce the NCD level, and
+\item
+  the future NCD level cannot be predicted with certainty.
+\end{itemize}
+
+Therefore, each \(X_n\) is a \textbf{random variable}.
+
+\begin{quote}
+\textbf{Key Idea:} The randomness comes from the policyholder's future
+claim experience.
+\end{quote}
+\end{frame}
+
+\begin{frame}{Time Domain and State Space}
+\protect\phantomsection\label{time-domain-and-state-space}
+The NCD process is
+
+\[
+\{X_n:n=0,1,2,\ldots\}.
+\]
+
+Its two main components are
+
+\begin{itemize}
+\item
+  \textbf{Time domain}
+
+  \[
+  T=\{0,1,2,\ldots\},
+  \]
+
+  since the NCD level is observed once every policy year.
+\item
+  \textbf{State space}
+
+  The set of all possible NCD levels defined by the insurer.
+
+  For example,
+
+  \[
+  S=\{0,1,2,3,4\}.
+  \]
+\end{itemize}
+
+The exact state space depends on the insurer's NCD scheme.
+\end{frame}
+
+\begin{frame}{Classification of the NCD Process}
+\protect\phantomsection\label{classification-of-the-ncd-process}
+The NCD process has the following characteristics.
+
+\begin{itemize}
+\item
+  \textbf{Discrete-time}
+
+  Observations are made at distinct time points (policy years).
+\item
+  \textbf{Discrete-state}
+
+  Only a finite number of NCD levels are possible.
+\end{itemize}
+
+Hence,
+
+\[
+\boxed{\text{The NCD system is a discrete-time, discrete-state stochastic process.}}
+\]
+
+This type of process is studied in detail using \textbf{discrete-time
+Markov chains} later in the course.
+\end{frame}
+
+\begin{frame}{Example 2: Insurance Claim Arrivals}
+\protect\phantomsection\label{example-2-insurance-claim-arrivals}
+Insurance companies receive claims throughout the day.
+
+Examples include
+
+\begin{itemize}
+\tightlist
+\item
+  Motor insurance claims.
+\item
+  Property insurance claims.
+\item
+  Health insurance claims.
+\end{itemize}
+
+Unlike the NCD example, claims may occur \textbf{at any instant}.
+
+Typical actuarial questions include
+
+\begin{itemize}
+\tightlist
+\item
+  How many claims will be reported today?
+\item
+  What is the probability of receiving more than 100 claims this week?
+\item
+  How long until the next claim arrives?
+\end{itemize}
+
+\begin{quote}
+\textbf{Observation:} We require a model that describes random events
+occurring continuously over time.
+\end{quote}
+\end{frame}
+
+\begin{frame}{Modelling Claim Arrivals}
+\protect\phantomsection\label{modelling-claim-arrivals}
+Let
+
+\[
+N_t=\text{number of claims received by time }t,
+\]
+
+where
+
+\begin{itemize}
+\tightlist
+\item
+  \(t\ge0\) denotes time.
+\item
+  \(N_t\) counts all claims reported from time \(0\) up to time \(t\).
+\end{itemize}
+
+The collection
+
+\[
+\{N_t:t\ge0\}
+\]
+
+forms a \textbf{stochastic process}.
+\end{frame}
+
+\begin{frame}{Why is \(N_t\) Random?}
+\protect\phantomsection\label{why-is-n_t-random}
+At the present time, the insurer cannot predict
+
+\begin{itemize}
+\tightlist
+\item
+  when the next claim will occur,
+\item
+  how many claims will be received during the next hour or day, or
+\item
+  the total number of claims by a future time.
+\end{itemize}
+
+Consequently,
+
+\begin{itemize}
+\tightlist
+\item
+  the value of \(N_t\) is uncertain for every future time \(t\), and
+\item
+  each \(N_t\) is a \textbf{random variable}.
+\end{itemize}
+
+\begin{quote}
+\textbf{Key Idea:} The randomness comes from the unpredictable arrival
+times of future claims.
+\end{quote}
+\end{frame}
+
+\begin{frame}{Time Domain and State Space}
+\protect\phantomsection\label{time-domain-and-state-space-1}
+The claim-count process is
+
+\[
+\{N_t:t\ge0\}.
+\]
+
+Its two main components are
+
+\begin{itemize}
+\item
+  \textbf{Time domain} (claims occur at any instant)
+
+  \[
+  T=[0,\infty),
+  \]
+\item
+  \textbf{State space} (count of non-negative claims)
+
+  \[
+  S=\{0,1,2,\ldots\},
+  \]
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Classification of the Claim-Count Process}
+\protect\phantomsection\label{classification-of-the-claim-count-process}
+The process has the following characteristics.
+
+\begin{itemize}
+\item
+  \textbf{Continuous-time}
+
+  Time is measured continuously.
+\item
+  \textbf{Discrete-state}
+
+  The process records the number of claims, which is always a whole
+  number.
+\end{itemize}
+
+Hence,
+
+\[
+\boxed{\text{The claim-count process is a continuous-time, discrete-state stochastic process.}}
+\]
+
+A fundamental example of this type of process is the \textbf{Poisson
+process}, which will be studied in detail later in the course.
+\end{frame}
+
+\begin{frame}{Example 3: Survival of a Life}
+\protect\phantomsection\label{example-3-survival-of-a-life}
+Life insurance contracts depend on the future lifetime of the insured
+individual.
+
+Actuaries are interested in questions such as
+
+\begin{itemize}
+\tightlist
+\item
+  What is the probability that a life aged 70 survives for another year?
+\item
+  What is the probability that death occurs before age 71?
+\item
+  How does the survival status change over time?
+\end{itemize}
+
+\begin{quote}
+\textbf{Observation:} The survival status changes over time, but the
+future lifetime is uncertain.
+\end{quote}
+\end{frame}
+
+\begin{frame}{Modelling Survival Status}
+\protect\phantomsection\label{modelling-survival-status}
+Suppose we observe an individual continuously over time.
+
+Define
+
+\[
+X_t=
+\begin{cases}
+1, & \text{if the individual is alive at time }t,\\
+0, & \text{if the individual has died by time }t.
+\end{cases}
+\]
+
+where
+
+\begin{itemize}
+\tightlist
+\item
+  \(t\ge0\) denotes the time since observation begins.
+\item
+  \(X_t\) represents the survival status at time \(t\).
+\end{itemize}
+
+The collection
+
+\[
+\{X_t:t\ge0\}
+\]
+
+forms a \textbf{stochastic process}.
+\end{frame}
+
+\begin{frame}{Why is \(X_t\) Random?}
+\protect\phantomsection\label{why-is-x_t-random}
+At the present time, we do not know
+
+\begin{itemize}
+\tightlist
+\item
+  when death will occur,
+\item
+  whether the individual will still be alive at a future time, or
+\item
+  how long the individual will survive.
+\end{itemize}
+
+Therefore,
+
+\begin{itemize}
+\tightlist
+\item
+  the value of \(X_t\) is uncertain for every future time \(t\), and
+\item
+  each \(X_t\) is a \textbf{random variable}.
+\end{itemize}
+
+\begin{quote}
+\textbf{Key Idea:} The randomness arises from the uncertain future
+lifetime of the individual.
+\end{quote}
+\end{frame}
+
+\begin{frame}{Time Domain and State Space}
+\protect\phantomsection\label{time-domain-and-state-space-2}
+The survival process is
+
+\[
+\{X_t:t\ge0\}.
+\]
+
+Its two main components are
+
+\begin{itemize}
+\item
+  \textbf{Time domain} (survival can be monitored continuously over
+  time)
+
+  \[
+  T=[0,\infty),
+  \]
+\item
+  \textbf{State space}
+
+  \[
+  S=\{0,1\},
+  \]
+
+  where \(1\) represents \textbf{alive}, and \(0\) represents
+  \textbf{dead}.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Classification of the Survival Process}
+\protect\phantomsection\label{classification-of-the-survival-process}
+The process has the following characteristics.
+
+\begin{itemize}
+\item
+  \textbf{Continuous-time}
+
+  The survival status is defined at every instant.
+\item
+  \textbf{Discrete-state}
+
+  Only two states are possible: alive or dead.
+\end{itemize}
+
+Hence,
+
+\[
+\boxed{\text{The survival process is a continuous-time, discrete-state stochastic process.}}
+\]
+
+This type of process is commonly modelled using \textbf{continuous-time
+Markov processes}, which will be studied later in the course.
+\end{frame}
+
+\begin{frame}{From Examples to a General Model}
+\protect\phantomsection\label{from-examples-to-a-general-model}
+Although the applications are different, they have the same mathematical
+structure.
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}ll@{}}
+\toprule\noalign{}
+Application & Stochastic Process \\
+\midrule\noalign{}
+\endhead
+NCD system & \(\{X_n:n=0,1,2,\ldots\}\) \\
+Claim arrivals & \(\{N_t:t\ge0\}\) \\
+Survival status & \(\{X_t:t\ge0\}\) \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+
+Each example consists of
+
+\begin{itemize}
+\tightlist
+\item
+  a \textbf{collection of random variables},
+\item
+  indexed by \textbf{time}, and
+\item
+  describing the \textbf{evolution of a system}.
+\end{itemize}
+
+\begin{quote}
+\textbf{Observation:} We now introduce a general definition that applies
+to all stochastic processes.
+\end{quote}
+\end{frame}
+
+\begin{frame}{Formal Definition}
+\protect\phantomsection\label{formal-definition}
+A \textbf{stochastic process} is a collection of random variables
+
+\[
+\{X_t:t\in T\},
+\]
+
+defined on a common probability space
+
+\[
+(\Omega,\mathcal{F},P),
+\]
+
+where
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{\(X_t\)} is the random variable observed at time \(t\).
+\item
+  \textbf{\(T\)} is the index set (time domain).
+\end{itemize}
+
+Each random variable describes the state of the system at a particular
+time.
+\end{frame}
+
+\begin{frame}{Understanding the Definition}
+\protect\phantomsection\label{understanding-the-definition}
+The notation
+
+\[
+\{X_t:t\in T\}
+\]
+
+contains three important components.
+
+\begin{itemize}
+\item
+  \textbf{Random variables} \(X_t\)
+
+  Describe the state of the system at time \(t\).
+\item
+  \textbf{Time index} \(t\)
+
+  Identifies a particular observation time.
+\item
+  \textbf{Index set} \(T\)
+
+  Contains all time points for which the process is defined.
+\end{itemize}
+
+Different applications may use different index sets.
+\end{frame}
+
+\begin{frame}{Index Set vs State Space}
+\protect\phantomsection\label{index-set-vs-state-space}
+Two concepts are easily confused.
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.4800}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.5200}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Index Set
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+State Space
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+Specifies \textbf{when} the process is observed. & Specifies
+\textbf{what values} the process can take. \\
+Usually denoted by \(T\). & Usually denoted by \(S\). \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+
+Examples
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}lll@{}}
+\toprule\noalign{}
+Process & Index Set \(T\) & State Space \(S\) \\
+\midrule\noalign{}
+\endhead
+NCD & \(\{0,1,2,\ldots\}\) & \(\{0,1,2,3,4\}\) \\
+Claim arrivals & \([0,\infty)\) & \(\{0,1,2,\ldots\}\) \\
+Survival & \([0,\infty)\) & \(\{0,1\}\) \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+
+\begin{quote}
+\textbf{Key Idea:} The index set describes \textbf{time}, whereas the
+state space describes \textbf{possible values}.
+\end{quote}
+\end{frame}
+
+\begin{frame}{Looking Ahead}
+\protect\phantomsection\label{looking-ahead-1}
+The formal definition introduces several important components.
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Probability space} \((\Omega,\mathcal{F},P)\) --- defines the
+  underlying random experiment.
+\item
+  \textbf{Index set} \(T\) --- specifies when observations are made.
+\item
+  \textbf{State space} \(S\) --- contains all possible values of the
+  process.
+\item
+  \textbf{Sample path} --- represents one possible evolution of the
+  process.
+\end{itemize}
+
+In the next section, we examine each of these components in more detail.
+\end{frame}
+
+\begin{frame}{Components of a Stochastic Process}
+\protect\phantomsection\label{components-of-a-stochastic-process}
+A stochastic process
+
+\[
+\{X_t:t\in T\}
+\]
+
+contains several important components.
+
+Throughout this course, we will identify
+
+\begin{itemize}
+\tightlist
+\item
+  the \textbf{probability space} \((\Omega,\mathcal{F},P)\),
+\item
+  the \textbf{index set} \(T\),
+\item
+  the \textbf{state space} \(S\), and
+\item
+  the \textbf{sample path}.
+\end{itemize}
+
+Understanding these components helps us describe and analyse any
+stochastic process.
+\end{frame}
+
+\begin{frame}{Probability Space}
+\protect\phantomsection\label{probability-space}
+Every stochastic process is defined on a probability space
+
+\[
+(\Omega,\mathcal{F},P),
+\]
+
+where
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Sample space} \(\Omega\) --- contains all possible outcomes of
+  the experiment.
+\item
+  \textbf{Sigma-algebra} \(\mathcal{F}\) --- specifies the events of
+  interest.
+\item
+  \textbf{Probability measure} \(P\) --- assigns probabilities to those
+  events.
+\end{itemize}
+
+The probability space provides the mathematical foundation for the
+stochastic process.
+
+\begin{quote}
+\textbf{Remark:} In this course, we will usually focus on the stochastic
+process itself rather than the details of the probability space.
+\end{quote}
+\end{frame}
+
+\begin{frame}{Index Set (Time Domain)}
+\protect\phantomsection\label{index-set-time-domain}
+The \textbf{index set} specifies the time points at which the process is
+defined.
+
+Common choices are
+
+\begin{itemize}
+\item
+  \textbf{Discrete time}: observations are made at distinct time points
+
+  \[
+  T=\{0,1,2,\ldots\},
+  \]
+\item
+  \textbf{Continuous time}: the process is defined for every instant.
+
+  \[
+  T=[0,\infty),
+  \]
+\end{itemize}
+
+Examples (1) NCD system: yearly observations, (2) Claim arrivals:
+continuous time, and (3) Survival process: continuous time.
+\end{frame}
+
+\begin{frame}{State Space}
+\protect\phantomsection\label{state-space}
+The \textbf{state space} is the set of all possible values that the
+process can take.
+
+Examples
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}ll@{}}
+\toprule\noalign{}
+Process & State Space \\
+\midrule\noalign{}
+\endhead
+NCD system & \(\{0,1,2,3,4\}\) \\
+Claim arrivals & \(\{0,1,2,\ldots\}\) \\
+Survival process & \(\{0,1\}\) \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+
+The choice of state space depends on the quantity being modelled.
+
+\begin{quote}
+\textbf{Key Idea:} The state space describes \textbf{what values} the
+process can assume, not \textbf{when} they occur.
+\end{quote}
+\end{frame}
+
+\begin{frame}{Sample Paths}
+\protect\phantomsection\label{sample-paths}
+A \textbf{sample path} is one possible realisation of a stochastic
+process.
+
+It records how the state of the process changes over time.
+
+Examples
+
+\begin{itemize}
+\tightlist
+\item
+  An NCD level that changes over successive policy years.
+\item
+  A cumulative claim count observed over time.
+\item
+  The survival status of an individual over time.
+\end{itemize}
+
+Each sample path corresponds to one possible outcome of the random
+experiment.
+\end{frame}
+
+\begin{frame}{Example of a Sample Path}
+\protect\phantomsection\label{example-of-a-sample-path}
+Suppose
+
+\[
+X_t=
+\begin{cases}
+1, & \text{alive},\\
+0, & \text{dead}.
+\end{cases}
+\]
+
+One possible sample path is
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}lccccc@{}}
+\toprule\noalign{}
+Time \(t\) & 0 & 0.5 & 1.0 & 1.5 & 2.0 \\
+\midrule\noalign{}
+\endhead
+\(X_t\) & 1 & 1 & 1 & 0 & 0 \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+
+This individual survives until sometime between \(t=1.0\) and \(t=1.5\),
+after which the process remains in state 0.
+\end{frame}
+
+\begin{frame}{Summary of the Components}
+\protect\phantomsection\label{summary-of-the-components}
+Every stochastic process can be described by four components.
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}ll@{}}
+\toprule\noalign{}
+Component & Description \\
+\midrule\noalign{}
+\endhead
+Probability space & Defines the underlying random experiment. \\
+Index set & Specifies when the process is observed. \\
+State space & Specifies the possible values of the process. \\
+Sample path & Describes one possible evolution of the process. \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+
+These components provide a common framework for studying different types
+of stochastic processes.
+\end{frame}
+
+\begin{frame}{Classification of Stochastic Processes}
+\protect\phantomsection\label{classification-of-stochastic-processes}
+Stochastic processes can be classified according to
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Time domain} --- whether time is discrete or continuous.
+\item
+  \textbf{State space} --- whether the possible values are discrete or
+  continuous.
+\end{itemize}
+
+Combining these two characteristics gives four broad classes of
+stochastic processes.
+
+These classes provide a useful framework for selecting an appropriate
+model.
+\end{frame}
+
+\begin{frame}{Classification by Time Domain and State Space}
+\protect\phantomsection\label{classification-by-time-domain-and-state-space}
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.2203}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3729}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.4068}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Time Domain
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Discrete State Space
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Continuous State Space
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\textbf{Discrete time} & Discrete-time Markov chainsNCD system & Random
+walksAutoregressive models \\
+\textbf{Continuous time} & Poisson processesBirth-death
+processesContinuous-time Markov chains & Brownian motionDiffusion
+processes \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+
+This classification provides a roadmap for the topics studied in this
+course.
+\end{frame}
+
+\begin{frame}{Discrete-Time vs Continuous-Time}
+\protect\phantomsection\label{discrete-time-vs-continuous-time}
+The \textbf{time domain} specifies when the process is observed.
+
+\begin{itemize}
+\item
+  \textbf{Discrete-time}
+
+  Observations are made at distinct time points.
+
+  Example: NCD levels recorded once every policy year.
+\item
+  \textbf{Continuous-time}
+
+  The process is defined for every instant.
+
+  Examples: Claim arrivals and survival status.
+\end{itemize}
+
+The choice depends on how the system evolves over time.
+\end{frame}
+
+\begin{frame}{Discrete-State vs Continuous-State}
+\protect\phantomsection\label{discrete-state-vs-continuous-state}
+The \textbf{state space} specifies the possible values of the process.
+
+\begin{itemize}
+\item
+  \textbf{Discrete-state}
+
+  The process takes countable values.
+
+  Examples: NCD level, claim count, survival status.
+\item
+  \textbf{Continuous-state}
+
+  The process can take any value within an interval.
+
+  Examples: Stock prices and interest rates.
+\end{itemize}
+
+Different applications require different state spaces.
+\end{frame}
+
+\begin{frame}{Choosing an Appropriate Model}
+\protect\phantomsection\label{choosing-an-appropriate-model}
+The choice of stochastic process depends on the characteristics of the
+system.
+
+Ask the following questions.
+
+\begin{enumerate}
+\item
+  \textbf{When is the process observed?}
+
+  Is time discrete or continuous?
+\item
+  \textbf{What values can the process take?}
+
+  Is the state space discrete or continuous?
+\item
+  \textbf{How does the process evolve?}
+
+  Which stochastic model best describes its behaviour?
+\end{enumerate}
+
+These questions guide the selection of an appropriate stochastic
+process.
+\end{frame}
+
+\begin{frame}{Roadmap of This Course}
+\protect\phantomsection\label{roadmap-of-this-course}
+The remainder of the course studies several important classes of
+stochastic processes.
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}ll@{}}
+\toprule\noalign{}
+Topic & Process Type \\
+\midrule\noalign{}
+\endhead
+Discrete-time Markov chains & Discrete time, discrete state \\
+Continuous-time Markov processes & Continuous time, discrete state \\
+Poisson processes & Continuous time, discrete state \\
+Brownian motion & Continuous time, continuous state \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+
+Each topic develops techniques for analysing the behaviour of stochastic
+processes.
+\end{frame}
+
+\begin{frame}{Chapter Summary}
+\protect\phantomsection\label{chapter-summary}
+In this chapter, we introduced the basic ideas of stochastic processes.
+
+You should now be able to
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Explain} why stochastic processes are used to model systems
+  that evolve over time.
+\item
+  \textbf{Distinguish} between a random variable and a stochastic
+  process.
+\item
+  \textbf{Identify} the stochastic process, time domain, and state space
+  in simple actuarial applications.
+\item
+  \textbf{Interpret} the notation \[
+  \{X_t:t\in T\}.
+  \]
+\item
+  \textbf{Describe} the main components of a stochastic process.
+\item
+  \textbf{Classify} stochastic processes according to their time domain
+  and state space.
+\end{itemize}
+
+These ideas form the foundation for the remainder of the course.
+\end{frame}
+
+
+
+
+\end{document}

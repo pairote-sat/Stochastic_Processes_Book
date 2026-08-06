@@ -1,5 +1,5 @@
 ---
-title: "01 Workbook: Introduction to Stochastic Processes"
+title: "Workbook 1: Introduction to Stochastic Processes"
 format:
   pdf:
     toc: false
@@ -57,7 +57,11 @@ Below is a workbook that progresses from **identification** to **modelling** and
     
     (d) The temperature in a city.
 
+::: {.callout-note}
+**Markov property**
 
+A stochastic process is said to satisfy the **Markov property** if the future depends only on the **current state**, and not on how the process arrived at that state.
+:::
 
 3. Consider the No-Claim Discount (NCD) process introduced in the lecture, where $X_n$ denotes the NCD level of a policyholder after the $n$th policy year.
 

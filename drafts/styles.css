@@ -1,10 +1,18 @@
 .reveal {
     font-family: "Aptos", "Calibri", Arial, sans-serif;
+    font-size: 28px;
+
 }
 
 .reveal h1,
 .reveal h2,
 .reveal h3 {
+    color: #003366;
     font-family: "Aptos Display", "Calibri", sans-serif;
     font-weight: 600;
+}
+
+
+.reveal code {
+    font-size: 0.9em;
 }
