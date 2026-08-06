@@ -1,0 +1,1379 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>1&nbsp; Introduction to Stochastic Processes – Stochastic Processes</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../index.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-87aed0b8589e23e45aa8556edf37a91b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/01_Introduction_to_Stochastic_Processes.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction to Stochastic Processes</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Stochastic Processes</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Welcome to My Book</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/01_Introduction_to_Stochastic_Processes.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction to Stochastic Processes</span></span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#learning-outcomes" id="toc-learning-outcomes" class="nav-link active" data-scroll-target="#learning-outcomes">Learning Outcomes</a></li>
+  <li><a href="#why-stochastic-processes" id="toc-why-stochastic-processes" class="nav-link" data-scroll-target="#why-stochastic-processes"><span class="header-section-number">1.1</span> Why Stochastic Processes?</a></li>
+  <li><a href="#random-variables-versus-stochastic-processes" id="toc-random-variables-versus-stochastic-processes" class="nav-link" data-scroll-target="#random-variables-versus-stochastic-processes"><span class="header-section-number">1.2</span> Random Variables versus Stochastic Processes</a></li>
+  <li><a href="#motivating-examples" id="toc-motivating-examples" class="nav-link" data-scroll-target="#motivating-examples"><span class="header-section-number">1.3</span> Motivating Examples</a></li>
+  <li><a href="#formal-definition-of-a-stochastic-process" id="toc-formal-definition-of-a-stochastic-process" class="nav-link" data-scroll-target="#formal-definition-of-a-stochastic-process"><span class="header-section-number">1.4</span> Formal Definition of a Stochastic Process</a></li>
+  <li><a href="#components-of-a-stochastic-process" id="toc-components-of-a-stochastic-process" class="nav-link" data-scroll-target="#components-of-a-stochastic-process"><span class="header-section-number">1.5</span> Components of a Stochastic Process</a>
+  <ul class="collapse">
+  <li><a href="#probability-space" id="toc-probability-space" class="nav-link" data-scroll-target="#probability-space"><span class="header-section-number">1.5.1</span> Probability space</a></li>
+  <li><a href="#index-set" id="toc-index-set" class="nav-link" data-scroll-target="#index-set"><span class="header-section-number">1.5.2</span> Index set</a></li>
+  <li><a href="#state-space" id="toc-state-space" class="nav-link" data-scroll-target="#state-space"><span class="header-section-number">1.5.3</span> State space</a></li>
+  <li><a href="#sample-paths-realizations" id="toc-sample-paths-realizations" class="nav-link" data-scroll-target="#sample-paths-realizations"><span class="header-section-number">1.5.4</span> Sample paths (realizations)</a></li>
+  </ul></li>
+  <li><a href="#classification-of-stochastic-processes" id="toc-classification-of-stochastic-processes" class="nav-link" data-scroll-target="#classification-of-stochastic-processes"><span class="header-section-number">1.6</span> Classification of Stochastic Processes</a>
+  <ul class="collapse">
+  <li><a href="#discrete-time-discrete-state-processes" id="toc-discrete-time-discrete-state-processes" class="nav-link" data-scroll-target="#discrete-time-discrete-state-processes"><span class="header-section-number">1.6.1</span> Discrete-Time, Discrete-State Processes</a></li>
+  <li><a href="#continuous-time-discrete-state-processes" id="toc-continuous-time-discrete-state-processes" class="nav-link" data-scroll-target="#continuous-time-discrete-state-processes"><span class="header-section-number">1.6.2</span> Continuous-Time, Discrete-State Processes</a></li>
+  <li><a href="#continuous-time-continuous-state-processes" id="toc-continuous-time-continuous-state-processes" class="nav-link" data-scroll-target="#continuous-time-continuous-state-processes"><span class="header-section-number">1.6.3</span> Continuous-Time, Continuous-State Processes</a></li>
+  <li><a href="#discrete-time-continuous-state-processes" id="toc-discrete-time-continuous-state-processes" class="nav-link" data-scroll-target="#discrete-time-continuous-state-processes"><span class="header-section-number">1.6.4</span> Discrete-Time, Continuous-State Processes</a></li>
+  </ul></li>
+  <li><a href="#roadmap-of-the-course" id="toc-roadmap-of-the-course" class="nav-link" data-scroll-target="#roadmap-of-the-course"><span class="header-section-number">1.7</span> Roadmap of the Course</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction to Stochastic Processes</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<!-- # Introduction to Stochastic Processes {#intro} -->
+<section id="learning-outcomes" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="learning-outcomes">Learning Outcomes</h2>
+<p>After studying this chapter, students should be able to:</p>
+<p><strong>Remember</strong></p>
+<ol type="1">
+<li><strong>Define</strong> a stochastic process and its basic components.</li>
+<li><strong>State</strong> the meaning of the index set, state space, and sample path.</li>
+</ol>
+<p><strong>Understand</strong></p>
+<ol start="3" type="1">
+<li><strong>Explain</strong> the difference between a random variable and a stochastic process.</li>
+<li><strong>Describe</strong> how a stochastic process models a quantity that evolves over time under uncertainty.</li>
+<li><strong>Classify</strong> a stochastic process according to its time domain and state space.</li>
+</ol>
+<p><strong>Apply</strong></p>
+<ol start="6" type="1">
+<li><strong>Formulate</strong> a stochastic process for a real-world problem by defining the random variable, time domain, and state space.</li>
+<li><strong>Identify</strong> appropriate stochastic process models for simple actuarial and financial applications.</li>
+</ol>
+<hr>
+<p>The course will cover the probabilistic framework for stochastic models of real-world applications with emphasis on actuarial work. We will illustrate some practical actuarial problems for which we will develop mathematical models, tools and techniques for analysing and quantifying the uncertainty of the problems.</p>
+</section>
+<section id="why-stochastic-processes" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="why-stochastic-processes"><span class="header-section-number">1.1</span> Why Stochastic Processes?</h2>
+<p>Many quantities encountered in actuarial science, finance, engineering, and the natural sciences evolve over time. Some evolve in a predictable manner, whereas others are affected by chance. A stochastic process provides a mathematical framework for describing such random phenomena.</p>
+<p>Consider the following questions.</p>
+<ul>
+<li>How many insurance claims will have occurred by time <span class="math inline">\(t\)</span>?</li>
+<li>What No-Claim Discount (NCD) level will a policyholder be assigned at the next policy renewal?</li>
+<li>Will a policyholder aged 70 survive to age <span class="math inline">\(70+t\)</span>?</li>
+<li>What will be the price of a stock one week from today?</li>
+</ul>
+<p>Although these questions arise in different fields, they have two common features:</p>
+<ol type="1">
+<li>The quantity of interest changes over time.</li>
+<li>The future value cannot be predicted with certainty.</li>
+</ol>
+<p>Consequently, we require mathematical models that describe both the evolution of the quantity over time and the uncertainty associated with its future values. Such models are called <strong>stochastic processes</strong>.</p>
+<p>Throughout this text, we will study several important stochastic processes, including:</p>
+<ul>
+<li>the No-Claim Discount (NCD) model,</li>
+<li>the Poisson process for modelling claim arrivals,</li>
+<li>Markov processes for modelling transitions between states.</li>
+</ul>
+<p>Each of these processes has different mathematical properties, but all can be viewed as collections of random variables indexed by time.</p>
+<p>Before introducing the formal definition, we first distinguish between a random variable and a stochastic process.</p>
+</section>
+<section id="random-variables-versus-stochastic-processes" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="random-variables-versus-stochastic-processes"><span class="header-section-number">1.2</span> Random Variables versus Stochastic Processes</h2>
+<p>A <strong>random variable</strong> represents the outcome of a single random experiment. For example,</p>
+<ul>
+<li>the total number of claims reported today,</li>
+<li>the lifetime of a policyholder,</li>
+<li>the amount of a single insurance claim.</li>
+</ul>
+<p>A random variable is typically denoted by</p>
+<p><span class="math display">\[
+X.
+\]</span></p>
+<p>Its value is unknown before the experiment is performed, but once the outcome is observed, the random variable takes a single value.</p>
+<p>In contrast, many real-world quantities are observed repeatedly over time. Instead of a single random variable, we consider a sequence or collection of random variables, one for each point in time.</p>
+<p>For example, let</p>
+<p><span class="math display">\[
+X_n=\text{number of claims reported on day }n,
+\]</span></p>
+<p>where</p>
+<p><span class="math display">\[
+n=0,1,2,\ldots.
+\]</span></p>
+<p>Rather than studying each random variable separately, we study the entire collection</p>
+<p><span class="math display">\[
+{X_n:n=0,1,2,\ldots}.
+\]</span></p>
+<p>Similarly, if time is measured continuously, we may write</p>
+<p><span class="math display">\[
+{X_t:t\ge0},
+\]</span></p>
+<p>where <span class="math inline">\(t\)</span> can take any non-negative real value.</p>
+<p>A stochastic process therefore consists of a family of random variables indexed by time. At each time point, there is a random variable describing the state of the system.</p>
+<p>For example:</p>
+<ul>
+<li>In the No-Claim Discount (NCD) model, <span class="math inline">\(X_n\)</span> denotes the NCD level assigned to a policyholder at the <span class="math inline">\(n\)</span>th policy renewal.</li>
+<li>In a Poisson process, <span class="math inline">\(N(t)\)</span> denotes the total number of claims that have occurred by time <span class="math inline">\(t\)</span>.</li>
+<li>In a survival model, <span class="math inline">\(X_t\)</span> indicates whether a policyholder is alive or dead at time <span class="math inline">\(t\)</span>.</li>
+</ul>
+<p>These examples illustrate that stochastic processes differ according to</p>
+<ul>
+<li>how time is measured (discrete or continuous), and</li>
+<li>the possible values that the process can take (discrete or continuous).</li>
+</ul>
+<p>The next section introduces these classifications before presenting the formal definition of a stochastic process.</p>
+</section>
+<section id="motivating-examples" class="level2" data-number="1.3">
+<h2 data-number="1.3" class="anchored" data-anchor-id="motivating-examples"><span class="header-section-number">1.3</span> Motivating Examples</h2>
+<p>The following examples illustrate a variety of stochastic processes that arise naturally in actuarial science. They will be studied in greater detail in later chapters.</p>
+<div id="exm-ncd" class="theorem example">
+<p><span class="theorem-title"><strong>Example 1.1 (No-Claim Discount (NCD) System)</strong></span> A <strong>No-Claim Discount (NCD) system</strong> is widely used in motor insurance to adjust a policyholder’s premium according to their recent claims experience. A policyholder who remains claim-free is rewarded with a premium discount, whereas one or more claims may result in a reduction of the discount or an increase in premium.</p>
+<p>An example of a seven-level NCD system is shown below.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: right;">Level</th>
+<th style="text-align: right;">7</th>
+<th style="text-align: right;">6</th>
+<th style="text-align: right;">5</th>
+<th style="text-align: right;">4</th>
+<th style="text-align: right;">3</th>
+<th style="text-align: right;">2</th>
+<th style="text-align: right;">1</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">Premium</td>
+<td style="text-align: right;">100%</td>
+<td style="text-align: right;">75%</td>
+<td style="text-align: right;">65%</td>
+<td style="text-align: right;">55%</td>
+<td style="text-align: right;">45%</td>
+<td style="text-align: right;">40%</td>
+<td style="text-align: right;">33%</td>
+</tr>
+</tbody>
+</table>
+<p>Level 1 corresponds to the highest discount (lowest premium), whereas Level 7 corresponds to no discount.</p>
+<p>A policyholder moves between levels according to the following rules.</p>
+<ul>
+<li><p><strong>Claim-free year:</strong> Move down one level, with Level 1 remaining unchanged.</p></li>
+<li><p><strong>Levels 4–7</strong></p>
+<ul>
+<li>One claim: move up one level (or remain at Level 7).</li>
+<li>Two or more claims: move to Level 7.</li>
+</ul></li>
+<li><p><strong>Levels 2–3</strong></p>
+<ul>
+<li>One claim: move up two levels.</li>
+<li>Two claims: move up four levels.</li>
+<li>Three or more claims: move to Level 7.</li>
+</ul></li>
+<li><p><strong>Level 1</strong></p>
+<ul>
+<li>One claim: move to Level 4.</li>
+<li>Two claims: move to Level 6.</li>
+<li>Three or more claims: move to Level 7.</li>
+</ul></li>
+</ul>
+<p>Typical actuarial questions include:</p>
+<ol type="1">
+<li>What is the expected number of policyholders in each NCD level after a given number of years?</li>
+<li>What is the probability that a policyholder currently at a particular level will be at Level 7 after two years?</li>
+<li>What is the probability distribution of the NCD level after five years?</li>
+<li>What proportion of policyholders is expected to occupy each level in the long run?</li>
+</ol>
+<p>To study these questions, let</p>
+<p><span class="math display">\[
+X_n=\text{the NCD level of a policyholder after the }n\text{th policy year},
+\]</span></p>
+<p>where <span class="math inline">\(n=0,1,2,\ldots\)</span>. The collection</p>
+<p><span class="math display">\[
+{X_n:n=0,1,2,\ldots}
+\]</span></p>
+<p>describes the evolution of the policyholder’s NCD level over time.</p>
+<p>In this example,</p>
+<ul>
+<li><p>time is measured in policy years and is therefore <strong>discrete</strong>;</p></li>
+<li><p>the state space is</p>
+<p><span class="math display">\[
+S={1,2,\ldots,7},
+\]</span></p>
+<p>which is also <strong>discrete</strong>.</p></li>
+</ul>
+<p>Hence, the NCD system can be represented by a <strong>discrete-time, discrete-state stochastic process</strong>. In a later chapter, we will show that, under suitable assumptions, this process can be modelled as a discrete-time Markov chain.</p>
+</div>
+<div id="exm-poisson-process" class="theorem example">
+<p><span class="theorem-title"><strong>Example 1.2 (Poisson Process)</strong></span> Suppose that claims arise from a portfolio of health insurance policies. Let</p>
+<p><span class="math display">\[
+N(t)=\text{the total number of claims that have occurred by time }t,
+\]</span></p>
+<p>where <span class="math inline">\(t\ge0\)</span>. Assume that claims occur randomly over time at an average rate of <span class="math inline">\(\lambda\)</span> claims per unit time (e.g., per day or per week).</p>
+<p>Typical actuarial questions include:</p>
+<ol type="1">
+<li>Suppose that, on average, 20 claims occur each day. What is the probability that more than 100 claims occur during a week?</li>
+<li>What is the expected time until the next claim?</li>
+<li>What is the probability that exactly 15 claims occur during the next day?</li>
+<li>What is the probability that no claims occur during the next hour?</li>
+</ol>
+<p>The collection</p>
+<p><span class="math display">\[
+{N(t):t\ge0}
+\]</span></p>
+<p>describes the evolution of the cumulative number of claims over time.</p>
+<p>In this example,</p>
+<ul>
+<li><p>time is measured continuously and is therefore <strong>continuous</strong>;</p></li>
+<li><p>the state space is</p>
+<p><span class="math display">\[
+S={0,1,2,\ldots},
+\]</span></p>
+<p>which is <strong>discrete</strong>.</p></li>
+</ul>
+<p>Hence, this is an example of a <strong>continuous-time, discrete-state stochastic process</strong>.</p>
+<p>The stochastic process <span class="math inline">\({N(t):t\ge0}\)</span> is called a <strong>Poisson process</strong>. It is one of the most widely used counting processes in probability and actuarial science. Although claims occur at a constant average rate, the exact times at which they occur are random.</p>
+<p>Later, we will study several equivalent ways of describing a Poisson process. One approach focuses on the counting process <span class="math inline">\({N(t):t\ge0}\)</span>, while another focuses on the times between successive claims. Both viewpoints are useful and lead to many important properties of the Poisson process.</p>
+</div>
+<div id="exm-survival-process" class="theorem example">
+<p><span class="theorem-title"><strong>Example 1.3 (Survival Process)</strong></span> Life insurers are interested in modelling the future lifetime of policyholders in order to price life insurance products and calculate reserves. One of the primary objectives is to estimate the probability that a life survives for a specified period.</p>
+<p>Suppose that we observe a sample of <span class="math inline">\(n\)</span> independent lives, all aged between <span class="math inline">\(x\)</span> and <span class="math inline">\(x+1\)</span>. For each life <span class="math inline">\(i\)</span>, we record the following information:</p>
+<ul>
+<li><span class="math inline">\(x+a_i\)</span>: the age at which observation begins, where <span class="math inline">\(0 \le a_i &lt; 1\)</span>;</li>
+<li><span class="math inline">\(x+b_i\)</span>: the age at which observation ends if the life is still alive, where <span class="math inline">\(0 \le b_i &lt; 1\)</span>;</li>
+<li><span class="math inline">\(x+t_i\)</span>: the age at which observation ends because of either death or censoring;</li>
+<li><span class="math inline">\(d_i\)</span>: the event indicator, where <span class="math display">\[
+d_i=
+\begin{cases}
+1, &amp; \text{if life }i\text{ dies during the observation period},\\
+0, &amp; \text{if life }i\text{ is censored}.
+\end{cases}
+\]</span></li>
+</ul>
+<p>For example, the following table contains observations on eight lives aged between 70 and 71.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: right;">Life</th>
+<th style="text-align: right;"><span class="math inline">\(a_i\)</span></th>
+<th style="text-align: right;"><span class="math inline">\(b_i\)</span></th>
+<th style="text-align: right;"><span class="math inline">\(d_i\)</span></th>
+<th style="text-align: right;"><span class="math inline">\(t_i\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.0</td>
+<td style="text-align: right;">1.0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.25</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0.0</td>
+<td style="text-align: right;">1.0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.75</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">0.0</td>
+<td style="text-align: right;">1.0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1.00</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">0.1</td>
+<td style="text-align: right;">0.6</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.50</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">0.2</td>
+<td style="text-align: right;">0.7</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.60</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">0.2</td>
+<td style="text-align: right;">0.4</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.40</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">0.5</td>
+<td style="text-align: right;">1.0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.75</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">0.5</td>
+<td style="text-align: right;">0.75</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.75</td>
+</tr>
+</tbody>
+</table>
+<p>A natural actuarial question is:</p>
+<blockquote class="blockquote">
+<p>How can we estimate the probability that a life aged 70 dies before age <span class="math inline">\(70+t\)</span>, or survives to at least age <span class="math inline">\(70+t\)</span>, for <span class="math inline">\(t\in[0,1)\)</span>?</p>
+</blockquote>
+<p>To describe the survival status of a life over time, define</p>
+<p><span class="math display">\[
+X_t=
+\begin{cases}
+1, &amp; \text{if the life is alive at age }x+t,\\
+0, &amp; \text{if the life has died before age }x+t,
+\end{cases}
+\qquad t\ge0.
+\]</span></p>
+<p>The collection</p>
+<p><span class="math display">\[
+{X_t:t\ge0}
+\]</span></p>
+<p>describes the evolution of the life’s survival status over time.</p>
+<p>In this example,</p>
+<ul>
+<li><p>time is measured continuously and is therefore <strong>continuous</strong>;</p></li>
+<li><p>the state space is</p>
+<p><span class="math display">\[
+S={0,1},
+\]</span></p>
+<p>which is <strong>discrete</strong>.</p></li>
+</ul>
+<p>Hence, this is an example of a <strong>continuous-time, discrete-state stochastic process</strong>.</p>
+<p>The probability of principal interest is</p>
+<p><span class="math display">\[
+P(X_t=1\mid X_0=1),
+\]</span></p>
+<p>which represents the probability that a life alive at age <span class="math inline">\(x\)</span> survives to age <span class="math inline">\(x+t\)</span>.</p>
+<p>Later in this course, we will show that, under suitable assumptions, this stochastic process can be modelled as a <strong>continuous-time Markov process</strong>. This model provides a powerful framework for estimating survival probabilities and analysing more general multi-state actuarial models, such as disability and long-term care insurance.</p>
+</div>
+<!-- ##  Motivating Examples -->
+<!-- Here are some of the examples which will be covered later in the course. -->
+<!-- ::: {#exm-ncd} -->
+<!-- ## No claims discount systems (NCD) -->
+<!-- A well-known model widely used by auto insurance companies is the **no claims -->
+<!-- discount system**, in which an insured receives a discount for a claim -->
+<!-- free year, while the insured is penalised by an additional premium when -->
+<!-- one or more accidents occur. -->
+<!-- An example of the NCD system in UK may be structured as follows: -->
+<!-- | Level   |    7 |   6 |   5 |   4 |   3 |   2 |   1 | -->
+<!-- | ------- | ---: | --: | --: | --: | --: | --: | --: | -->
+<!-- | Premium | 100% | 75% | 65% | 55% | 45% | 40% | 33% | -->
+<!-- The rules for moving between these levels are as follows: -->
+<!-- -   *For a claim-free year, a policyholder moves down 1 level.* -->
+<!-- -   *Levels 4-7:* -->
+<!--     -   *For every one claim, the policyholder moves up 1 level or -->
+<!--         remains at level 7.* -->
+<!--     -   *For every two or more claims, move to, or remains at, level 7.* -->
+<!-- -   *Levels 2-3:* -->
+<!--     -   *For every one claim, move up 2 levels.* -->
+<!--     -   *For every two claims, move up 4 levels.* -->
+<!--     -   *For every three or more claims, move to level 7.* -->
+<!-- -   *Level 1:* -->
+<!--     -   *For every one claim, move to level 4.* -->
+<!--     -   *For every two claims, move to level 6.* -->
+<!--     -   *For every three or more claims, move to level 7.* -->
+<!-- *The no claims discount system is a form of experience rating consisting -->
+<!-- of a finite number of levels (or classes), each with its own premium. -->
+<!-- The 7 levels are experience-rated as described above.* -->
+<!-- *For the NCD model, questions of interest may include:* -->
+<!-- 1.  *For 10,000 policyholders at level 7, estimate the *expected -->
+<!--     numbers* at each discount level at a given time, or once stability -->
+<!--     has been achieved. -->
+<!-- 2.  *What is the *probability* that a policyholder who is at a specific -->
+<!--     discount level (i.e. one of the levels 1-6) has no discount after 2 -->
+<!--     years? -->
+<!-- 3.  *What is the *distribution* of being in one of the levels at time 5 -->
+<!--     years? -->
+<!-- 4.  *Suppose a large number of people having the same claim -->
+<!--     probabilities take out policies at the same time. What is the -->
+<!--     proportion would you expect to be in each discount level in the long -->
+<!--     run?* -->
+<!-- *What would be a suitable model to study the NCD system? As opposed to a -->
+<!-- **deterministic model** for which its outcomes are fixed, the outcomes -->
+<!-- of the NCD model are uncertain. It turns out that the NCD system can be -->
+<!-- studied within the framework of Markov chains, which are examples of -->
+<!-- stochastic processes. The use of matrix algebra provides a powerful tool -->
+<!-- to understand and analyse the processes.* -->
+<!-- *The evolution of the states or levels can be described the random -->
+<!-- variables by $X_0, X_1,X_2, \ldots$ and probability distributions, where -->
+<!-- $X_n$ is the level of the policyholder at time $n$. In this example, the -->
+<!-- set of all states called the state space is discrete, which consists of -->
+<!-- seven levels, and the time variable is also discrete. This is an example -->
+<!-- of a **discrete time, discrete state space stochastic process**.* -->
+<!-- ::: -->
+<!-- ::: {#exm-poisson-processes} -->
+<!-- ## Poisson processes -->
+<!-- Consider the number of claims that occur up to time $t$ (denoted by $N_t$) from a portfolio of health -->
+<!-- insurance policies (or other types of insurance products). Suppose that -->
+<!-- the average rate of occurrence of claims per time unit (e.g. day or week -->
+<!-- ) is given by $\lambda$.* -->
+<!-- *Here are some questions of interest:* -->
+<!-- 1.  *On average, 20 claims arrive every day, what is the probability -->
+<!--     that more than 100 claims arrive within a week?* -->
+<!-- 2.  *What is the expected time until the next claim?* -->
+<!-- In this example, the state space consists of all whole numbers -->
+<!-- $\{0, 1, 2, \ldots\}$, while the time variable is continuous. The -->
+<!-- process is a **continuous-time stochastic process with discrete state -->
+<!-- space**. The model used to model the insurance claims is an example of -->
+<!-- **Poisson processes**. The Poisson process is one of the most -->
+<!-- widely-used counting processes. Even thought we know that claims occur -->
+<!-- at a certain rate, but completely at random. Moreover, the timing -->
+<!-- between claims seem to be completely random. -->
+<!-- Later, we will see that there are several ways to describe this -->
+<!-- process. One can focus on the number of claims that occur up to time $t$ -->
+<!-- or the times between those claims when they occur. Many important -->
+<!-- properties of Poisson processes will be discussed. -->
+<!-- ::: -->
+<!-- ::: {#exm-markov-processes} -->
+<!-- ## Markov processes -->
+<!-- Suppose that we observe a total -->
+<!-- of $n$ independent lives all aged between $x$ and $x + 1$. For life $i$, -->
+<!-- we define the following terms:* -->
+<!-- -   *$x+ a_i$ is the age at which observation -->
+<!--     begins,$\quad 0 \le a_i < 1$.* -->
+<!-- -   *$x+ b_i$ is the age at which observation ends, if life does not -->
+<!--     die, $\quad 0 \le b_i < 1$.* -->
+<!-- -   *$x+ t_i$ is the age at which observation stops, by death or -->
+<!--     censoring.* -->
+<!-- -   *$d_i = 1$, if life $i$ dies, otherwise $d_i = 0$, if life $i$ -->
+<!--     censored.* -->
+<!-- *For example, consider the following mortality data on eight lives all -->
+<!-- aged between $70$ and $71$.* -->
+<!--    *Life*   *$a_i$*   *$b_i$*   *$d_i$*   *$t_i$* -->
+<!--   -------- --------- --------- --------- --------- -->
+<!--     *1*       *0*       *1*       *1*     *0.25* -->
+<!--     *2*       *0*       *1*       *1*     *0.75* -->
+<!--     *3*       *0*       *1*       *0*       *1* -->
+<!--     *4*      *0.1*     *0.6*      *1*      *0.5* -->
+<!--     *5*      *0.2*     *0.7*      *1*      *0.6* -->
+<!--     *6*      *0.2*     *0.4*      *0*      *0.4* -->
+<!--     *7*      *0.5*      *1*       *1*     *0.75* -->
+<!--     *8*      *0.5*    *0.75*      *0*     *0.75* -->
+<!-- *How would one use this dataset to estimate the probability that a life -->
+<!-- aged 70 dies before age $70 + t$ or survives to at least age $70 + t$, -->
+<!-- for $t \in [0,1)$?* -->
+<!-- *In this example, we can represent the process by $\{X_t\}_{t \ge 0}$ -->
+<!-- with two possible states (alive or dead). This model is also an example -->
+<!-- of a **continuous-time stochastic process with discrete state space**.* -->
+<!-- *Here, we illustrate three actuarial applications which can be modelled -->
+<!-- by some **stochastic processes**. We should also emphasis that the -->
+<!-- outcome of one of the above processes is not fixed or uncertain. The -->
+<!-- course will provide important tools and techniques to analyse the -->
+<!-- problems with the goal of quantifying the uncertainty in the system.* -->
+<!-- ::: -->
+</section>
+<section id="formal-definition-of-a-stochastic-process" class="level2" data-number="1.4">
+<h2 data-number="1.4" class="anchored" data-anchor-id="formal-definition-of-a-stochastic-process"><span class="header-section-number">1.4</span> Formal Definition of a Stochastic Process</h2>
+<p>After studying several motivating examples, we are now ready to give a formal definition of a stochastic process.</p>
+<p>A <strong>stochastic process</strong> is a collection of random variables</p>
+<p><span class="math display">\[
+{X_t : t \in T},
+\]</span></p>
+<p>defined on a common probability space. Each random variable <span class="math inline">\(X_t\)</span> describes the state of the system at time <span class="math inline">\(t\)</span>, while the collection <span class="math inline">\({X_t:t\in T}\)</span> describes how the system evolves over time.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Key Idea
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A stochastic process is <strong>not</strong> a single random variable. It is a <strong>collection of random variables</strong>, where each random variable describes the state of the system at a particular time.</p>
+</div>
+</div>
+<p>The notation consists of three essential components:</p>
+<ul>
+<li><p><strong>Index set (<span class="math inline">\(T\)</span>):</strong> The set of time points at which the process is observed. The index set is often referred to as the <strong>time domain</strong>. Depending on the application,</p>
+<ul>
+<li><span class="math inline">\(T={0,1,2,\ldots}\)</span> represents <strong>discrete time</strong>, while</li>
+<li><span class="math inline">\(T=[0,\infty)\)</span> represents <strong>continuous time</strong>.</li>
+</ul></li>
+<li><p><strong>State space (<span class="math inline">\(S\)</span>):</strong> The set of all possible values that the random variable <span class="math inline">\(X_t\)</span> can take. The state space depends on the application. For example,</p>
+<ul>
+<li>the NCD process has a finite set of discount levels,</li>
+<li>the Poisson process has state space <span class="math inline">\({0,1,2,\ldots}\)</span>,</li>
+<li>Brownian motion has state space <span class="math inline">\(\mathbb{R}\)</span>.</li>
+</ul></li>
+</ul>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Common Misconception
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The <strong>index set</strong> and the <strong>state space</strong> describe different aspects of a stochastic process.</p>
+<ul>
+<li>The <strong>index set</strong> specifies <strong>when</strong> the process is observed.</li>
+<li>The <strong>state space</strong> specifies <strong>what values</strong> the process can take.</li>
+</ul>
+<p>For example, in the Poisson process,</p>
+<p><span class="math display">\[
+T=[0,\infty), \qquad
+S=\{0,1,2,\ldots\},
+\]</span></p>
+<p>so the time domain is continuous while the state space is discrete.</p>
+</div>
+</div>
+<ul>
+<li><strong>Random variables (<span class="math inline">\(X_t\)</span>):</strong> For each time point <span class="math inline">\(t\in T\)</span>, <span class="math inline">\(X_t\)</span> is a random variable describing the state of the system at time <span class="math inline">\(t\)</span>.</li>
+</ul>
+<p>It is important to note that the random variables in a stochastic process are generally <strong>dependent</strong> and need not have identical probability distributions.</p>
+</section>
+<section id="components-of-a-stochastic-process" class="level2" data-number="1.5">
+<h2 data-number="1.5" class="anchored" data-anchor-id="components-of-a-stochastic-process"><span class="header-section-number">1.5</span> Components of a Stochastic Process</h2>
+<p>The formal definition of a stochastic process contains several important components. Understanding the role of each component provides a clearer picture of how stochastic processes are constructed.</p>
+<section id="probability-space" class="level3" data-number="1.5.1">
+<h3 data-number="1.5.1" class="anchored" data-anchor-id="probability-space"><span class="header-section-number">1.5.1</span> Probability space</h3>
+<p>Every stochastic process is defined on a common probability space</p>
+<p><span class="math display">\[
+(\Omega,\mathcal{F},P),
+\]</span></p>
+<p>where</p>
+<ul>
+<li><span class="math inline">\(\Omega\)</span> is the sample space,</li>
+<li><span class="math inline">\(\mathcal{F}\)</span> is the collection of events,</li>
+<li><span class="math inline">\(P\)</span> is the probability measure.</li>
+</ul>
+<p>The probability space represents all possible outcomes of the underlying random experiment.</p>
+</section>
+<section id="index-set" class="level3" data-number="1.5.2">
+<h3 data-number="1.5.2" class="anchored" data-anchor-id="index-set"><span class="header-section-number">1.5.2</span> Index set</h3>
+<p>The <strong>index set</strong> <span class="math inline">\(T\)</span> specifies the time points at which the process is observed.</p>
+<p>Examples include</p>
+<ul>
+<li><span class="math inline">\(T={0,1,2,\ldots}\)</span> for yearly observations in an NCD system,</li>
+<li><span class="math inline">\(T=[0,\infty)\)</span> for continuously observed claim arrivals,</li>
+<li><span class="math inline">\(T=[0,\infty)\)</span> for monitoring the survival status of an individual over time.</li>
+</ul>
+<p>The index set determines whether the process evolves in <strong>discrete time</strong> or <strong>continuous time</strong>.</p>
+</section>
+<section id="state-space" class="level3" data-number="1.5.3">
+<h3 data-number="1.5.3" class="anchored" data-anchor-id="state-space"><span class="header-section-number">1.5.3</span> State space</h3>
+<p>The <strong>state space</strong> <span class="math inline">\(S\)</span> is the set of all possible values that the process may assume.</p>
+<p>For the motivating examples,</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 22%">
+<col style="width: 77%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Process</th>
+<th>State space</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>NCD process</td>
+<td>Finite set of NCD levels</td>
+</tr>
+<tr class="even">
+<td>Poisson process</td>
+<td><span class="math inline">\({0,1,2,\ldots}\)</span></td>
+</tr>
+<tr class="odd">
+<td>Survival process</td>
+<td><span class="math inline">\({0,1}\)</span> (or equivalently <span class="math inline">\({\text{Alive},\text{Dead}}\)</span>)</td>
+</tr>
+</tbody>
+</table>
+<p>The state space may be <strong>discrete</strong> or <strong>continuous</strong>, depending on the application.</p>
+</section>
+<section id="sample-paths-realizations" class="level3" data-number="1.5.4">
+<h3 data-number="1.5.4" class="anchored" data-anchor-id="sample-paths-realizations"><span class="header-section-number">1.5.4</span> Sample paths (realizations)</h3>
+<p>Fix an outcome <span class="math inline">\(\omega\in\Omega\)</span>. The values</p>
+<p><span class="math display">\[
+X_t(\omega),\qquad t\in T,
+\]</span></p>
+<p>form a <strong>sample path</strong> (or <strong>realization</strong>) of the stochastic process.</p>
+<p>A sample path describes one possible evolution of the system through time. Different outcomes in the sample space generally produce different sample paths.</p>
+<p>For example,</p>
+<ul>
+<li>in the NCD process, one sample path records the sequence of NCD levels experienced by a particular policyholder;</li>
+<li>in the Poisson process, one sample path records the cumulative number of claims observed over time;</li>
+<li>in the survival process, one sample path indicates when an individual changes from the Alive state to the Dead state.</li>
+</ul>
+<p>Since the underlying experiment is random, infinitely many sample paths are possible, each occurring with an associated probability.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Interpreting a Sample Path
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A sample path is obtained by fixing one outcome of the underlying random experiment and observing how the process evolves over time. Different outcomes generally produce different sample paths.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="classification-of-stochastic-processes" class="level2" data-number="1.6">
+<h2 data-number="1.6" class="anchored" data-anchor-id="classification-of-stochastic-processes"><span class="header-section-number">1.6</span> Classification of Stochastic Processes</h2>
+<p>Two fundamental characteristics determine the type of a stochastic process:</p>
+<ul>
+<li>the <strong>index set (time domain)</strong>, which may be <strong>discrete</strong> or <strong>continuous</strong>; and</li>
+<li>the <strong>state space</strong>, which may also be <strong>discrete</strong> or <strong>continuous</strong>.</li>
+</ul>
+<p>These two characteristics naturally classify stochastic processes into four categories, as shown in <a href="#tbl-process-classification" class="quarto-xref">Table&nbsp;<span>1.1</span></a>.</p>
+<div id="tbl-process-classification" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-process-classification-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;1.1: Classification of stochastic processes according to their time domain and state space.
+</figcaption>
+<div aria-describedby="tbl-process-classification-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;"><strong>Time domain</strong></th>
+<th style="text-align: left;"><strong>Discrete state space</strong></th>
+<th style="text-align: left;"><strong>Continuous state space</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>Discrete time</strong></td>
+<td style="text-align: left;">Discrete-time Markov chains (e.g., NCD system)</td>
+<td style="text-align: left;">Random walks, autoregressive models</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Continuous time</strong></td>
+<td style="text-align: left;">Poisson processes, birth-death processes, continuous-time Markov chains</td>
+<td style="text-align: left;">Brownian motion, diffusion processes</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Key Observation
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Every stochastic process is classified according to <strong>two independent characteristics</strong>:</p>
+<ol type="1">
+<li>the type of <strong>time domain</strong> (discrete or continuous), and</li>
+<li>the type of <strong>state space</strong> (discrete or continuous).</li>
+</ol>
+<p>Together, these determine which of the four classes the process belongs to.</p>
+</div>
+</div>
+<p>The three motivating examples introduced earlier can now be placed within this classification:</p>
+<ul>
+<li>The <strong>No-Claim Discount (NCD) system</strong> is a <strong>discrete-time, discrete-state</strong> stochastic process.</li>
+<li>The <strong>Poisson process</strong> is a <strong>continuous-time, discrete-state</strong> stochastic process.</li>
+<li>The <strong>Survival process</strong> is also a <strong>continuous-time, discrete-state</strong> stochastic process.</li>
+</ul>
+<p>We now briefly discuss each of the four classes.</p>
+<section id="discrete-time-discrete-state-processes" class="level3" data-number="1.6.1">
+<h3 data-number="1.6.1" class="anchored" data-anchor-id="discrete-time-discrete-state-processes"><span class="header-section-number">1.6.1</span> Discrete-Time, Discrete-State Processes</h3>
+<p>In this class, observations are made only at discrete time points, and the process can occupy only a finite or countably infinite number of states.</p>
+<p>For example, in the No-Claim Discount (NCD) system,</p>
+<p><span class="math display">\[
+X_n,\qquad n=0,1,2,\ldots,
+\]</span></p>
+<p>denotes the discount level after the <span class="math inline">\(n\)</span>th policy year. If the insurer uses three discount levels,</p>
+<p><span class="math display">\[
+S={0,1,2},
+\]</span></p>
+<p>then both the time domain and the state space are discrete.</p>
+<p>Many actuarial models, including discrete-time Markov chains, belong to this class.</p>
+</section>
+<section id="continuous-time-discrete-state-processes" class="level3" data-number="1.6.2">
+<h3 data-number="1.6.2" class="anchored" data-anchor-id="continuous-time-discrete-state-processes"><span class="header-section-number">1.6.2</span> Continuous-Time, Discrete-State Processes</h3>
+<p>In this class, the process evolves continuously through time, but the possible states remain discrete.</p>
+<p>The Poisson process introduced earlier is an important example. If</p>
+<p><span class="math display">\[
+N(t)
+\]</span></p>
+<p>denotes the cumulative number of claims reported by time <span class="math inline">\(t\)</span>, then</p>
+<p><span class="math display">\[
+T=[0,\infty), \qquad
+S={0,1,2,\ldots}.
+\]</span></p>
+<p>Similarly, the survival process</p>
+<p><span class="math display">\[
+X_t\in{\text{Alive},\text{Dead}}
+\]</span></p>
+<p>has a continuous time domain but only two possible states.</p>
+<p>Many important actuarial models, including Poisson processes, birth-death processes, and continuous-time Markov chains, belong to this category.</p>
+</section>
+<section id="continuous-time-continuous-state-processes" class="level3" data-number="1.6.3">
+<h3 data-number="1.6.3" class="anchored" data-anchor-id="continuous-time-continuous-state-processes"><span class="header-section-number">1.6.3</span> Continuous-Time, Continuous-State Processes</h3>
+<p>In these processes, both time and the state space are continuous.</p>
+<p>For example, let</p>
+<p><span class="math display">\[
+S_t
+\]</span></p>
+<p>denote the total amount of claims accumulated by time <span class="math inline">\(t\)</span>. Since claim amounts are measured on a continuous scale,</p>
+<p><span class="math display">\[
+T=[0,\infty),
+\qquad
+S=\mathbb{R}_{\ge0}.
+\]</span></p>
+<p>Brownian motion and diffusion processes are important examples of continuous-time, continuous-state stochastic processes. These models are widely used in finance, risk analysis, and credibility theory.</p>
+</section>
+<section id="discrete-time-continuous-state-processes" class="level3" data-number="1.6.4">
+<h3 data-number="1.6.4" class="anchored" data-anchor-id="discrete-time-continuous-state-processes"><span class="header-section-number">1.6.4</span> Discrete-Time, Continuous-State Processes</h3>
+<p>Sometimes a quantity evolves continuously but is observed only at discrete time points.</p>
+<p>For example, suppose the accumulated claim amount is recorded only at the end of each day, week, or month. Then the observations form the sequence</p>
+<p><span class="math display">\[
+S_0,S_1,S_2,\ldots,
+\]</span></p>
+<p>where the time domain is discrete, while the state space remains continuous.</p>
+<p>Processes of this type commonly arise when observations are collected periodically or when continuous monitoring is impractical or expensive. Time series models such as autoregressive (AR) models belong to this class.</p>
+</section>
+<section id="modelling-considerations" class="level3 unnumbered unlisted">
+<h3 class="unnumbered unlisted anchored" data-anchor-id="modelling-considerations">Modelling Considerations</h3>
+<p>The choice of state space often depends on the level of detail required in a model.</p>
+<p>For example, claim amounts are naturally continuous quantities and may therefore be modelled using a continuous state space. However, if claim amounts are recorded only to the nearest baht (or another fixed monetary unit), the process may instead be approximated by a discrete-state model.</p>
+<p>Similarly, although many real-world phenomena evolve continuously through time, they are often observed only at discrete time points. In such cases, a discrete-time stochastic process may provide an appropriate and more practical model.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Modelling Choice
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The classification of a stochastic process depends on the mathematical model rather than the physical system itself.</p>
+<p>For example, claim amounts may be modelled using a <strong>continuous</strong> state space or approximated by a <strong>discrete</strong> state space if they are recorded to the nearest monetary unit. Likewise, a continuously evolving quantity may be observed only at discrete time points.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="roadmap-of-the-course" class="level2" data-number="1.7">
+<h2 data-number="1.7" class="anchored" data-anchor-id="roadmap-of-the-course"><span class="header-section-number">1.7</span> Roadmap of the Course</h2>
+<p>The classification of stochastic processes presented in <a href="#tbl-process-classification" class="quarto-xref">Table&nbsp;<span>1.1</span></a> provides a useful roadmap for the topics covered in these lecture notes. Following the Institute and Faculty of Actuaries (IFoA) CS2 syllabus (Chapters 1–5), the focus will be on stochastic processes with <strong>discrete state spaces</strong>, including both discrete-time and continuous-time models.</p>
+<p>The main topics covered are:</p>
+<ul>
+<li><strong>Discrete-time Markov chains</strong>, which model systems observed at discrete time points with transitions between a finite or countably infinite number of states.</li>
+<li><strong>Continuous-time Markov processes</strong>, where transitions between states may occur at any point in time.</li>
+<li><strong>Poisson processes</strong>, an important class of continuous-time Markov processes used to model random event occurrences.</li>
+<li><strong>Time-homogeneous</strong> and <strong>time-inhomogeneous</strong> Markov models, which distinguish whether the transition probabilities (or transition rates) remain constant over time or vary with time.</li>
+</ul>
+<p>By the end of these lecture notes, you will understand how these stochastic processes are constructed, analysed, and applied to actuarial modelling.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../index.html" class="pagination-link" aria-label="Welcome to My Book">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Welcome to My Book</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
