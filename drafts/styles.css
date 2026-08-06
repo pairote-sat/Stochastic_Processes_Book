@@ -1,0 +1,10 @@
+.reveal {
+    font-family: "Aptos", "Calibri", Arial, sans-serif;
+}
+
+.reveal h1,
+.reveal h2,
+.reveal h3 {
+    font-family: "Aptos Display", "Calibri", sans-serif;
+    font-weight: 600;
+}

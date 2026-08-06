@@ -2,7 +2,7 @@
 title: "Introduction to Stochastic Processes"
 ---
 
-# Introduction to Stochastic Processes {#intro}
+<!-- # Introduction to Stochastic Processes {#intro} -->
 
 ## Learning Outcomes {.unnumbered}
 
@@ -24,7 +24,7 @@ After studying this chapter, students should be able to:
 6. **Formulate** a stochastic process for a real-world problem by defining the random variable, time domain, and state space.
 7. **Identify** appropriate stochastic process models for simple actuarial and financial applications.
 
----
+--- 
 
 The course will cover the probabilistic framework for stochastic models
 of real-world applications with emphasis on actuarial work. We will
@@ -121,7 +121,6 @@ These examples illustrate that stochastic processes differ according to
 The next section introduces these classifications before presenting the formal definition of a stochastic process.
 
 
----
 
 ## Motivating Examples
 

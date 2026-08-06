@@ -217,3 +217,17 @@ The choice of state space often depends on the level of detail required in a mod
 For example, claim amounts are naturally continuous quantities and may therefore be modelled using a continuous state space. However, if claim amounts are recorded only to the nearest baht (or another fixed monetary unit), the process may instead be approximated by a discrete-state model.
 
 Similarly, although many real-world phenomena evolve continuously through time, they are often observed only at discrete time points. In such cases, a discrete-time stochastic process may provide an appropriate and more practical model.
+
+
+## Roadmap of the Course
+
+The classification of stochastic processes presented in Table @tbl-process-classification provides a useful roadmap for the topics covered in these lecture notes. Following the Institute and Faculty of Actuaries (IFoA) CS2 syllabus (Chapters 1–5), the focus will be on stochastic processes with **discrete state spaces**, including both discrete-time and continuous-time models.
+
+The main topics covered are:
+
+- **Discrete-time Markov chains**, which model systems observed at discrete time points with transitions between a finite or countably infinite number of states.
+- **Continuous-time Markov processes**, where transitions between states may occur at any point in time.
+- **Poisson processes**, an important class of continuous-time Markov processes used to model random event occurrences.
+- **Time-homogeneous** and **time-inhomogeneous** Markov models, which distinguish whether the transition probabilities (or transition rates) remain constant over time or vary with time.
+
+By the end of these lecture notes, you will understand how these stochastic processes are constructed, analysed, and applied to actuarial modelling.

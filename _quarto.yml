@@ -6,7 +6,10 @@ book:
   author: "Pairote Satiracoo"
   chapters:
     - index.qmd  
+    - chapters/01_Introduction_to_Stochastic_Processes.qmd
 
+
+bibliography: references.bib
 
 format:
   html:

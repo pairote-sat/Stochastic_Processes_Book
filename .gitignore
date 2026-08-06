@@ -9,11 +9,14 @@
 # Quarto output
 _book/
 _site/
+/.quarto/
 
 # Rendered documents
 *.html
 *.pdf
 *.docx
+*.pptx
+
 
 # Quarto cache
 _cache/

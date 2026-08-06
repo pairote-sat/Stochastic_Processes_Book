@@ -1,7 +1,3 @@
----
-title: "Stochastic Processes"
----
-
-# Welcome
+# Welcome to My Book {.unnumbered}
 
 These lecture notes accompany the Stochastic Processes course.

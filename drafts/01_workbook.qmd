@@ -1,0 +1,88 @@
+---
+title: "01 Workbook: Introduction to Stochastic Processes"
+format:
+  pdf:
+    toc: false
+number-sections: true
+---
+
+**Instructions**
+
+This workbook is intended to be completed **after** the lecture. Its purpose is to help you check your understanding of the material covered in this chapter and to guide your independent study.
+
+- Attempt all questions without referring to your lecture notes whenever possible.
+- Provide brief explanations to justify your answers.
+- Where appropriate, use the notation introduced in the lecture, such as $\{X_t:t\in T\}$.
+
+
+The questions progress from identifying stochastic processes to making modelling decisions and applying the concepts to real-world situations.
+
+Below is a workbook that progresses from **identification** to **modelling** and then to **application**. The questions reinforce the learning objectives of the chapter while preparing students for later topics.
+
+
+
+1. For each of the following situations:
+
+    1. Define a stochastic process ${X_t:t\in T}$ by describing what the random variable $X_t$ represents.
+    2. State the time domain.
+    3. State the state space.
+    4. Determine whether the time domain and the state space are discrete or continuous.
+    
+    (a) The number of customers waiting in a bank throughout the day.
+    
+    (b) The daily closing price of a company's stock.
+    
+    (c) The annual No-Claim Discount (NCD) level of a motor insurance policyholder.
+    
+    (d) The amount of rainfall recorded every hour.
+
+
+
+2. When modelling a quantity that changes over time, several modelling decisions must be made.
+
+    For each of the following situations, discuss whether you would choose
+    
+    * a deterministic or a stochastic model;
+    * a discrete or continuous time domain;
+    * a discrete or continuous state space; and
+    * if a stochastic model is used, whether the Markov property is likely to be a reasonable assumption.
+    
+    Briefly justify each of your choices.
+
+    (a) The number of insurance claims reported to a call centre.
+    
+    (b) The balance of a customer's bank account.
+    
+    (c) The health status of a patient (Healthy, Ill, Dead).
+    
+    (d) The temperature in a city.
+
+
+
+3. Consider the No-Claim Discount (NCD) process introduced in the lecture, where $X_n$ denotes the NCD level of a policyholder after the $n$th policy year.
+
+    (a) Explain the difference between a stochastic process and a sample path.
+    
+    (b) Sketch two possible sample paths over six policy years.
+    
+    (c) Explain why both sample paths can belong to the same stochastic process.
+    
+    (d) Identify events that may cause the two sample paths to differ.
+
+
+
+4. The No-Claim Discount (NCD) system is an example of a stochastic process.
+
+| Process                        | Time domain  | State space | Discrete/Continuous Time | Discrete/Continuous State | Possible Topic in This Course |
+| ------------------------------ | ------------ | ----------- | ------------------------ | ------------------------- | ----------------------------- |
+| No-Claim Discount (NCD) system | Policy years | NCD levels  | Discrete                 | Discrete                  | Discrete-time Markov chains   |
+|                                |              |             |                          |                           |                               |
+|                                |              |             |                          |                           |                               |
+|                                |              |             |                          |                           |                               |
+|                                |              |             |                          |                           |                               |
+
+: Real-world examples of stochastic processes {tbl-colwidths="[25,15,15,15,15,15]"}
+
+Find **four** other real-world quantities that evolve over time and can be modelled as stochastic processes. Complete the table above.
+
+For each example, briefly explain why your chosen time domain and state space are appropriate.
