@@ -10,7 +10,6 @@ number-sections: true
 
 This workbook is intended to be completed **after** the lecture. Its purpose is to help you check your understanding of the material covered in this chapter and to guide your independent study.
 
-- Attempt all questions without referring to your lecture notes whenever possible.
 - Provide brief explanations to justify your answers.
 - Where appropriate, use the notation introduced in the lecture, such as $\{X_t:t\in T\}$.
 
@@ -79,7 +78,7 @@ A stochastic process is said to satisfy the **Markov property** if the future de
 
 | Process                        | Time domain  | State space | Discrete/Continuous Time | Discrete/Continuous State | Possible Topic in This Course |
 | ------------------------------ | ------------ | ----------- | ------------------------ | ------------------------- | ----------------------------- |
-| No-Claim Discount (NCD) system | Policy years | NCD levels  | Discrete                 | Discrete                  | Discrete-time Markov chains   |
+| No-Claim Discount (NCD) system | Policy years, $T={0,1,2,\ldots}$ | NCD levels, e.g. ${0,1,2,3,4}$  | Discrete                 | Discrete                  | Discrete-time Markov chains   |
 |                                |              |             |                          |                           |                               |
 |                                |              |             |                          |                           |                               |
 |                                |              |             |                          |                           |                               |

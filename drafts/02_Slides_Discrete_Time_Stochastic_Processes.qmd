@@ -1,0 +1,2076 @@
+---
+title: "Lecture 2: Discrete-Time Markov Chains"
+
+format:
+  beamer:
+    theme: Boadilla
+    colortheme: default
+    fonttheme: professionalfonts
+    aspectratio: 169
+    pdf-engine: xelatex
+    keep-tex: true
+    toc: false
+    number-sections: false
+    
+# format:
+#   revealjs:
+#     theme: simple
+#     css: styles.css
+#     slide-number: true
+#     scrollable: true
+#     chalkboard:
+#       buttons: false
+#     preview-links: auto
+
+execute:
+  echo: false
+---
+
+# Simple Random Walk: A Motivating Example
+
+## A simple model
+
+Suppose that the price of a stock changes by exactly 1 baht at the end of each trading day.
+
+- Increase by 1 baht with probability $p$
+- Decrease by 1 baht with probability $q=1-p$
+
+Let $X_n$ be the stock price after $n$ trading days, with
+
+$$
+X_0=a.
+$$
+
+The process evolves according to
+
+$$
+X_n=X_{n-1}+Z_n, \quad \text{where } Z_n=
+\begin{cases}
+1, & \text{with probability }p,\\
+-1, & \text{with probability }q.
+\end{cases}
+$$
+
+This process is called a **simple random walk**.
+
+---
+
+## From random changes to a process
+
+The successive changes are
+
+$$
+Z_1,Z_2,\ldots
+$$
+
+and therefore
+
+$$
+X_n=a+\sum_{i=1}^n Z_i.
+$$
+
+The process is defined at discrete times $n=0,1,2,\ldots$ and has a discrete state space.
+
+For a particular sequence of random changes, we obtain one **sample path**:
+
+$$
+X_0,X_1,X_2,\ldots
+$$
+
+Different random changes produce different sample paths.
+
+---
+
+## Example: One Sample Path
+
+Suppose
+
+$$
+X_0=100
+$$
+
+and the successive changes are
+
+$$
++1,\quad -1,\quad +1,\quad +1,\quad -1.
+$$
+
+The process evolves as follows:
+
+$$
+\begin{array}{c|cccccc}
+n & 0&1&2&3&4&5\\
+\hline
+X_n &100&101&100&101&102&101
+\end{array}
+$$
+
+---
+
+## Example: One Sample Path
+
+The resulting sample path is
+
+$$
+100\rightarrow101\rightarrow100\rightarrow101\rightarrow102\rightarrow101.
+$$
+
+> **One process, many possible paths**
+>
+> The stochastic process describes all possible random evolution.
+>
+> A **sample path** is one particular realisation of the process.
+
+---
+
+## The Random Changes
+
+Assume that
+
+$$
+Z_1,Z_2,\ldots
+$$
+
+are independent and identically distributed, with
+
+$$
+\Pr(Z_i=1)=p,
+\qquad
+\Pr(Z_i=-1)=q=1-p.
+$$
+
+Each $Z_i$ represents the change in the random walk during one time step.
+
+---
+
+## The Mean and Variance of an Increment
+
+For each increment,
+
+$$
+\mathrm{E}[Z_i]
+=
+p-q
+=
+2p-1
+$$
+
+and
+
+$$
+\mathrm{Var}(Z_i)
+=
+4pq.
+$$
+
+Thus, the expected change in one time step is determined by the difference between the probabilities of moving up and down.
+
+---
+
+## The Symmetric Random Walk
+
+When
+
+$$
+p=q=\frac12,
+$$
+
+the random walk is called a **symmetric random walk**.
+
+In this case,
+
+$$
+\mathrm{E}[Z_i]=0,
+\qquad
+\mathrm{Var}(Z_i)=1.
+$$
+
+There is no preferred direction of movement:
+
+$$
+\Pr(Z_i=1)=\Pr(Z_i=-1)=\frac12.
+$$
+
+---
+
+## Mean and variance of the random walk
+
+Since
+
+$$
+X_n=a+\sum_{i=1}^n Z_i,
+$$
+
+we have
+
+$$
+\mathrm{E}[X_n]
+=a+n(p-q)
+$$
+
+and, using independence,
+
+$$
+\mathrm{Var}(X_n)
+=4npq.
+$$
+
+Hence,
+
+$$
+\boxed{
+\mathrm{E}[X_n]=a+n(p-q),
+\qquad
+\mathrm{Var}(X_n)=4npq.
+}
+$$
+
+For a symmetric random walk,
+
+$$
+\boxed{
+\mathrm{E}[X_n]=a,
+\qquad
+\mathrm{Var}(X_n)=n.
+}
+$$
+
+The variance increases with $n$, so uncertainty about the position of the random walk increases over time.
+
+---
+
+## Simulation: one sample path
+
+A simulation makes the idea of a sample path concrete.
+
+For a symmetric random walk starting from $X_0=0$:
+
+```{r}
+#| fig-width: 5
+#| fig-height: 3.5
+#| 
+set.seed(123)
+
+n <- 100
+
+Z <- sample(
+  c(-1, 1),
+  size = n,
+  replace = TRUE
+)
+
+X <- c(0, cumsum(Z))
+
+plot(
+  0:n, X,
+  type = "l",
+  xlab = "Time, n",
+  ylab = "X_n",
+  main = "One Realisation of a Simple Random Walk"
+)
+```
+
+The resulting graph is **one possible sample path**.
+
+A different sequence of random changes gives a different path.
+
+---
+
+## Simulation: several sample paths
+
+A single path does not show the range of possible behaviour.
+
+We can simulate several independent realisations of the same process:
+
+```{r}
+#| fig-width: 5
+#| fig-height: 3.5
+#| 
+set.seed(123)
+
+n <- 100
+m <- 10
+
+X <- matrix(0, nrow = n + 1, ncol = m)
+
+for (j in 1:m) {
+  Z <- sample(
+    c(-1, 1),
+    size = n,
+    replace = TRUE
+  )
+
+  X[, j] <- c(0, cumsum(Z))
+}
+
+matplot(
+  0:n, X,
+  type = "l",
+  lty = 1,
+  xlab = "Time, n",
+  ylab = "X_n",
+  main = "Ten Realisations of a Simple Random Walk"
+)
+```
+
+Each line is a different realisation of the **same stochastic process**.
+
+All paths start from
+
+$$
+X_0=0,
+$$
+
+but they evolve differently because the random changes are different.
+
+---
+
+## What does the simulation show?
+
+For the symmetric random walk:
+
+* Some paths move above zero.
+* Some paths move below zero.
+* Some paths return to zero several times.
+* The paths become more dispersed as $n$ increases.
+
+This reflects
+
+$$
+\mathrm{E}[X_n]=0,
+\qquad
+\mathrm{Var}(X_n)=n.
+$$
+
+The simulation gives a visual interpretation of these mathematical quantities.
+
+---
+
+## When $p\neq q$
+
+Suppose
+
+$$
+p=0.6,
+\qquad
+q=0.4.
+$$
+
+Then
+
+$$
+\mathrm{E}[Z_i]=p-q=0.2.
+$$
+
+Starting from $X_0=0$,
+
+$$
+\mathrm{E}[X_n]=0.2n.
+$$
+
+Thus, the random walk has a positive average direction.
+
+A typical collection of paths tends to move upward as time increases, although an individual path can still move downward for several consecutive steps.
+
+---
+
+
+## A Probability Involving Several Time Points
+
+Suppose
+
+$$
+X_0=100.
+$$
+
+Consider
+
+$$
+\Pr(X_2=98,X_5=99\mid X_0=100).
+$$
+
+First, consider the state at time $2$.
+
+To have $X_2=98,$ the first two changes must both be $-1$.
+
+Therefore,
+
+$$
+\Pr(X_2=98\mid X_0=100)=q^2.
+$$
+
+---
+
+## From $X_2=98$ to $X_5=99$
+
+Starting from $X_2=98,$ we need to reach $X_5=99$ in three steps.
+
+The required net change is
+
+$$
+99-98=1.
+$$
+
+Therefore, among the three changes, we need:
+
+- two upward steps;
+- one downward step.
+
+---
+
+## Completing the Calculation
+
+There are
+
+$$
+{3\choose2}=3
+$$
+
+possible orders for the two upward steps.
+
+Thus,
+
+$$
+\begin{aligned}
+&\Pr(X_2=98,X_5=99\mid X_0=100)\\
+&=q^2
+\left[
+{3\choose2}p^2q
+\right]=\boxed{3p^2q^3}.
+\end{aligned}
+$$
+
+The calculation separates the path into two parts:
+
+$$
+100\longrightarrow98
+\quad\text{and}\quad
+98\longrightarrow99.
+$$
+
+---
+
+## Distribution after $n$ steps
+
+Let
+
+* $A$ = number of upward steps;
+* $B$ = number of downward steps.
+
+Then
+
+$$
+A+B=n \quad \text{ and }\quad X_n=a+A-B.
+$$
+
+
+Thus, the distribution of $X_n$ can be obtained from a binomial distribution. For example, when $X_0=0$ and $n=2m$,
+
+$$
+\Pr(X_{2n}=2m)
+={2n\choose n+m}p^{n+m}q^{n-m}.
+$$
+
+The random walk can only occupy states with the same parity as the number of steps taken.
+
+---
+
+## A key observation
+
+Suppose that the current state is $X_n=i.$
+
+The next state can only be $i+1 \quad\text{or}\quad i-1.$
+
+Moreover,
+
+$$
+\Pr(X_{n+1}=i+1\mid X_n=i)=p \quad \text{ and } \quad \Pr(X_{n+1}=i-1\mid X_n=i)=q.
+$$
+
+
+These probabilities do not depend on how the process arrived at $i$.
+
+For example, if $X_n=100,$
+
+then the probability of moving to $101$ is $p$, regardless of the earlier values $X_0,X_1,\ldots,X_{n-1}.$
+
+---
+
+## From random walk to Markov chains
+
+The simple random walk has the property
+
+$$
+\boxed{
+\text{Past}
+\longrightarrow
+\text{Current state}
+\longrightarrow
+\text{Future}.
+}
+$$
+
+Once the current state is known, the past provides no additional information about the next state.
+
+This is the **Markov property**.
+
+The simple random walk is therefore a natural example from which to introduce **discrete-time Markov chains**.
+
+> **Key idea**
+>
+> The current state contains all the information from the past that is relevant for predicting the next state.
+
+
+
+# The Markov Property and Discrete-Time Markov Chains 
+
+## The Markov Property
+
+Consider again the simple random walk. Suppose that
+
+$$
+(X_0,X_1,X_2,X_3)=(100,99,98,99).
+$$
+
+Given $X_3=99$,
+
+$$
+\Pr(X_4=100\mid X_3=99)=p, \quad \text{ and } \quad \Pr(X_4=98\mid X_3=99)=q.
+$$
+
+The earlier values $X_0,X_1,X_2$ do not affect these probabilities.
+
+$$
+\boxed{
+\Pr(X_4=j\mid X_0,\ldots,X_3)
+=\Pr(X_4=j\mid X_3)
+}
+$$
+
+The current state contains all the information from the past that is relevant for predicting the next state.
+
+---
+
+
+
+## The Markov Property
+
+A discrete-time stochastic process ${X_n:n=0,1,2,\ldots}$ has the **Markov property** if
+
+$$
+\boxed{
+\Pr(X_{n+1}=j\mid X_0=i_0,\ldots,X_n=i)
+=\Pr(X_{n+1}=j\mid X_n=i).
+}
+$$
+
+In words:
+
+$$
+\boxed{
+\text{Past}
+\longrightarrow
+\text{Current state}
+\longrightarrow
+\text{Future}
+}
+$$
+
+Once the current state is known, the past provides no additional information about the next state.
+
+---
+
+## Simple Random Walk
+
+For the simple random walk,
+
+$$
+\Pr(X_{n+1}=j\mid X_n=i)
+=\begin{cases}
+p, & j=i+1,\\
+q, & j=i-1,\\
+0, & \text{otherwise}.
+\end{cases}
+$$
+
+These probabilities depend only on the current state $i$.
+
+Therefore, the simple random walk satisfies the Markov property.
+
+> **Key idea**
+>
+> The Markov property does not mean that successive states are independent.
+>
+> $X_{n+1}$ generally depends on $X_n$.
+>
+> It means that, given $X_n$, the earlier states provide no further information about the future.
+
+---
+
+## Discrete-Time Markov Chain
+
+A **discrete-time Markov chain (DTMC)** is a discrete-time stochastic process that satisfies the Markov property.
+
+Let
+
+$$
+{X_n:n=0,1,2,\ldots}
+$$
+
+have state space $S$.
+
+The process is a DTMC if
+
+$$
+\boxed{
+\Pr(X_{n+1}=j\mid X_n=i,X_{n-1},\ldots,X_0)
+=\Pr(X_{n+1}=j\mid X_n=i)
+}
+$$
+
+for all $n\geq0$ and all states for which the conditional probabilities are defined.
+
+The state space $S$ contains all possible values of the process.
+
+---
+
+## Interpreting the Definition 
+
+Compare:
+
+$$
+\Pr(X_{n+1}=j\mid X_n=i) \quad \text{with} \quad \Pr(X_{n+1}=j\mid X_0,\ldots,X_{n-1},X_n=i).
+$$
+
+For a DTMC, these two probabilities are equal.
+
+Thus, when predicting the next state, we can replace the complete history
+
+$$
+X_0,\ldots,X_{n-1},X_n
+$$
+
+by the single value $X_n.$
+
+This is the main simplification provided by the Markov property.
+
+---
+
+## Example: No-Claim Discount System
+
+Let $X_n$ denote the NCD level after $n$ policy years, with $S=\{0,1,2\}.$
+
+Suppose:
+
+* a claim-free year moves the policyholder up one level;
+* a claim moves the policyholder down one level;
+* the boundary levels are retained when the corresponding movement is impossible.
+
+If the probability of a claim-free year is $p$, then, for example,
+
+$$
+\Pr(X_{n+1}=2\mid X_n=1)=p, \quad \text{and} \quad \Pr(X_{n+1}=0\mid X_n=1)=1-p.
+$$
+
+
+These probabilities depend only on the current NCD level.
+
+Hence, the NCD system is a DTMC.
+
+---
+
+## One-Step Transition Probabilities
+
+For a DTMC, define the **one-step transition probability**
+
+$$
+\boxed{
+p_{ij}^{(n,n+1)}
+=\Pr(X_{n+1}=j\mid X_n=i).
+}
+$$
+
+It is the probability of moving $\boxed{i\longrightarrow j}$ in one time step.
+
+For every current state $i$,
+
+$$
+0\leq p_{ij}^{(n,n+1)}\leq1    \quad \text{and} \quad   \boxed{
+\sum_{j\in S}p_{ij}^{(n,n+1)}=1.
+} 
+$$
+
+Each row therefore gives a probability distribution for the next state.
+
+---
+
+## Example: Simple Random Walk
+
+For the simple random walk,
+
+$$
+p_{ij}^{(n,n+1)}
+=\begin{cases}
+p, & j=i+1,\\
+q, & j=i-1,\\
+0, & \text{otherwise}.
+\end{cases}
+$$
+
+For example,
+
+$$
+\Pr(X_{n+1}=6\mid X_n=5)=p \quad \text{and} \quad  \Pr(X_{n+1}=4\mid X_n=5)=q.
+$$
+
+
+The transition probabilities do not depend on $n$.
+
+This leads to the concept of a **time-homogeneous Markov chain**.
+
+---
+
+## Time-Homogeneous Markov Chains
+
+A Markov chain is **time-homogeneous** if its one-step transition probabilities do not depend on time.
+
+Thus,
+
+$$
+\boxed{
+\Pr(X_{n+1}=j\mid X_n=i)=p_{ij}
+}
+$$
+
+for all $n$.
+
+The probability of the transition
+
+$$
+i\longrightarrow j
+$$
+
+is the same whether it occurs in year 1, year 5, or year 20.
+
+If transition probabilities depend on $n$, the chain is **time-inhomogeneous**.
+
+> **Unless stated otherwise, we assume that Markov chains are time-homogeneous.**
+
+---
+
+## Transition Matrix
+
+For a time-homogeneous Markov chain, collect all one-step transition probabilities into a matrix:
+
+$$
+\boxed{
+P=(p_{ij}),
+\qquad
+p_{ij}=\Pr(X_{n+1}=j\mid X_n=i).
+}
+$$
+
+For a finite state space $S={1,\ldots,d}$,
+
+$$
+P=
+\begin{pmatrix}
+p_{11}&p_{12}&\cdots&p_{1d}\\
+p_{21}&p_{22}&\cdots&p_{2d}\\
+\vdots&\vdots&\ddots&\vdots\\
+p_{d1}&p_{d2}&\cdots&p_{dd}
+\end{pmatrix}.
+$$
+
+**Rows = current state**
+
+**Columns = next state**
+
+---
+
+## Reading a Transition Matrix
+
+The entry $p_{ij}$ means
+
+$$
+\boxed{
+p_{ij}
+=\Pr(X_{n+1}=j\mid X_n=i).
+}
+$$
+
+For example,
+
+$$
+p_{23}
+=\Pr(X_{n+1}=3\mid X_n=2).
+$$
+
+Every entry satisfies $p_{ij}\geq0,$ and every row satisfies $\boxed{\sum_jp_{ij}=1.}$
+
+A matrix with non-negative entries and row sums equal to 1 is called a **stochastic matrix**.
+
+---
+
+## NCD System: Transition Matrix
+
+For the NCD system with states
+
+$$
+S=\{0,1,2\},
+$$
+
+suppose that the probability of a claim-free year is $p$.
+
+The transition rules give
+
+$$
+\boxed{
+P=
+\begin{pmatrix}
+1-p&p&0\\
+1-p&0&p\\
+0&1-p&p
+\end{pmatrix}.
+}
+$$
+
+
+
+---
+
+## Health-Sick-Dead Model
+
+Consider a health insurance model with three states: $S=\{H,S,D\},$
+
+where
+
+* $H$ = Healthy, $S$ = Sick, $D$ = Dead.
+
+Suppose
+
+$$
+P=
+\begin{pmatrix}
+p_{HH}&p_{HS}&p_{HD}\\
+p_{SH}&p_{SS}&p_{SD}\\
+0&0&1
+\end{pmatrix}.
+$$
+
+For example,
+
+$$
+p_{HS}
+=\Pr(X_{n+1}=S\mid X_n=H).
+$$
+
+Thus, $p_{HS}$ is the probability that a healthy policyholder becomes sick during the next period.
+
+---
+
+## An Absorbing State
+
+The final row of the HSD transition matrix is
+
+$$
+(0,0,1).
+$$
+
+Therefore,
+
+$$
+\Pr(X_{n+1}=D\mid X_n=D)=1.
+$$
+
+Once the process enters state $D$, it remains there.
+
+Thus,
+
+$$
+\boxed{
+D\text{ is an absorbing state.}
+}
+$$
+
+We will study absorbing states and boundaries later in the chapter.
+
+---
+
+## Weather Model
+
+Consider a simple model with three weather states:
+
+$$
+S=\{\text{Sunny},\text{Cloudy},\text{Rainy}\}.
+$$
+
+A transition matrix might be
+
+$$
+P=
+\begin{pmatrix}
+p_{SS}&p_{SC}&p_{SR}\\
+p_{CS}&p_{CC}&p_{CR}\\
+p_{RS}&p_{RC}&p_{RR}
+\end{pmatrix}.
+$$
+
+For example,
+
+$$
+p_{SR}
+=\Pr(X_{n+1}=\text{Rainy}\mid X_n=\text{Sunny}).
+$$
+
+Each row describes the distribution of tomorrow's weather given today's weather.
+
+---
+
+## Three Applications, One Mathematical Structure
+
+| Application        | State          | Time step       | Markov interpretation                       |
+| :----------------- | :------------- | :-------------- | :------------------------------------------ |
+| Simple random walk | Position       | One step        | Next position depends on current position   |
+| NCD system         | Discount level | One policy year | Next level depends on current level         |
+| HSD model          | Health status  | One period      | Next status depends on current status       |
+| Weather model      | Weather state  | One day         | Tomorrow's weather depends on today's state |
+
+The applications have different interpretations, but the same mathematical structure:
+
+$$
+\boxed{
+\text{Current state}
+\longrightarrow
+\text{probabilistic next state}.
+}
+$$
+
+---
+
+## The Transition Matrix as a Model
+
+For a time-homogeneous DTMC,
+
+$$
+P=(p_{ij})
+$$
+
+contains the complete one-step transition behaviour.
+
+Once $P$ is known:
+
+$$
+\boxed{
+\text{current state}
++
+\text{transition matrix}
+\longrightarrow
+\text{distribution of next state}.
+}
+$$
+
+For example, if $X_n=i$, the $i$th row of $P$ gives
+
+$$
+\Pr(X_{n+1}=j\mid X_n=i),
+\qquad j\in S.
+$$
+
+The transition matrix therefore provides the basic computational representation of a DTMC.
+
+---
+
+## From One-Step to Multi-Step Transitions
+
+The transition matrix describes one-step movement:
+
+$$
+P
+\quad\longrightarrow\quad
+\Pr(X_{n+1}=j\mid X_n=i).
+$$
+
+In many applications, we need probabilities several steps ahead.
+
+For example:
+
+> What is the probability that a policyholder currently at NCD level 1 will be at level 2 three years from now?
+
+This leads to
+
+$$
+\boxed{\text{n-step transition probabilities: } P^{(n)} = P^n}
+$$
+
+
+and, in the next stage, to matrix powers such as $P^2,\quad P^3,\quad\ldots,\quad P^n.$
+
+The next section develops this connection.
+
+
+
+# Multi-Step Transitions and State Distributions
+
+## From one-step to multi-step transitions
+
+The transition matrix $P$ describes movement over **one time step**.
+
+In many applications, we need probabilities several steps ahead.
+
+For example:
+
+> A policyholder is currently at NCD level $1$. What is the probability of being at level $2$ three years from now?
+
+This is a **three-step transition probability**.
+
+$$
+\boxed{
+\text{One step: }P
+\qquad
+\text{Several steps: }P^n
+}
+$$
+
+---
+
+
+## $n$-step transition probabilities
+
+For a time-homogeneous Markov chain, define
+
+$$
+\boxed{
+p_{ij}^{(n)}
+=\Pr(X_{m+n}=j\mid X_m=i).
+}
+$$
+
+This is the probability of being in state $j$ **$n$ steps after starting in state $i$**.
+
+Because the chain is time-homogeneous,
+
+$$
+p_{ij}^{(n)}
+=\Pr(X_n=j\mid X_0=i).
+$$
+
+For $n=1$,
+
+$$
+p_{ij}^{(1)}
+=p_{ij}.
+$$
+
+> The superscript $(n)$ indicates the number of transitions. It is **not** a power of $p_{ij}$.
+
+---
+
+## Two-step transitions
+
+Suppose the chain starts in state $i$ and we want $\Pr(X_2=j\mid X_0=i).$
+
+The chain must pass through some intermediate state $k$: $i\longrightarrow k\longrightarrow j.$
+
+For a particular $k$,
+
+$$
+\Pr(X_1=k\mid X_0=i)=p_{ik}
+$$
+
+and
+
+$$
+\Pr(X_2=j\mid X_1=k)=p_{kj}.
+$$
+
+Therefore,
+
+$$
+\boxed{
+p_{ij}^{(2)}
+=\sum_{k\in S}p_{ik}p_{kj}.
+}
+$$
+
+We sum over **all possible intermediate states**.
+
+---
+
+## Example: NCD system
+
+
+$$
+P=
+\begin{pmatrix}
+1-p&p&0\\
+1-p&0&p\\
+0&1-p&p
+\end{pmatrix}.
+$$
+
+Suppose the current state is $1$. To reach state $2$ after two years, the possible paths are
+
+$$
+1\longrightarrow0\longrightarrow2 \quad \text{ and } \quad 1\longrightarrow2\longrightarrow2.
+$$
+
+
+Hence,
+
+$$
+\begin{aligned}
+p_{12}^{(2)}
+&=p_{10}p_{02}+p_{12}p_{22}\
+&=(1-p)(0)+p^2\
+&=p^2.
+\end{aligned}
+$$
+
+$$
+\boxed{
+\Pr(X_{n+2}=2\mid X_n=1)=p^2.
+}
+$$
+
+---
+
+
+
+## Chapman–Kolmogorov equation
+
+Suppose we want to move from state $i$ to state $j$ in $n$ steps.
+
+Choose an intermediate time $l$, where $0<l<n.$
+
+The process must pass through some state $k$ at time $l$:
+
+$$
+i
+\overset{l}{\longrightarrow}
+k
+\overset{n-l}{\longrightarrow}
+j.
+$$
+
+Therefore,
+
+$$
+\boxed{
+p_{ij}^{(n)}
+=\sum_{k\in S}
+p_{ik}^{(l)}
+p_{kj}^{(n-l)}.
+}
+$$
+
+This is the **Chapman–Kolmogorov equation**.
+
+> An $n$-step transition can be decomposed into an $l$-step transition followed by an $(n-l)$-step transition.
+
+---
+
+## Why does Chapman–Kolmogorov work?
+
+Partition according to the state $X_l$:
+
+$$
+\begin{aligned}
+p_{ij}^{(n)}
+&=
+\sum_{k\in S}
+\Pr(X_n=j,X_l=k\mid X_0=i)\
+&=
+\sum_{k\in S}
+\Pr(X_n=j\mid X_l=k,X_0=i)
+\Pr(X_l=k\mid X_0=i).
+\end{aligned}
+$$
+
+The Markov property gives
+
+$$
+\Pr(X_n=j\mid X_l=k,X_0=i)
+=\Pr(X_n=j\mid X_l=k).
+$$
+
+Hence,
+
+$$
+p_{ij}^{(n)}
+=\sum_{k\in S}
+p_{ik}^{(l)}
+p_{kj}^{(n-l)}.
+$$
+
+The intermediate state $k$ is summed over all possible values.
+
+---
+
+## Matrix Representation
+
+Let
+
+$$
+P^{(n)}=(p_{ij}^{(n)})
+$$
+
+be the matrix of $n$-step transition probabilities.
+
+The Chapman–Kolmogorov equation gives
+
+$$
+\boxed{
+P^{(n)}
+=
+P^{(l)}P^{(n-l)}.
+}
+$$
+
+Thus, an $n$-step transition can be decomposed into an $l$-step transition followed by an $(n-l)$-step transition.
+
+---
+
+## Matrix Powers
+
+Since
+
+$$
+P^{(1)}=P,
+$$
+
+the Chapman–Kolmogorov equation gives
+
+$$
+P^{(2)}=P^2,
+\qquad
+P^{(3)}=P^3.
+$$
+
+Continuing in the same way,
+
+$$
+\boxed{
+P^{(n)}=P^n.
+}
+$$
+
+Thus, matrix powers provide the $n$-step transition probabilities.
+
+---
+
+## Matrix Powers and $n$-Step Probabilities
+
+The $(i,j)$ entry of $P^n$ is the probability of moving from state $i$ to state $j$ in $n$ steps:
+
+$$
+\boxed{
+(P^n)_{ij}
+=
+p_{ij}^{(n)}
+=
+\Pr(X_{m+n}=j\mid X_m=i).
+}
+$$
+
+For a time-homogeneous Markov chain, this probability does not depend on the starting time $m$.
+
+Hence,
+
+$$
+\boxed{
+P^n
+\quad\text{contains all $n$-step transition probabilities.}
+}
+$$
+
+---
+
+## Matrix powers and paths
+
+Matrix multiplication combines all possible intermediate states.
+
+For example,
+
+$$
+(P^2)_{ij}
+=\sum_k p_{ik}p_{kj}.
+$$
+
+Each term corresponds to a two-step path $i\longrightarrow k\longrightarrow j.$
+
+Similarly,
+
+$$
+(P^3)_{ij}
+=\sum_{k}\sum_l
+p_{ik}p_{kl}p_{lj}.
+$$
+
+Each term corresponds to a three-step path.
+
+$$
+\boxed{
+\text{Matrix powers}
+\quad\longleftrightarrow\quad
+\text{all possible paths over several steps}
+}
+$$
+
+---
+
+
+
+
+## Example: NCD system
+
+Suppose $p=\frac34$ and 
+
+$$
+P=
+\begin{pmatrix}
+1/4&3/4&0\\
+1/4&0&3/4\\
+0&1/4&3/4
+\end{pmatrix}.
+$$
+
+Then
+
+$$
+P^3=
+\begin{pmatrix}
+7/64&21/64&9/16\\
+7/64&3/16&45/64\\
+1/16&15/64&45/64
+\end{pmatrix}.
+$$
+
+If the current NCD level is $1$,
+
+$$
+\Pr(X_{n+3}=1\mid X_n=1)
+=(P^3)_{11} \quad \text{ and } \quad \boxed{
+\Pr(X_{n+3}=1\mid X_n=1)
+=\frac{3}{16}.
+}
+$$
+
+---
+
+## From conditional probabilities to distributions
+
+The transition matrix gives probabilities **conditional on the current state**.
+
+We can also ask: What is the distribution of $X_n$?
+
+Let
+
+$$
+\boldsymbol{\mu}^{(n)}
+=\left(
+\Pr(X_n=i)
+\right)_{i\in S}.
+$$
+
+The initial distribution is
+
+$$
+\boldsymbol{\mu}^{(0)}
+=\left(
+\Pr(X_0=i)
+\right)_{i\in S}.
+$$
+
+By the law of total probability,
+
+$$
+\begin{aligned}
+\Pr(X_{n+1}=j)
+&=
+\sum_{i\in S}
+\Pr(X_{n+1}=j\mid X_n=i)
+\Pr(X_n=i) =
+\sum_{i\in S}
+p_{ij}\mu_i^{(n)}.
+\end{aligned}
+$$
+
+---
+
+## Distribution of $X_n$
+
+In matrix notation,
+
+$$
+\boxed{
+\boldsymbol{\mu}^{(n+1)}
+=\boldsymbol{\mu}^{(n)}P.
+}
+$$
+
+Repeating this relation gives
+
+$$
+\boxed{
+\boldsymbol{\mu}^{(n)}
+=\boldsymbol{\mu}^{(0)}P^n.
+}
+$$
+
+Thus,
+
+$$
+\boxed{
+P
+\longrightarrow
+P^n
+\longrightarrow
+\boldsymbol{\mu}^{(0)}P^n.
+}
+$$
+
+* $P$ gives one-step transition probabilities.
+* $P^n$ gives $n$-step transition probabilities.
+* $\boldsymbol{\mu}^{(0)}P^n$ gives the distribution of $X_n$.
+
+---
+
+## Conditional versus unconditional probabilities
+
+| Quantity                        | Interpretation         |
+| :------------------------------ | :--------------------- |
+| $(P^n)_{ij}$                    | $\Pr(X_n=j\mid X_0=i)$ |
+| $(\boldsymbol{\mu}^{(0)}P^n)_j$ | $\Pr(X_n=j)$           |
+
+The first assumes a specified initial state.
+
+The second allows uncertainty about the initial state.
+
+---
+
+## Example: NCD Distribution After Three Years
+
+Suppose
+
+$$
+P=
+\begin{pmatrix}
+1/4&3/4&0\\
+1/4&0&3/4\\
+0&1/4&3/4
+\end{pmatrix}
+$$
+
+and the policyholder starts in state $1$:
+
+$$
+\boldsymbol{\mu}^{(0)}
+=
+(0,1,0).
+$$
+
+---
+
+## Example: NCD Distribution After Three Years
+
+After three years,
+
+$$
+\boldsymbol{\mu}^{(3)}
+=
+\boldsymbol{\mu}^{(0)}P^3.
+$$
+
+Using
+
+$$
+P^3=
+\begin{pmatrix}
+7/64&21/64&9/16\\
+7/64&3/16&45/64\\
+1/16&15/64&45/64
+\end{pmatrix},
+$$
+
+we obtain
+
+$$
+\boldsymbol{\mu}^{(3)}
+=
+\left(
+\frac{7}{64},
+\frac{3}{16},
+\frac{45}{64}
+\right).
+$$
+
+---
+
+## Example: NCD Distribution After Three Years
+
+Therefore,
+
+$$
+\Pr(X_3=0)=\frac{7}{64},
+$$
+
+$$
+\Pr(X_3=1)=\frac{3}{16},
+$$
+
+and
+
+$$
+\Pr(X_3=2)=\frac{45}{64}.
+$$
+
+As a check,
+
+$$
+\frac{7}{64}
++\frac{3}{16}
++\frac{45}{64}
+=1.
+$$
+
+
+---
+
+## Joint distributions
+
+Sometimes we need the probability of a **particular sequence of states**:
+
+$$
+\Pr(X_0=i_0,X_1=i_1,\ldots,X_n=i_n).
+$$
+
+For a time-homogeneous Markov chain with initial distribution $\boldsymbol{\mu}$,
+
+$$
+\mu_i=\Pr(X_0=i),
+$$
+
+the Markov property gives
+
+$$
+\boxed{
+\Pr(X_0=i_0,\ldots,X_n=i_n)
+=\mu_{i_0}
+p_{i_0i_1}
+p_{i_1i_2}
+\cdots
+p_{i_{n-1}i_n}.
+}
+$$
+
+Thus, the probability of a particular path is the product of:
+
+1. the initial probability;
+2. the transition probabilities along the path.
+
+---
+
+## Example: A particular NCD path
+
+Suppose
+
+$$
+P=
+\begin{pmatrix}
+1/4&3/4&0\\
+1/4&0&3/4\\
+0&1/4&3/4
+\end{pmatrix} \quad \text{ and } \quad \boldsymbol{\mu}=(0.5,0.3,0.2).
+$$
+
+
+Consider the path $2\longrightarrow1\longrightarrow0.$ Then
+
+
+$$
+\begin{aligned}
+&\Pr(X_0=2,X_1=1,X_2=0)\
+&=
+\mu_2p_{21}p_{10}\
+&=
+0.2\left(\frac14\right)\left(\frac14\right)\
+&=
+\frac1{80}.
+\end{aligned}
+$$
+
+Hence,
+
+$$
+\boxed{
+\Pr(X_0=2,X_1=1,X_2=0)=\frac1{80}.
+}
+$$
+
+---
+
+## Future paths
+
+Suppose the current state is known:
+
+$$
+X_n=i_n.
+$$
+
+For the future path
+
+$$
+i_n\longrightarrow i_{n+1}
+\longrightarrow\cdots
+\longrightarrow i_{n+m},
+$$
+
+we have
+
+$$
+\boxed{
+\Pr(
+X_{n+1}=i_{n+1},\ldots,X_{n+m}=i_{n+m}
+\mid X_n=i_n)
+=\prod_{r=n}^{n+m-1}
+p_{i_ri_{r+1}}.
+}
+$$
+
+The initial distribution is no longer needed because the current state is already specified.
+
+---
+
+## Joint probabilities with gaps
+
+The observed states do not have to occur at consecutive times.
+
+Suppose
+
+$$
+0\leq n_1<n_2<\cdots<n_k.
+$$
+
+Then
+
+$$
+\boxed{
+\begin{aligned}
+&\Pr(X_{n_1}=i_1,\ldots,X_{n_k}=i_k)\
+&=
+(\boldsymbol{\mu}P^{n_1})*{i_1}
+(P^{n_2-n_1})*{i_1i_2}
+\cdots
+(P^{n_k-n_{k-1}})*{i*{k-1}i_k}.
+\end{aligned}
+}
+$$
+
+The matrix powers automatically account for the unobserved states between the specified times.
+
+---
+
+## Weather Model
+
+Suppose
+
+$$
+S=\{R,C,S\},
+$$
+
+where
+
+- $R$ = rainy,
+- $C$ = cloudy,
+- $S$ = sunny.
+
+Suppose the one-day transition matrix is
+
+$$
+P=
+\begin{pmatrix}
+0.7&0.2&0.1\\
+0.75&0.15&0.1\\
+0.2&0.4&0.4
+\end{pmatrix}.
+$$
+
+---
+
+## Weather Model: A Joint Probability
+
+Suppose Sunday has distribution
+
+$$
+\boldsymbol{\mu}
+=
+\left(\frac13,\frac13,\frac13\right).
+$$
+
+Consider the event:
+
+- Wednesday is sunny;
+- Friday is sunny;
+- Saturday is cloudy.
+
+We want to calculate
+
+$$
+\Pr(X_3=S,X_5=S,X_6=C).
+$$
+
+The states on Thursday are not specified.
+
+---
+
+## Weather Model: Using Transition Probabilities
+
+The probability can be written as
+
+$$
+\Pr(X_3=S,X_5=S,X_6=C)
+$$
+
+$$
+=
+(\boldsymbol{\mu}P^3)_S
+(P^2)_{SS}
+P_{SC}.
+$$
+
+Here, $\boldsymbol{\mu}P^3$ gives the distribution on Wednesday, while $P^2$ accounts for the two-day transition from Wednesday to Friday.
+
+---
+
+## Weather Model: Calculation
+
+Using
+
+$$
+(\boldsymbol{\mu}P^3)_S=0.148, \quad (P^2)_{SS}=0.22,
+$$
+
+
+and
+
+$$
+P_{SC}=0.4,
+$$
+
+we obtain
+
+$$
+\begin{aligned}
+&\Pr(X_3=S,X_5=S,X_6=C) =(0.148)(0.22)(0.4) =\boxed{0.013024}.
+\end{aligned}
+$$
+
+The matrix $P^2$ accounts for the unobserved weather on Thursday.
+
+
+# Random Walks with Absorbing and Reflecting Barriers
+
+## Why Introduce Boundaries?
+
+The simple random walk can move freely through all integer states:
+
+$$
+\ldots,-2,-1,0,1,2,\ldots
+$$
+
+In applications, the state space may have boundaries.
+
+For example, a gambler's fortune may be restricted to
+
+$$
+S=\{0,1,\ldots,N\}.
+$$
+
+We must specify what happens when the process reaches a boundary.
+
+Two important possibilities are:
+
+- **absorbing boundary**: the process remains at the boundary;
+- **reflecting barrier**: the process can return to the interior.
+
+---
+
+## Random Walk with Absorbing Barriers
+
+Consider
+
+$$
+S=\{0,1,\ldots,N\}.
+$$
+
+For an interior state $i$,
+
+$$
+\Pr(X_{n+1}=i+1\mid X_n=i)=p
+$$
+
+and
+
+$$
+\Pr(X_{n+1}=i-1\mid X_n=i)=q,
+$$
+
+where
+
+$$
+p+q=1.
+$$
+
+Suppose that $0$ and $N$ are absorbing:
+
+$$
+p_{00}=1,
+\qquad
+p_{NN}=1.
+$$
+
+Once either boundary is reached, the process remains there.
+
+---
+
+## Absorbing States
+
+A state $i$ is **absorbing** if
+
+$$
+\boxed{p_{ii}=1.}
+$$
+
+Equivalently,
+
+$$
+\Pr(X_{n+1}=i\mid X_n=i)=1.
+$$
+
+Thus, once the chain reaches state $i$, it cannot leave that state.
+
+---
+
+## Absorbing States
+
+Once the chain enters an absorbing state,
+
+$$
+X_n=i
+\quad\Longrightarrow\quad
+X_{n+r}=i,
+\qquad r\geq0.
+$$
+
+For the bounded random walk,
+
+$$
+0
+\quad\text{and}\quad
+N
+$$
+
+are absorbing states.
+
+---
+
+## Transition Matrix with Absorbing Barriers
+
+For
+
+$$
+S=\{0,1,\ldots,N\},
+$$
+
+the transition matrix has the form
+
+$$
+P=
+\begin{pmatrix}
+1&0&0&\cdots&0&0\\
+q&0&p&\cdots&0&0\\
+0&q&0&\ddots&0&0\\
+\vdots&\ddots&\ddots&\ddots&\ddots&\vdots\\
+0&0&0&\ddots&0&p\\
+0&0&0&\cdots&0&1
+\end{pmatrix}.
+$$
+
+The interior rows describe the ordinary random walk.
+
+The first and last rows describe the absorbing boundaries.
+
+---
+
+## Gambler's Ruin
+
+Interpret $X_n$ as a gambler's fortune.
+
+- The gambler starts with $i$ units.
+- A game is won with probability $p$.
+- A game is lost with probability $q=1-p$.
+- The fortune changes by one unit after each game.
+- The game stops when the fortune reaches $0$ or $N$.
+
+Thus,
+
+$$
+S=\{0,1,\ldots,N\},
+$$
+
+with
+
+$$
+0=\text{ruin},
+\qquad
+N=\text{target fortune}.
+$$
+
+Both states are absorbing.
+
+---
+
+## Questions About Absorption
+
+Starting from state $i$, we may ask:
+
+$$
+\Pr(\text{eventually reach }N\mid X_0=i)
+$$
+
+or
+
+$$
+\Pr(\text{eventually reach }0\mid X_0=i).
+$$
+
+We may also ask for the expected time until absorption:
+
+$$
+\mathrm{E}[\text{time until absorption}\mid X_0=i].
+$$
+
+These are **absorption probabilities** and **expected times to absorption**.
+
+We will use **first-step analysis** to answer these questions.
+
+---
+
+## Reflecting Barriers
+
+A boundary does not have to be absorbing.
+
+Suppose $S=\{0,1,\ldots,N\}.$
+
+For interior states,
+
+$$
+\Pr(X_{n+1}=i+1\mid X_n=i)=p,
+$$
+
+$$
+\Pr(X_{n+1}=i-1\mid X_n=i)=q.
+$$
+
+At the lower boundary $0$, suppose
+
+$$
+\Pr(X_{n+1}=0\mid X_n=0)=\alpha \quad \text{ and } \quad \Pr(X_{n+1}=1\mid X_n=0)=1-\alpha.
+$$
+
+The process cannot move to $-1$.
+
+---
+
+## Absorbing versus Reflecting
+
+| Boundary | Behaviour after reaching it |
+|:--|:--|
+| Absorbing | Remains at the boundary forever |
+| Reflecting | Can move back into the state space |
+
+For an absorbing state,
+
+$$
+p_{ii}=1.
+$$
+
+For a reflecting boundary, this need not be true.
+
+For example,
+
+$$
+0\longrightarrow0
+\quad\text{or}\quad
+0\longrightarrow1.
+$$
+
+Thus, the boundary rule must be included in the transition matrix.
+
+---
+
+## Reflecting Lower Barrier
+
+Consider the state space
+
+$$
+S=\{0,1,2,\ldots\}.
+$$
+
+For an interior state $i\geq1$,
+
+$$
+\Pr(X_{n+1}=i+1\mid X_n=i)=p,
+$$
+
+$$
+\Pr(X_{n+1}=i-1\mid X_n=i)=q.
+$$
+
+Thus, the usual random-walk transitions apply away from the boundary.
+
+---
+
+## Reflecting Lower Barrier
+
+At the boundary $0$, the process cannot move to $-1$.
+
+Suppose
+
+$$
+\Pr(X_{n+1}=0\mid X_n=0)=\alpha
+$$
+
+and
+
+$$
+\Pr(X_{n+1}=1\mid X_n=0)=1-\alpha.
+$$
+
+Hence, the process either remains at $0$ or moves back into the state space.
+
+The first row of the transition matrix is therefore different from the interior rows.
+
+---
+
+## Reflecting Lower Barrier: Transition Matrix
+
+The transition matrix begins
+
+$$
+P=
+\begin{pmatrix}
+\alpha&1-\alpha&0&0&\cdots\\
+q&0&p&0&\cdots\\
+0&q&0&p&\cdots\\
+0&0&q&0&\ddots\\
+\vdots&\vdots&\vdots&\ddots&\ddots
+\end{pmatrix}.
+$$
+
+The first row reflects the boundary condition at $0$.
+
+The interior rows retain the usual random-walk transitions.
+
+The process can return to the interior after reaching the boundary.

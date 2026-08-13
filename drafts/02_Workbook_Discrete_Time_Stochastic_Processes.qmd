@@ -1,0 +1,257 @@
+---
+title: "Workbook 2: Discrete-Time Markov Chains"
+format:
+  pdf:
+    toc: false
+number-sections: true
+---
+
+## Workbook: Discrete-Time Markov Chains {.unnumbered}
+
+Work through the following questions to develop the main ideas and calculations for discrete-time Markov chains.
+
+1. **Repeated die rolls:** Define a process from the sequence of die faces. Determine whether it is i.i.d. and whether it is a Markov chain. Construct its transition matrix and relate the process to a simple random walk.
+
+2. **Monthly subscriptions:** Model a customer's monthly subscription status across four platforms/states using given transition rules. Define the process, identify the state space, verify the Markov property, and construct the transition diagram and transition matrix.
+
+3. **Probability calculations:** Using the subscription model, calculate one-step and $n$-step transition probabilities, state distributions, path probabilities, and conditional probabilities. Use both the law of total probability and matrix methods.
+
+4. **Long-run behaviour:** Use powers of the transition matrix to investigate the distribution of the process after many transitions and, where appropriate, determine its stationary distribution.
+
+## **Question 1: Repeated die rolls:**
+
+### Part 1: The sequence of faces
+
+A fair die is rolled repeatedly. Consider the sequence of faces obtained from the rolls. For example,
+
+$$
+2,5,3,6,1,4,\ldots
+$$
+
+1. How could you define a stochastic process to describe the sequence of faces?
+2. What are the possible states?
+3. Is the process a Markov chain? Explain.
+4. Determine the one-step transition probabilities.
+5. Draw the transition diagram.
+6. Write down the transition probability matrix.
+7. Calculate selected one-step and $n$-step probabilities.
+
+### Part 2: From die rolls to a random walk
+
+Now consider the same sequence of die rolls. Suppose that a roll of $1$, $2$, or $3$ corresponds to a step of $-1$, while a roll of $4$, $5$, or $6$ corresponds to a step of $+1$.
+
+8. How could you define a new stochastic process that records the position after each roll?
+
+9. What are the possible changes in position at each step?
+
+10. Is the new process a Markov chain?
+
+11. Draw its transition diagram and write down its transition probability matrix.
+
+12. Calculate
+
+    $$
+    P(X_2=0),\qquad P(X_3=1),
+    $$
+    
+    given that the initial position is $X_0=0$.
+
+13. Explain why this process is called a **simple random walk**.
+
+14. **Compare the two processes. How is the second process related to the usual simple random walk? What information from the original sequence of die faces is retained, and what information is lost?**
+
+---
+
+## **Question 2: Monthly subscription status**
+
+### Part 1: The sequence of subscription statuses
+
+A customer subscribes to one of four streaming platforms or has no subscription:
+
+* Netflix (N)
+* Disney+ (D)
+* Amazon Prime Video (A)
+* No subscription (0)
+
+The customer's subscription status is observed at the end of each month.
+
+The following rules describe how the subscription status changes from one month to the next:
+
+| Current status     | Next-month status                                                                                                 |
+| ------------------ | ----------------------------------------------------------------------------------------------------------------- |
+| Netflix            | Netflix with probability $0.8$, Disney+ with probability $0.2$                                                    |
+| Disney+            | Netflix with probability $0.1$, Disney+ with probability $0.7$, Amazon Prime Video with probability $0.2$         |
+| Amazon Prime Video | Netflix with probability $0.2$, Amazon Prime Video with probability $0.6$, no subscription with probability $0.2$ |
+| No subscription    | Netflix with probability $0.4$, Disney+ with probability $0.2$, no subscription with probability $0.4$            |
+
+1. How could you define a stochastic process to describe the customer's subscription status?
+2. What are the possible states?
+
+### Part 2: The Markov property
+
+3. Is the process a Markov chain? Explain your answer.
+4. What information about the customer's subscription history is needed to determine the probabilities for the next month?
+
+### Part 3: Transition probabilities
+
+5. Determine the one-step transition probabilities between all possible states.
+6. Draw the transition diagram.
+7. Construct the transition probability matrix, using the state ordering
+
+$$
+(N,D,A,0).
+$$
+
+### Part 4: Basic probability calculations
+
+8. If the customer is subscribed to Netflix this month, calculate the probability that they are subscribed to Amazon Prime Video next month.
+9. If the customer is subscribed to Netflix now, calculate the probability that they have no subscription after two months.
+10. Suppose the customer is initially subscribed to Netflix. Find the distribution of the subscription status after three months.
+
+
+---
+
+## **Question 3: Probability calculations for a DTMC**
+
+Using the monthly subscription model from Question 2, let the states be ordered as
+
+$$
+(N,D,A,0).
+$$
+
+Suppose the transition probability matrix is
+
+$$
+P=
+\begin{pmatrix}
+0.8&0.2&0&0\\
+0.1&0.7&0.2&0\\
+0.2&0&0.6&0.2\\
+0.4&0.2&0&0.4
+\end{pmatrix}.
+$$
+
+### Part 1: One-step transition probabilities
+
+1. Calculate selected one-step transition probabilities, such as
+
+$$
+P(X_{n+1}=D\mid X_n=N)
+$$
+
+and
+
+$$
+P(X_{n+1}=A\mid X_n=D).
+$$
+
+2. Explain how these probabilities are represented in the transition matrix.
+
+### Part 2: Two-step transition probabilities
+
+3. Calculate
+
+$$
+P(X_{n+2}=A\mid X_n=N)
+$$
+
+using the law of total probability.
+
+4. Calculate the matrix $P^2$ and verify your answer to Question 3.
+
+### Part 3: $n$-step transition probabilities
+
+5. Calculate $P^3$.
+
+6. Hence, calculate
+
+$$
+P(X_3=0\mid X_0=N).
+$$
+
+7. Explain how $P^n$ can be used to obtain $n$-step transition probabilities.
+
+### Part 4: State distributions
+
+Suppose that initially the customer subscribes to Netflix, so that
+
+$$
+\boldsymbol{\pi}_0=(1,0,0,0).
+$$
+
+8. Calculate the distributions
+
+$$
+\boldsymbol{\pi}_1,\qquad
+\boldsymbol{\pi}_2,\qquad
+\boldsymbol{\pi}_3.
+$$
+
+9. Verify that
+
+$$
+\boldsymbol{\pi}_n=\boldsymbol{\pi}_0P^n.
+$$
+
+10. Suppose instead that
+
+$$
+\boldsymbol{\pi}_0=(0.4,0.3,0.2,0.1).
+$$
+
+Calculate the probability that the customer has no subscription after three months.
+
+### Part 5: Probabilities of particular paths
+
+11. Calculate the probability that a customer follows the sequence
+
+$$
+N\rightarrow D\rightarrow A\rightarrow0.
+$$
+
+12. Generalise your calculation to obtain the probability of a specified path
+
+$$
+i_0\rightarrow i_1\rightarrow\cdots\rightarrow i_n.
+$$
+
+### Part 6: Conditional probabilities
+
+13. Calculate
+
+$$
+P(X_4=N\mid X_1=D).
+$$
+
+14. Calculate
+
+$$
+P(X_1=D\mid X_0=N,X_2=A).
+$$
+
+15. Explain how the Markov property can simplify these calculations.
+
+### Part 7: Long-run behaviour
+
+16. Investigate the distribution
+
+$$
+\boldsymbol{\pi}_0P^n
+$$
+
+as $n$ becomes large.
+
+17. Determine whether the process has a stationary distribution. If it does, find a probability vector $\boldsymbol{\pi}$ satisfying
+
+$$
+\boldsymbol{\pi}P=\boldsymbol{\pi}.
+$$
+
+
+
+
+
+
+
+
+
