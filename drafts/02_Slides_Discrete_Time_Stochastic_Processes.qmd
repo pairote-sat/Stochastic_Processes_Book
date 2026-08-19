@@ -679,6 +679,14 @@ Hence, the NCD system is a DTMC.
 
 ---
 
+## Modeling NCD as a Markov Chain
+
+![No-claim discount](../figures/Modeling_NCD_as_Markov_Chain.png){#fig-ncd-markov fig-align="center" width="80%"}
+
+
+
+---
+
 ## One-Step Transition Probabilities
 
 For a DTMC, define the **one-step transition probability**
@@ -836,6 +844,13 @@ P=
 $$
 
 
+---
+
+## Transition Matrix for the NCD Model
+
+![Transition matrix for the NCD model](../figures/NCD_Markov_Chain_Model.png){#fig-ncd-matrix fig-align="center" width="80%"}
+
+
 
 ---
 
@@ -866,6 +881,14 @@ p_{HS}
 $$
 
 Thus, $p_{HS}$ is the probability that a healthy policyholder becomes sick during the next period.
+
+---
+
+## The Healthy-Sick-Dead Markov Model
+
+![Healthy-Sick-Dead Markov Chain](../figures/Healthy-Sick-Dead_Markov_Chain.png){#fig-hsd-chain fig-align="center" width="80%"}
+
+
 
 ---
 
@@ -1167,6 +1190,13 @@ $$
 This is the **Chapman–Kolmogorov equation**.
 
 > An $n$-step transition can be decomposed into an $l$-step transition followed by an $(n-l)$-step transition.
+
+---
+
+## Decomposing the Chapman-Kolmogorov Equation
+
+![Decomposing the Chapman-Kolmogorov Equation](../figures/Decomposing_the_Chapman-Kolmogorov_Equation.png){#fig-ck-decomposition fig-align="center" width="80%"}
+
 
 ---
 

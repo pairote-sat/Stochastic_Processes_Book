@@ -814,6 +814,21 @@ These probabilities depend only on the current NCD level.
 Hence, the NCD system is a DTMC.
 \end{frame}
 
+\begin{frame}{Modeling NCD as a Markov Chain}
+\protect\phantomsection\label{modeling-ncd-as-a-markov-chain}
+\begin{figure}
+
+\centering{
+
+\includegraphics[width=0.8\linewidth,height=\textheight,keepaspectratio]{../figures/Modeling_NCD_as_Markov_Chain.png}
+
+}
+
+\caption{\label{fig-ncd-markov}No-claim discount}
+
+\end{figure}%
+\end{frame}
+
 \begin{frame}{One-Step Transition Probabilities}
 \protect\phantomsection\label{one-step-transition-probabilities}
 For a DTMC, define the \textbf{one-step transition probability}
@@ -974,6 +989,21 @@ P=
 \]
 \end{frame}
 
+\begin{frame}{Transition Matrix for the NCD Model}
+\protect\phantomsection\label{transition-matrix-for-the-ncd-model}
+\begin{figure}
+
+\centering{
+
+\includegraphics[width=0.8\linewidth,height=\textheight,keepaspectratio]{../figures/NCD_Markov_Chain_Model.png}
+
+}
+
+\caption{\label{fig-ncd-matrix}Transition matrix for the NCD model}
+
+\end{figure}%
+\end{frame}
+
 \begin{frame}{Health-Sick-Dead Model}
 \protect\phantomsection\label{health-sick-dead-model}
 Consider a health insurance model with three states: \(S=\{H,S,D\},\)
@@ -1006,6 +1036,21 @@ p_{HS}
 
 Thus, \(p_{HS}\) is the probability that a healthy policyholder becomes
 sick during the next period.
+\end{frame}
+
+\begin{frame}{The Healthy-Sick-Dead Markov Model}
+\protect\phantomsection\label{the-healthy-sick-dead-markov-model}
+\begin{figure}
+
+\centering{
+
+\includegraphics[width=0.8\linewidth,height=\textheight,keepaspectratio]{../figures/Healthy-Sick-Dead_Markov_Chain.png}
+
+}
+
+\caption{\label{fig-hsd-chain}Healthy-Sick-Dead Markov Chain}
+
+\end{figure}%
 \end{frame}
 
 \begin{frame}{An Absorbing State}
@@ -1336,6 +1381,22 @@ This is the \textbf{Chapman--Kolmogorov equation}.
 An \(n\)-step transition can be decomposed into an \(l\)-step transition
 followed by an \((n-l)\)-step transition.
 \end{quote}
+\end{frame}
+
+\begin{frame}{Decomposing the Chapman-Kolmogorov Equation}
+\protect\phantomsection\label{decomposing-the-chapman-kolmogorov-equation}
+\begin{figure}
+
+\centering{
+
+\includegraphics[width=0.8\linewidth,height=\textheight,keepaspectratio]{../figures/Decomposing_the_Chapman-Kolmogorov_Equation.png}
+
+}
+
+\caption{\label{fig-ck-decomposition}Decomposing the Chapman-Kolmogorov
+Equation}
+
+\end{figure}%
 \end{frame}
 
 \begin{frame}{Why does Chapman--Kolmogorov work?}
