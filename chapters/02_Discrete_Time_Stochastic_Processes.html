@@ -1,0 +1,2744 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>2&nbsp; Chapter 2: Discrete-Time Markov Chains – Stochastic Processes</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../chapters/01_Introduction_to_Stochastic_Processes.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-87aed0b8589e23e45aa8556edf37a91b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/02_Discrete_Time_Stochastic_Processes.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Chapter 2: Discrete-Time Markov Chains</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Stochastic Processes</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Welcome to My Book</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/01_Introduction_to_Stochastic_Processes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction to Stochastic Processes</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/02_Discrete_Time_Stochastic_Processes.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Chapter 2: Discrete-Time Markov Chains</span></span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#chapter-2-discrete-time-markov-chains" id="toc-chapter-2-discrete-time-markov-chains" class="nav-link active" data-scroll-target="#chapter-2-discrete-time-markov-chains"><span class="header-section-number">3</span> Chapter 2: Discrete-Time Markov Chains</a>
+  <ul class="collapse">
+  <li><a href="#learning-outcomes" id="toc-learning-outcomes" class="nav-link" data-scroll-target="#learning-outcomes">Learning Outcomes</a></li>
+  <li><a href="#simple-random-walk-a-motivating-example" id="toc-simple-random-walk-a-motivating-example" class="nav-link" data-scroll-target="#simple-random-walk-a-motivating-example"><span class="header-section-number">3.1</span> Simple Random Walk: A Motivating Example</a>
+  <ul class="collapse">
+  <li><a href="#the-random-changes" id="toc-the-random-changes" class="nav-link" data-scroll-target="#the-random-changes"><span class="header-section-number">3.1.1</span> The random changes</a></li>
+  <li><a href="#behaviour-of-the-random-walk" id="toc-behaviour-of-the-random-walk" class="nav-link" data-scroll-target="#behaviour-of-the-random-walk"><span class="header-section-number">3.1.2</span> Behaviour of the random walk</a></li>
+  <li><a href="#example-a-probability-involving-several-time-points" id="toc-example-a-probability-involving-several-time-points" class="nav-link" data-scroll-target="#example-a-probability-involving-several-time-points"><span class="header-section-number">3.1.3</span> Example: A probability involving several time points</a></li>
+  <li><a href="#simulating-a-simple-random-walk" id="toc-simulating-a-simple-random-walk" class="nav-link" data-scroll-target="#simulating-a-simple-random-walk"><span class="header-section-number">3.1.4</span> Simulating a Simple Random Walk</a></li>
+  <li><a href="#example-distribution-of-the-random-walk" id="toc-example-distribution-of-the-random-walk" class="nav-link" data-scroll-target="#example-distribution-of-the-random-walk"><span class="header-section-number">3.1.5</span> Example: Distribution of the random walk</a></li>
+  <li><a href="#a-key-observation" id="toc-a-key-observation" class="nav-link" data-scroll-target="#a-key-observation"><span class="header-section-number">3.1.6</span> A key observation</a></li>
+  </ul></li>
+  <li><a href="#the-markov-property" id="toc-the-markov-property" class="nav-link" data-scroll-target="#the-markov-property"><span class="header-section-number">3.2</span> The Markov Property</a>
+  <ul class="collapse">
+  <li><a href="#the-markov-property-1" id="toc-the-markov-property-1" class="nav-link" data-scroll-target="#the-markov-property-1"><span class="header-section-number">3.2.1</span> The Markov property</a></li>
+  </ul></li>
+  <li><a href="#discrete-time-markov-chains" id="toc-discrete-time-markov-chains" class="nav-link" data-scroll-target="#discrete-time-markov-chains"><span class="header-section-number">3.3</span> Discrete-Time Markov Chains</a>
+  <ul class="collapse">
+  <li><a href="#interpreting-the-definition" id="toc-interpreting-the-definition" class="nav-link" data-scroll-target="#interpreting-the-definition"><span class="header-section-number">3.3.1</span> Interpreting the definition</a></li>
+  <li><a href="#examples-of-markov-chains" id="toc-examples-of-markov-chains" class="nav-link" data-scroll-target="#examples-of-markov-chains"><span class="header-section-number">3.3.2</span> Examples of Markov chains</a></li>
+  </ul></li>
+  <li><a href="#one-step-transition-probabilities-and-transition-matrices" id="toc-one-step-transition-probabilities-and-transition-matrices" class="nav-link" data-scroll-target="#one-step-transition-probabilities-and-transition-matrices"><span class="header-section-number">3.4</span> One-Step Transition Probabilities and Transition Matrices</a>
+  <ul class="collapse">
+  <li><a href="#one-step-transition-probabilities" id="toc-one-step-transition-probabilities" class="nav-link" data-scroll-target="#one-step-transition-probabilities"><span class="header-section-number">3.4.1</span> One-step transition probabilities</a></li>
+  <li><a href="#example-simple-random-walk" id="toc-example-simple-random-walk" class="nav-link" data-scroll-target="#example-simple-random-walk"><span class="header-section-number">3.4.2</span> Example: Simple random walk</a></li>
+  </ul></li>
+  <li><a href="#time-homogeneous-markov-chains" id="toc-time-homogeneous-markov-chains" class="nav-link" data-scroll-target="#time-homogeneous-markov-chains"><span class="header-section-number">3.5</span> Time-Homogeneous Markov Chains</a>
+  <ul class="collapse">
+  <li><a href="#transition-probability-matrix" id="toc-transition-probability-matrix" class="nav-link" data-scroll-target="#transition-probability-matrix"><span class="header-section-number">3.5.1</span> Transition probability matrix</a></li>
+  <li><a href="#example-ncd-system" id="toc-example-ncd-system" class="nav-link" data-scroll-target="#example-ncd-system"><span class="header-section-number">3.5.2</span> Example: NCD system</a></li>
+  <li><a href="#example-health-insurance-model" id="toc-example-health-insurance-model" class="nav-link" data-scroll-target="#example-health-insurance-model"><span class="header-section-number">3.5.3</span> Example: Health insurance model</a></li>
+  <li><a href="#why-the-transition-matrix-is-useful" id="toc-why-the-transition-matrix-is-useful" class="nav-link" data-scroll-target="#why-the-transition-matrix-is-useful"><span class="header-section-number">3.5.4</span> Why the transition matrix is useful</a></li>
+  </ul></li>
+  <li><a href="#n-step-transition-probabilities-and-the-chapmankolmogorov-equation" id="toc-n-step-transition-probabilities-and-the-chapmankolmogorov-equation" class="nav-link" data-scroll-target="#n-step-transition-probabilities-and-the-chapmankolmogorov-equation"><span class="header-section-number">3.6</span> <span class="math inline">\(n\)</span>-Step Transition Probabilities and the Chapman–Kolmogorov Equation</a>
+  <ul class="collapse">
+  <li><a href="#n-step-transition-probabilities" id="toc-n-step-transition-probabilities" class="nav-link" data-scroll-target="#n-step-transition-probabilities"><span class="header-section-number">3.6.1</span> <span class="math inline">\(n\)</span>-step transition probabilities</a></li>
+  <li><a href="#from-one-step-to-two-steps" id="toc-from-one-step-to-two-steps" class="nav-link" data-scroll-target="#from-one-step-to-two-steps"><span class="header-section-number">3.6.2</span> From one step to two steps</a></li>
+  <li><a href="#example-ncd-system-1" id="toc-example-ncd-system-1" class="nav-link" data-scroll-target="#example-ncd-system-1"><span class="header-section-number">3.6.3</span> Example: NCD system</a></li>
+  <li><a href="#the-chapmankolmogorov-equation" id="toc-the-chapmankolmogorov-equation" class="nav-link" data-scroll-target="#the-chapmankolmogorov-equation"><span class="header-section-number">3.6.4</span> The Chapman–Kolmogorov Equation</a></li>
+  <li><a href="#derivation" id="toc-derivation" class="nav-link" data-scroll-target="#derivation"><span class="header-section-number">3.6.5</span> Derivation</a></li>
+  <li><a href="#matrix-representation" id="toc-matrix-representation" class="nav-link" data-scroll-target="#matrix-representation"><span class="header-section-number">3.6.6</span> Matrix representation</a></li>
+  <li><a href="#a-path-interpretation" id="toc-a-path-interpretation" class="nav-link" data-scroll-target="#a-path-interpretation"><span class="header-section-number">3.6.7</span> A path interpretation</a></li>
+  </ul></li>
+  <li><a href="#distribution-after-n-steps" id="toc-distribution-after-n-steps" class="nav-link" data-scroll-target="#distribution-after-n-steps"><span class="header-section-number">3.7</span> Distribution after <span class="math inline">\(n\)</span> steps</a></li>
+  <li><a href="#joint-distributions-and-probabilities-of-paths" id="toc-joint-distributions-and-probabilities-of-paths" class="nav-link" data-scroll-target="#joint-distributions-and-probabilities-of-paths"><span class="header-section-number">3.8</span> Joint Distributions and Probabilities of Paths</a>
+  <ul class="collapse">
+  <li><a href="#probability-of-a-particular-path" id="toc-probability-of-a-particular-path" class="nav-link" data-scroll-target="#probability-of-a-particular-path"><span class="header-section-number">3.8.1</span> Probability of a particular path</a></li>
+  </ul></li>
+  <li><a href="#conditional-probabilities-of-future-paths" id="toc-conditional-probabilities-of-future-paths" class="nav-link" data-scroll-target="#conditional-probabilities-of-future-paths"><span class="header-section-number">3.9</span> Conditional probabilities of future paths</a></li>
+  <li><a href="#paths-with-gaps-between-observation-times" id="toc-paths-with-gaps-between-observation-times" class="nav-link" data-scroll-target="#paths-with-gaps-between-observation-times"><span class="header-section-number">3.10</span> Paths with gaps between observation times</a></li>
+  <li><a href="#from-specified-paths-to-events" id="toc-from-specified-paths-to-events" class="nav-link" data-scroll-target="#from-specified-paths-to-events"><span class="header-section-number">3.11</span> From specified paths to events</a></li>
+  <li><a href="#random-walks-with-absorbing-and-reflecting-barriers" id="toc-random-walks-with-absorbing-and-reflecting-barriers" class="nav-link" data-scroll-target="#random-walks-with-absorbing-and-reflecting-barriers"><span class="header-section-number">3.12</span> Random Walks with Absorbing and Reflecting Barriers</a>
+  <ul class="collapse">
+  <li><a href="#random-walk-with-absorbing-barriers" id="toc-random-walk-with-absorbing-barriers" class="nav-link" data-scroll-target="#random-walk-with-absorbing-barriers"><span class="header-section-number">3.12.1</span> Random walk with absorbing barriers</a></li>
+  <li><a href="#reflecting-barriers" id="toc-reflecting-barriers" class="nav-link" data-scroll-target="#reflecting-barriers"><span class="header-section-number">3.12.2</span> Reflecting barriers</a></li>
+  <li><a href="#a-random-walk-with-a-reflecting-lower-barrier" id="toc-a-random-walk-with-a-reflecting-lower-barrier" class="nav-link" data-scroll-target="#a-random-walk-with-a-reflecting-lower-barrier"><span class="header-section-number">3.12.3</span> A random walk with a reflecting lower barrier</a></li>
+  <li><a href="#why-boundary-behaviour-matters" id="toc-why-boundary-behaviour-matters" class="nav-link" data-scroll-target="#why-boundary-behaviour-matters"><span class="header-section-number">3.12.4</span> Why boundary behaviour matters</a></li>
+  </ul></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Chapter 2: Discrete-Time Markov Chains</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="chapter-2-discrete-time-markov-chains" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Chapter 2: Discrete-Time Markov Chains</h1>
+<section id="learning-outcomes" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="learning-outcomes">Learning Outcomes</h2>
+<p>After studying this chapter, students should be able to:</p>
+<ol type="1">
+<li><strong>Define and describe</strong> a discrete-time Markov chain and explain the Markov property.</li>
+<li><strong>Construct and interpret</strong> transition probabilities and transition matrices for discrete-time Markov chains.</li>
+<li><strong>Calculate</strong> <span class="math inline">\(n\)</span>-step transition probabilities and state distributions using the Chapman–Kolmogorov equation and matrix methods.</li>
+<li><strong>Calculate</strong> joint and conditional probabilities for specified paths and events of a Markov chain.</li>
+<li><strong>Analyse</strong> Markov chains with absorbing or reflecting boundaries, including absorption probabilities and expected times to absorption.</li>
+<li><strong>Analyse the long-run behaviour</strong> of Markov chains using state classification, stationary distributions, and limiting distributions.</li>
+</ol>
+</section>
+<section id="simple-random-walk-a-motivating-example" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="simple-random-walk-a-motivating-example"><span class="header-section-number">3.1</span> Simple Random Walk: A Motivating Example</h2>
+<p>One of the simplest examples of a stochastic process is a <strong>simple random walk</strong>. It provides a natural starting point for studying discrete-time Markov chains because the distribution of the next state depends only on the current state.</p>
+<p>Consider a simple model of the price of a stock, measured in baht. Suppose that, at the end of each trading day, the stock price either increases by 1 baht with probability <span class="math inline">\(p\)</span> or decreases by 1 baht with probability <span class="math inline">\(q=1-p\)</span>. Let <span class="math inline">\(X_n\)</span> denote the stock price after <span class="math inline">\(n\)</span> trading days, with initial value</p>
+<p><span class="math display">\[
+X_0=a.
+\]</span></p>
+<p>Thus,</p>
+<p><span class="math display">\[
+X_n=X_{n-1}+Z_n,
+\]</span></p>
+<p>where the random change <span class="math inline">\(Z_n\)</span> is given by</p>
+<p><span class="math display">\[
+Z_n=
+\begin{cases}
+1, &amp; \text{with probability }p,\\
+-1, &amp; \text{with probability }q=1-p.
+\end{cases}
+\]</span></p>
+<p>Equivalently,</p>
+<p><span class="math display">\[
+X_n=a+\sum_{i=1}^n Z_i.
+\]</span></p>
+<p>This process is called a <strong>simple random walk</strong>.</p>
+<p>The time index is discrete, <span class="math inline">\(n=0,1,2,\ldots\)</span>, and the state space is also discrete. A realisation of the process is a sequence of values</p>
+<p><span class="math display">\[
+X_0,X_1,X_2,\ldots
+\]</span></p>
+<p>obtained from one particular sequence of random changes <span class="math inline">\(Z_1,Z_2,\ldots\)</span>. Such a sequence is called a <strong>sample path</strong>.</p>
+<p>For example, if <span class="math inline">\(X_0=100\)</span> and the successive changes are</p>
+<p><span class="math display">\[
++1,\quad -1,\quad +1,\quad +1,\quad -1,
+\]</span></p>
+<p>then the corresponding sample path is</p>
+<p><span class="math display">\[
+100,\quad 101,\quad 100,\quad 101,\quad 102,\quad 101.
+\]</span></p>
+<p>Different sequences of random changes produce different sample paths. The random walk therefore describes a collection of possible paths rather than a single deterministic sequence.</p>
+<section id="the-random-changes" class="level3" data-number="3.1.1">
+<h3 data-number="3.1.1" class="anchored" data-anchor-id="the-random-changes"><span class="header-section-number">3.1.1</span> The random changes</h3>
+<p>The random variables <span class="math inline">\(Z_1,Z_2,\ldots\)</span> are assumed to be independent and identically distributed. In particular,</p>
+<p><span class="math display">\[
+\Pr(Z_i=1)=p,
+\qquad
+\Pr(Z_i=-1)=q=1-p.
+\]</span></p>
+<p>The expected value and variance of each random change are</p>
+<p><span class="math display">\[
+\begin{aligned}
+\mu
+&amp;=\mathrm{E}[Z_i]\\
+&amp;=p-q\\
+&amp;=2p-1,
+\end{aligned}
+\]</span></p>
+<p>and</p>
+<p><span class="math display">\[
+\begin{aligned}
+\sigma^2
+&amp;=\mathrm{Var}(Z_i)\\
+&amp;=\mathrm{E}[Z_i^2]-{\mathrm{E}[Z_i]}^2\\
+&amp;=1-(p-q)^2\\
+&amp;=4pq.
+\end{aligned}
+\]</span></p>
+<p>When <span class="math inline">\(p=\frac12\)</span>, the upward and downward movements have equal probability. The random walk is then called a <strong>symmetric random walk</strong>. In this case,</p>
+<p><span class="math display">\[
+\mathrm{E}[Z_i]=0,
+\qquad
+\mathrm{Var}(Z_i)=1.
+\]</span></p>
+</section>
+<section id="behaviour-of-the-random-walk" class="level3" data-number="3.1.2">
+<h3 data-number="3.1.2" class="anchored" data-anchor-id="behaviour-of-the-random-walk"><span class="header-section-number">3.1.2</span> Behaviour of the random walk</h3>
+<p>Since</p>
+<p><span class="math display">\[
+X_n=a+\sum_{i=1}^n Z_i,
+\]</span></p>
+<p>the expectation of the process at time <span class="math inline">\(n\)</span> is</p>
+<p><span class="math display">\[
+\begin{aligned}
+\mathrm{E}[X_n]
+&amp;=a+\sum_{i=1}^n\mathrm{E}[Z_i]\\
+&amp;=a+n(p-q).
+\end{aligned}
+\]</span></p>
+<p>Similarly, since the <span class="math inline">\(Z_i\)</span> are independent,</p>
+<p><span class="math display">\[
+\begin{aligned}
+\mathrm{Var}(X_n)
+&amp;=\mathrm{Var}\left(\sum_{i=1}^n Z_i\right)\\
+&amp;=\sum_{i=1}^n\mathrm{Var}(Z_i)\\
+&amp;=4npq.
+\end{aligned}
+\]</span></p>
+<p>Thus,</p>
+<p><span class="math display">\[
+\boxed{
+\mathrm{E}[X_n]=a+n(p-q),
+\qquad
+\mathrm{Var}(X_n)=4npq.
+}
+\]</span></p>
+<p>In particular, for a symmetric random walk,</p>
+<p><span class="math display">\[
+\mathrm{E}[X_n]=a,
+\qquad
+\mathrm{Var}(X_n)=n.
+\]</span></p>
+<p>The variance increases with time, reflecting the increasing uncertainty about the position of the random walk.</p>
+</section>
+<section id="example-a-probability-involving-several-time-points" class="level3" data-number="3.1.3">
+<h3 data-number="3.1.3" class="anchored" data-anchor-id="example-a-probability-involving-several-time-points"><span class="header-section-number">3.1.3</span> Example: A probability involving several time points</h3>
+<p>Suppose that <span class="math inline">\(X_0=100\)</span>. Consider the probability</p>
+<p><span class="math display">\[
+\Pr(X_2=98,X_5=99\mid X_0=100).
+\]</span></p>
+<p>For <span class="math inline">\(X_2=98\)</span>, the process must decrease on both of the first two steps. This has probability</p>
+<p><span class="math display">\[
+q^2.
+\]</span></p>
+<p>Starting from <span class="math inline">\(X_2=98\)</span>, we need to reach <span class="math inline">\(X_5=99\)</span> after three further steps. The net change must therefore be <span class="math inline">\(+1\)</span>. This requires two upward steps and one downward step. There are</p>
+<p><span class="math display">\[
+{3\choose2}=3
+\]</span></p>
+<p>possible orders for these three steps, and each has probability <span class="math inline">\(p^2q\)</span>. Hence,</p>
+<p><span class="math display">\[
+\begin{aligned}
+\Pr(X_2=98,X_5=99\mid X_0=100)
+&amp;=q^2{3\choose2}p^2q\\
+&amp;=3p^2q^3.
+\end{aligned}
+\]</span></p>
+<p>This example illustrates an important feature of the random walk: probabilities concerning future states can be calculated by considering the sequence of random changes between the relevant time points.</p>
+</section>
+<section id="simulating-a-simple-random-walk" class="level3" data-number="3.1.4">
+<h3 data-number="3.1.4" class="anchored" data-anchor-id="simulating-a-simple-random-walk"><span class="header-section-number">3.1.4</span> Simulating a Simple Random Walk</h3>
+<p>The random walk has many possible sample paths. Simulation provides a simple way to visualise these paths and to see how the behaviour of the process changes across different realisations.</p>
+<p>For simplicity, consider a symmetric random walk with</p>
+<p><span class="math display">\[
+p=q=\frac12
+\]</span></p>
+<p>and initial value <span class="math inline">\(X_0=0\)</span>. At each step, the process moves one unit upward or downward with equal probability.</p>
+<p>A single realisation can be simulated by generating independent random variables</p>
+<p><span class="math display">\[
+Z_1,Z_2,\ldots,Z_n,
+\]</span></p>
+<p>where</p>
+<p><span class="math display">\[
+Z_i=
+\begin{cases}
+1, &amp; \text{with probability }1/2,\\
+-1, &amp; \text{with probability }1/2.
+\end{cases}
+\]</span></p>
+<p>The corresponding sample path is then obtained from</p>
+<p><span class="math display">\[
+X_n=\sum_{i=1}^n Z_i.
+\]</span></p>
+<section id="simulating-one-realisation" class="level4">
+<h4 class="anchored" data-anchor-id="simulating-one-realisation">Simulating one realisation</h4>
+<p>The following R code generates and plots one realisation of a symmetric random walk over 100 steps.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>Z <span class="ot">&lt;-</span> <span class="fu">sample</span>(</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>),</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">size =</span> n,</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">replace =</span> <span class="cn">TRUE</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fu">cumsum</span>(Z))</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  <span class="dv">0</span><span class="sc">:</span>n, X,</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"l"</span>,</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">"Time, n"</span>,</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylab =</span> <span class="st">"X_n"</span>,</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"One Realisation of a Simple Random Walk"</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="02_Discrete_Time_Stochastic_Processes_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The first value of <code>X</code> is <span class="math inline">\(X_0=0\)</span>. The function <code>cumsum()</code> then calculates the cumulative sum of the successive changes, giving</p>
+<p><span class="math display">\[
+X_1,X_2,\ldots,X_n.
+\]</span></p>
+<p>The resulting graph is one possible sample path of the random walk. A different sequence of random changes produces a different path.</p>
+<p>The use of <code>set.seed()</code> makes the simulation reproducible. In particular, another user running the same code with the same seed obtains the same realisation.</p>
+</section>
+<section id="simulating-several-realisations" class="level4">
+<h4 class="anchored" data-anchor-id="simulating-several-realisations">Simulating several realisations</h4>
+<p>A single sample path does not show the full range of possible behaviour. We can simulate several independent realisations and plot them together.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">0</span>, <span class="at">nrow =</span> n <span class="sc">+</span> <span class="dv">1</span>, <span class="at">ncol =</span> m)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>m) {</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  Z <span class="ot">&lt;-</span> <span class="fu">sample</span>(</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>),</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> n,</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">replace =</span> <span class="cn">TRUE</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  X[, j] <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fu">cumsum</span>(Z))</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="fu">matplot</span>(</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>  <span class="dv">0</span><span class="sc">:</span>n, X,</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"l"</span>,</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">lty =</span> <span class="dv">1</span>,</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">"Time, n"</span>,</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylab =</span> <span class="st">"X_n"</span>,</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Ten Realisations of a Simple Random Walk"</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="02_Discrete_Time_Stochastic_Processes_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Each line represents one realisation of the same stochastic process. All paths start at <span class="math inline">\(X_0=0\)</span>, but they evolve differently because the random changes are different.</p>
+<p>Some paths may move substantially above zero, while others may move below zero. Some may return to zero many times. This variation is a consequence of the randomness in the process.</p>
+<p>The simulation also illustrates an important distinction:</p>
+<ul>
+<li>the <strong>stochastic process</strong> describes all possible random evolution of the system;</li>
+<li>a <strong>realisation</strong> or <strong>sample path</strong> is one particular outcome of that process.</li>
+</ul>
+<p>Thus, the lines in the figure are not different stochastic processes. They are different realisations of the same simple random walk.</p>
+</section>
+<section id="changing-the-probability-of-an-upward-movement" class="level4">
+<h4 class="anchored" data-anchor-id="changing-the-probability-of-an-upward-movement">Changing the probability of an upward movement</h4>
+<p>The same simulation can be used when the probabilities of upward and downward movements are unequal. Suppose</p>
+<p><span class="math display">\[
+p=\Pr(Z_i=1)=0.6,
+\qquad
+q=\Pr(Z_i=-1)=0.4.
+\]</span></p>
+<p>The random walk now has a positive expected increment,</p>
+<p><span class="math display">\[
+\mathrm{E}[Z_i]=p-q=0.2.
+\]</span></p>
+<p>Consequently,</p>
+<p><span class="math display">\[
+\mathrm{E}[X_n]=0.2n
+\]</span></p>
+<p>when <span class="math inline">\(X_0=0\)</span>. We can simulate several realisations as follows.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fl">0.6</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">0</span>, <span class="at">nrow =</span> n <span class="sc">+</span> <span class="dv">1</span>, <span class="at">ncol =</span> m)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>m) {</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  Z <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">runif</span>(n) <span class="sc">&lt;</span> p,</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="dv">1</span>,</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    <span class="sc">-</span><span class="dv">1</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>  X[, j] <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fu">cumsum</span>(Z))</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="fu">matplot</span>(</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>  <span class="dv">0</span><span class="sc">:</span>n, X,</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"l"</span>,</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">lty =</span> <span class="dv">1</span>,</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">"Time, n"</span>,</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylab =</span> <span class="st">"X_n"</span>,</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Ten Realisations of a Simple Random Walk (p = 0.6)"</span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="02_Discrete_Time_Stochastic_Processes_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Compared with the symmetric case, the paths tend to move upward over time. This does not mean that every realisation increases at every step. A particular path can still move downward for several consecutive steps. The positive value of <span class="math inline">\(\mathrm{E}[Z_i]\)</span> describes the average direction of the process across repeated realisations.</p>
+<p>Simulation therefore gives a useful visual interpretation of the quantities</p>
+<p><span class="math display">\[
+\mathrm{E}[X_n]
+\quad\text{and}\quad
+\mathrm{Var}(X_n),
+\]</span></p>
+<p>while the mathematical results describe these features exactly.</p>
+</section>
+</section>
+<section id="example-distribution-of-the-random-walk" class="level3" data-number="3.1.5">
+<h3 data-number="3.1.5" class="anchored" data-anchor-id="example-distribution-of-the-random-walk"><span class="header-section-number">3.1.5</span> Example: Distribution of the random walk</h3>
+<p>Suppose that <span class="math inline">\(X_0=0\)</span>. After <span class="math inline">\(n\)</span> steps, let <span class="math inline">\(A\)</span> be the number of upward steps and <span class="math inline">\(B\)</span> the number of downward steps. Then</p>
+<p><span class="math display">\[
+A+B=n
+\]</span></p>
+<p>and</p>
+<p><span class="math display">\[
+X_n=A-B.
+\]</span></p>
+<p>For example, after <span class="math inline">\(2n\)</span> steps, the random walk can only be at an even integer. If</p>
+<p><span class="math display">\[
+X_{2n}=2m,
+\]</span></p>
+<p>then</p>
+<p><span class="math display">\[
+A-B=2m,
+\qquad
+A+B=2n.
+\]</span></p>
+<p>Solving these equations gives</p>
+<p><span class="math display">\[
+A=n+m,
+\qquad
+B=n-m.
+\]</span></p>
+<p>Since <span class="math inline">\(A\)</span> has a binomial distribution with parameters <span class="math inline">\(2n\)</span> and <span class="math inline">\(p\)</span>,</p>
+<p><span class="math display">\[
+\Pr(X_{2n}=2m)
+={2n\choose n+m}p^{n+m}q^{n-m},
+\qquad -n\leq m\leq n.
+\]</span></p>
+<p>Similarly, after <span class="math inline">\(2n+1\)</span> steps, the random walk can only be at an odd integer. For <span class="math inline">\(-n-1\leq m\leq n\)</span>,</p>
+<p><span class="math display">\[
+\Pr(X_{2n+1}=2m+1)
+={2n+1\choose n+m+1}
+p^{n+m+1}q^{n-m}.
+\]</span></p>
+<p>These results show that the distribution of the random walk can be obtained from the binomial distribution.</p>
+</section>
+<section id="a-key-observation" class="level3" data-number="3.1.6">
+<h3 data-number="3.1.6" class="anchored" data-anchor-id="a-key-observation"><span class="header-section-number">3.1.6</span> A key observation</h3>
+<p>Consider the random walk at time <span class="math inline">\(n\)</span>. Once the current value <span class="math inline">\(X_n\)</span> is known, the distribution of the next value <span class="math inline">\(X_{n+1}\)</span> is determined by</p>
+<p><span class="math display">\[
+\Pr(X_{n+1}=X_n+1\mid X_n)=p
+\]</span></p>
+<p>and</p>
+<p><span class="math display">\[
+\Pr(X_{n+1}=X_n-1\mid X_n)=q.
+\]</span></p>
+<p>The earlier values</p>
+<p><span class="math display">\[
+X_0,X_1,\ldots,X_{n-1}
+\]</span></p>
+<p>do not affect these probabilities once <span class="math inline">\(X_n\)</span> is known.</p>
+<p>For example, suppose that <span class="math inline">\(X_n=100\)</span>. Regardless of how the process arrived at 100, the probability that the next value is 101 is <span class="math inline">\(p\)</span>, while the probability that the next value is 99 is <span class="math inline">\(q\)</span>.</p>
+<p>This property is the central idea behind a <strong>Markov chain</strong>. The random walk provides a simple example in which the future behaviour of the process depends on the present state, while the past is irrelevant once the present state is known. We formalise this idea in the next section.</p>
+</section>
+</section>
+<section id="the-markov-property" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="the-markov-property"><span class="header-section-number">3.2</span> The Markov Property</h2>
+<p>Consider again the simple random walk model for the stock price. Suppose that the stock prices over the first four days are</p>
+<p><span class="math display">\[
+(X_0,X_1,X_2,X_3)=(100,99,98,99).
+\]</span></p>
+<p>We want to determine the distribution of the stock price <span class="math inline">\(X_4\)</span>.</p>
+<p>For the simple random walk, the price changes by <span class="math inline">\(1\)</span> with probability <span class="math inline">\(p\)</span> and by <span class="math inline">\(-1\)</span> with probability <span class="math inline">\(q=1-p\)</span>. Since <span class="math inline">\(X_3=99\)</span>,</p>
+<p><span class="math display">\[
+\Pr(X_4=100\mid X_3=99)=p
+\]</span></p>
+<p>and</p>
+<p><span class="math display">\[
+\Pr(X_4=98\mid X_3=99)=q.
+\]</span></p>
+<p>The important point is that these probabilities do not depend on how the process arrived at <span class="math inline">\(X_3=99\)</span>. In particular,</p>
+<p><span class="math display">\[
+\Pr(X_4=j\mid X_0=100,X_1=99,X_2=98,X_3=99)
+=\Pr(X_4=j\mid X_3=99).
+\]</span></p>
+<p>Thus, once the current state <span class="math inline">\(X_3\)</span> is known, the earlier values <span class="math inline">\(X_0,X_1,X_2\)</span> provide no additional information about the distribution of the next state.</p>
+<p>This property is the key idea behind a Markov chain.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Key Idea
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A stochastic process has the <strong>Markov property</strong> if, given its current state, the past does not provide additional information about its future evolution.</p>
+</div>
+</div>
+<section id="the-markov-property-1" class="level3" data-number="3.2.1">
+<h3 data-number="3.2.1" class="anchored" data-anchor-id="the-markov-property-1"><span class="header-section-number">3.2.1</span> The Markov property</h3>
+<p>Let <span class="math inline">\({X_n:n=0,1,2,\ldots}\)</span> be a discrete-time stochastic process. The process has the <strong>Markov property</strong> if, for every <span class="math inline">\(n\)</span>,</p>
+<p><span class="math display">\[
+\Pr(X_{n+1}=j\mid X_0=i_0,\ldots,X_{n-1}=i_{n-1},X_n=i)
+=\Pr(X_{n+1}=j\mid X_n=i),
+\]</span></p>
+<p>whenever the conditional probabilities are defined.</p>
+<p>The left-hand side uses the entire history of the process up to time <span class="math inline">\(n\)</span>. The right-hand side uses only the current state <span class="math inline">\(X_n=i\)</span>.</p>
+<p>The Markov property can therefore be expressed informally as</p>
+<p><span class="math display">\[
+\boxed{\text{past} \longrightarrow \text{current state} \longrightarrow \text{future}.}
+\]</span></p>
+<p>The current state contains all the information from the past that is relevant for predicting the next state.</p>
+<p>The Markov property also extends to the whole future of the process. Given the current state <span class="math inline">\(X_n\)</span>, the future</p>
+<p><span class="math display">\[
+X_{n+1},X_{n+2},\ldots
+\]</span></p>
+<p>is conditionally independent of the past</p>
+<p><span class="math display">\[
+X_0,X_1,\ldots,X_{n-1}.
+\]</span></p>
+<p>For example, for a set of possible future states,</p>
+<p><span class="math display">\[
+\begin{aligned}
+&amp;\Pr(X_{n+1}=i_{n+1},\ldots,X_{n+m}=i_{n+m}\mid X_0=i_0,\ldots,X_n=i_n)\\
+&amp;=
+\Pr(X_{n+1}=i_{n+1},\ldots,X_{n+m}=i_{n+m}\mid X_n=i_n).
+\end{aligned}
+\]</span></p>
+<p>This means that once <span class="math inline">\(X_n\)</span> is known, the particular path taken to reach <span class="math inline">\(X_n\)</span> does not affect the conditional distribution of the future.</p>
+<div id="exm-walk" class="theorem example">
+<p><span class="theorem-title"><strong>Example 3.1 (Simple random walk)</strong></span> The simple random walk has the Markov property.</p>
+<p>Suppose that <span class="math inline">\(X_n=i\)</span>. The next state can only be <span class="math inline">\(i+1\)</span> or <span class="math inline">\(i-1\)</span>, with probabilities <span class="math inline">\(p\)</span> and <span class="math inline">\(q=1-p\)</span>, respectively. Hence,</p>
+<p><span class="math display">\[
+\Pr(X_{n+1}=j\mid X_n=i)=
+\begin{cases}
+p, &amp; j=i+1,\\
+q, &amp; j=i-1,\\
+0, &amp; \text{otherwise}.
+\end{cases}
+\]</span></p>
+<p>These probabilities depend only on the current state <span class="math inline">\(i\)</span> and do not depend on the earlier states <span class="math inline">\(X_0,\ldots,X_{n-1}\)</span>. Therefore, the simple random walk satisfies the Markov property.</p>
+</div>
+<p>The Markov property does not mean that successive values of the process are independent. In fact, <span class="math inline">\(X_{n+1}\)</span> generally depends on <span class="math inline">\(X_n\)</span>. The property states that, for predicting the future, the current state contains the information from the past that is relevant to the future.</p>
+</section>
+</section>
+<section id="discrete-time-markov-chains" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="discrete-time-markov-chains"><span class="header-section-number">3.3</span> Discrete-Time Markov Chains</h2>
+<p>A <strong>discrete-time Markov chain</strong> is a discrete-time stochastic process that satisfies the Markov property.</p>
+<p>Let</p>
+<p><span class="math display">\[
+{X_n:n=0,1,2,\ldots}
+\]</span></p>
+<p>be a stochastic process with state space <span class="math inline">\(S\)</span>. The process is a <strong>discrete-time Markov chain</strong> if</p>
+<p><span class="math display">\[
+\boxed{
+\Pr(X_{n+1}=j\mid X_n=i,X_{n-1}=i_{n-1},\ldots,X_0=i_0)
+=\Pr(X_{n+1}=j\mid X_n=i)
+}
+\]</span></p>
+<p>for every <span class="math inline">\(n\geq 0\)</span> and all states for which the conditional probabilities are defined.</p>
+<p>The state space <span class="math inline">\(S\)</span> is the set of all possible values that the process can take. In many applications considered in this chapter, <span class="math inline">\(S\)</span> is finite or countably infinite. For example,</p>
+<p><span class="math display">\[
+S\subseteq{0,1,2,\ldots}.
+\]</span></p>
+<p>The simple random walk has state space</p>
+<p><span class="math display">\[
+S=\mathbb{Z}
+\]</span></p>
+<p>when there are no boundaries, because the process can take any integer value.</p>
+<section id="interpreting-the-definition" class="level3" data-number="3.3.1">
+<h3 data-number="3.3.1" class="anchored" data-anchor-id="interpreting-the-definition"><span class="header-section-number">3.3.1</span> Interpreting the definition</h3>
+<p>The Markov property can be understood by comparing two conditional probabilities.</p>
+<p>Suppose that the current state is <span class="math inline">\(i\)</span>. We can ask for the probability that the next state is <span class="math inline">\(j\)</span>:</p>
+<p><span class="math display">\[
+\Pr(X_{n+1}=j\mid X_n=i).
+\]</span></p>
+<p>We could instead condition on the entire history,</p>
+<p><span class="math display">\[
+X_0=i_0,\ldots,X_{n-1}=i_{n-1},X_n=i.
+\]</span></p>
+<p>For a Markov chain, the answer is the same:</p>
+<p><span class="math display">\[
+\Pr(X_{n+1}=j\mid X_0=i_0,\ldots,X_n=i)
+=\Pr(X_{n+1}=j\mid X_n=i).
+\]</span></p>
+<p>Thus, the complete history can be replaced by the current state when determining the distribution of the next state.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Markov property
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>For a discrete-time Markov chain,</p>
+<p><span class="math display">\[
+\boxed{
+\text{distribution of the next state}
+=\text{a function of the current state only}.
+}
+\]</span></p>
+<p>The process may depend on its past through the current state, but the past has no further effect once the current state is known.</p>
+</div>
+</div>
+</section>
+<section id="examples-of-markov-chains" class="level3" data-number="3.3.2">
+<h3 data-number="3.3.2" class="anchored" data-anchor-id="examples-of-markov-chains"><span class="header-section-number">3.3.2</span> Examples of Markov chains</h3>
+<p>The simple random walk is one example of a discrete-time Markov chain. Many actuarial models can also be formulated in this way.</p>
+<p>For example, consider a no-claim discount (NCD) system. Let <span class="math inline">\(X_n\)</span> denote the discount level of a policyholder after <span class="math inline">\(n\)</span> policy years. Suppose the state space is</p>
+<p><span class="math display">\[
+S={0,1,2},
+\]</span></p>
+<p>where the states correspond to discount levels of <span class="math inline">\(0%\)</span>, <span class="math inline">\(20%\)</span>, and <span class="math inline">\(40%\)</span>.</p>
+<p>Suppose that a claim-free year moves the policyholder up one level, unless the maximum level has already been reached, while a year with at least one claim moves the policyholder down one level, unless the policyholder is already at level <span class="math inline">\(0\)</span>.</p>
+<p>If the probability of a claim-free year is <span class="math inline">\(p\)</span> and is independent of the policy year, then the probability of the next discount level depends only on the current discount level. For example, if <span class="math inline">\(X_n=1\)</span>, then</p>
+<p><span class="math display">\[
+\Pr(X_{n+1}=0\mid X_n=1)=1-p
+\]</span></p>
+<p>and</p>
+<p><span class="math display">\[
+\Pr(X_{n+1}=2\mid X_n=1)=p.
+\]</span></p>
+<p>The previous discount levels <span class="math inline">\(X_0,\ldots,X_{n-1}\)</span> do not affect these probabilities once <span class="math inline">\(X_n\)</span> is known. Therefore, the NCD system is a discrete-time Markov chain.</p>
+<p>The simple random walk and the NCD system have very different interpretations, but they share the same mathematical structure. In both cases, the current state is sufficient for determining the conditional distribution of the next state.</p>
+<p>The next step is to describe these conditional probabilities systematically. This leads to the concept of <strong>one-step transition probabilities</strong> and their representation by a <strong>transition probability matrix</strong>.</p>
+<div id="fig-ncd-markov" class="lightbox quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-ncd-markov-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="../figures/Modeling_NCD_as_Markov_Chain.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Figure&nbsp;3.1: No-claim discount"><img src="../figures/Modeling_NCD_as_Markov_Chain.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ncd-markov-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3.1: No-claim discount
+</figcaption>
+</figure>
+</div>
+</section>
+</section>
+<section id="one-step-transition-probabilities-and-transition-matrices" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="one-step-transition-probabilities-and-transition-matrices"><span class="header-section-number">3.4</span> One-Step Transition Probabilities and Transition Matrices</h2>
+<p>The Markov property tells us that, given the current state, the past does not provide additional information about the next state. We can therefore describe the one-step evolution of a Markov chain by specifying the probability of moving from each current state to each possible next state.</p>
+<section id="one-step-transition-probabilities" class="level3" data-number="3.4.1">
+<h3 data-number="3.4.1" class="anchored" data-anchor-id="one-step-transition-probabilities"><span class="header-section-number">3.4.1</span> One-step transition probabilities</h3>
+<p>Let <span class="math inline">\({X_n:n=0,1,2,\ldots}\)</span> be a discrete-time Markov chain with state space <span class="math inline">\(S\)</span>. The <strong>one-step transition probability</strong> from state <span class="math inline">\(i\)</span> to state <span class="math inline">\(j\)</span> at time <span class="math inline">\(n\)</span> is</p>
+<p><span class="math display">\[
+p_{ij}^{(n,n+1)}
+=\Pr(X_{n+1}=j\mid X_n=i),
+\qquad i,j\in S.
+\]</span></p>
+<p>The notation <span class="math inline">\(p_{ij}^{(n,n+1)}\)</span> indicates that the transition is from state <span class="math inline">\(i\)</span> at time <span class="math inline">\(n\)</span> to state <span class="math inline">\(j\)</span> at time <span class="math inline">\(n+1\)</span>.</p>
+<p>For a fixed current state <span class="math inline">\(i\)</span>, the collection</p>
+<p><span class="math display">\[
+\left\{p_{ij}^{(n,n+1)}:j\in S\right\},
+\qquad
+p_{ij}^{(n,n+1)}
+=
+\Pr(X_{n+1}=j\mid X_n=i).
+\]</span></p>
+<p>describes the probability distribution of the next state given that the current state is <span class="math inline">\(i\)</span>.</p>
+<p>Therefore,</p>
+<p><span class="math display">\[
+0\leq p_{ij}^{(n,n+1)}\leq 1
+\]</span></p>
+<p>and</p>
+<p><span class="math display">\[
+\sum_{j\in S}p_{ij}^{(n,n+1)}=1.
+\]</span></p>
+<p>The probabilities in a given row must sum to one because the process must move to one of the states in <span class="math inline">\(S\)</span> at the next time point.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Interpreting a transition probability
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The quantity</p>
+<p><span class="math display">\[
+p_{ij}^{(n,n+1)}
+=\Pr(X_{n+1}=j\mid X_n=i)
+\]</span></p>
+<p>is the probability that the chain moves <strong>from state <span class="math inline">\(i\)</span> to state <span class="math inline">\(j\)</span> in one time step</strong>.</p>
+<p>The first subscript is the current state and the second subscript is the next state.</p>
+</div>
+</div>
+</section>
+<section id="example-simple-random-walk" class="level3" data-number="3.4.2">
+<h3 data-number="3.4.2" class="anchored" data-anchor-id="example-simple-random-walk"><span class="header-section-number">3.4.2</span> Example: Simple random walk</h3>
+<p>Consider a simple random walk with</p>
+<p><span class="math display">\[
+\Pr(Z_n=1)=p,
+\qquad
+\Pr(Z_n=-1)=q=1-p.
+\]</span></p>
+<p>If <span class="math inline">\(X_n=i\)</span>, then the next state is either <span class="math inline">\(i+1\)</span> or <span class="math inline">\(i-1\)</span>. Hence,</p>
+<p><span class="math display">\[
+p_{ij}^{(n,n+1)}
+=\begin{cases}
+p, &amp; j=i+1,\\
+q, &amp; j=i-1,\\
+0, &amp; \text{otherwise}.
+\end{cases}
+\]</span></p>
+<p>For example,</p>
+<p><span class="math display">\[
+\Pr(X_{n+1}=6\mid X_n=5)=p
+\]</span></p>
+<p>and</p>
+<p><span class="math display">\[
+\Pr(X_{n+1}=4\mid X_n=5)=q.
+\]</span></p>
+<p>The probabilities do not depend on <span class="math inline">\(n\)</span> because the rules governing the random walk are the same at every time point.</p>
+<p>This leads to the important special case of a <strong>time-homogeneous Markov chain</strong>.</p>
+</section>
+</section>
+<section id="time-homogeneous-markov-chains" class="level2" data-number="3.5">
+<h2 data-number="3.5" class="anchored" data-anchor-id="time-homogeneous-markov-chains"><span class="header-section-number">3.5</span> Time-Homogeneous Markov Chains</h2>
+<p>A Markov chain is <strong>time-homogeneous</strong> if the one-step transition probabilities do not depend on the time at which the transition occurs. That is,</p>
+<p><span class="math display">\[
+\Pr(X_{n+1}=j\mid X_n=i)
+=\Pr(X_1=j\mid X_0=i)
+\]</span></p>
+<p>for all <span class="math inline">\(n\geq 0\)</span> and <span class="math inline">\(i,j\in S\)</span>.</p>
+<p>In this case, we write</p>
+<p><span class="math display">\[
+p_{ij}
+=\Pr(X_{n+1}=j\mid X_n=i).
+\]</span></p>
+<p>The transition probability is therefore determined entirely by the current state <span class="math inline">\(i\)</span> and the next state <span class="math inline">\(j\)</span>.</p>
+<p>If the transition probabilities depend on <span class="math inline">\(n\)</span>, the chain is called <strong>time-inhomogeneous</strong> or <strong>non-homogeneous</strong>.</p>
+<p>Unless stated otherwise, we will assume that Markov chains are time-homogeneous.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Homogeneous versus non-homogeneous
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>For a time-homogeneous Markov chain,</p>
+<p><span class="math display">\[
+\Pr(X_{n+1}=j\mid X_n=i)=p_{ij}
+\]</span></p>
+<p>is the same at every time <span class="math inline">\(n\)</span>.</p>
+<p>For a time-inhomogeneous Markov chain, the corresponding probability can change with time:</p>
+<p><span class="math display">\[
+\Pr(X_{n+1}=j\mid X_n=i)=p_{ij}^{(n,n+1)}.
+\]</span></p>
+</div>
+</div>
+<section id="transition-probability-matrix" class="level3" data-number="3.5.1">
+<h3 data-number="3.5.1" class="anchored" data-anchor-id="transition-probability-matrix"><span class="header-section-number">3.5.1</span> Transition probability matrix</h3>
+<p>For a time-homogeneous Markov chain, all one-step transition probabilities can be collected into a matrix.</p>
+<p>The <strong>transition probability matrix</strong>, denoted by <span class="math inline">\(P\)</span>, is the matrix whose <span class="math inline">\((i,j)\)</span>-th entry is</p>
+<p><span class="math display">\[
+p_{ij}=\Pr(X_{n+1}=j\mid X_n=i).
+\]</span></p>
+<p>Thus,</p>
+<p><span class="math display">\[
+P=(p_{ij})_{i,j\in S}.
+\]</span></p>
+<p>For a finite state space <span class="math inline">\(S={1,2,\ldots,d}\)</span>,</p>
+<p><span class="math display">\[
+P=
+\begin{pmatrix}
+p_{11} &amp; p_{12} &amp; \cdots &amp; p_{1d}\\
+p_{21} &amp; p_{22} &amp; \cdots &amp; p_{2d}\\
+\vdots &amp; \vdots &amp; \ddots &amp; \vdots\\
+p_{d1} &amp; p_{d2} &amp; \cdots &amp; p_{dd}
+\end{pmatrix}.
+\]</span></p>
+<p>The rows correspond to the current state and the columns correspond to the next state.</p>
+<p>For example, the entry <span class="math inline">\(p_{23}\)</span> is the probability of moving from state <span class="math inline">\(2\)</span> to state <span class="math inline">\(3\)</span> in one time step:</p>
+<p><span class="math display">\[
+p_{23}=\Pr(X_{n+1}=3\mid X_n=2).
+\]</span></p>
+<p>Since each row gives a probability distribution over the possible next states,</p>
+<p><span class="math display">\[
+p_{ij}\geq 0
+\]</span></p>
+<p>and</p>
+<p><span class="math display">\[
+\sum_{j\in S}p_{ij}=1
+\]</span></p>
+<p>for every <span class="math inline">\(i\in S\)</span>.</p>
+<p>A matrix satisfying these two properties is called a <strong>stochastic matrix</strong>.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Transition matrix
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>For a time-homogeneous Markov chain,</p>
+<p><span class="math display">\[
+\boxed{
+P=(p_{ij}),\qquad
+p_{ij}=\Pr(X_{n+1}=j\mid X_n=i).
+}
+\]</span></p>
+<p>Each row of <span class="math inline">\(P\)</span> describes the probability distribution of the next state given the current state.</p>
+</div>
+</div>
+</section>
+<section id="example-ncd-system" class="level3" data-number="3.5.2">
+<h3 data-number="3.5.2" class="anchored" data-anchor-id="example-ncd-system"><span class="header-section-number">3.5.2</span> Example: NCD system</h3>
+<p>Consider the NCD system introduced earlier, with state space</p>
+<p><span class="math display">\[
+S={0,1,2},
+\]</span></p>
+<p>where the states correspond to discount levels of <span class="math inline">\(0%\)</span>, <span class="math inline">\(20%\)</span>, and <span class="math inline">\(40%\)</span>.</p>
+<p>Suppose that the probability of a claim-free year is <span class="math inline">\(p\)</span> and the probability of at least one claim is <span class="math inline">\(1-p\)</span>. The rules are:</p>
+<ul>
+<li>from state <span class="math inline">\(0\)</span>, a claim-free year moves the policyholder to state <span class="math inline">\(1\)</span>, while a claim keeps the policyholder in state <span class="math inline">\(0\)</span>;</li>
+<li>from state <span class="math inline">\(1\)</span>, a claim-free year moves the policyholder to state <span class="math inline">\(2\)</span>, while a claim moves the policyholder to state <span class="math inline">\(0\)</span>;</li>
+<li>from state <span class="math inline">\(2\)</span>, a claim-free year keeps the policyholder in state <span class="math inline">\(2\)</span>, while a claim moves the policyholder to state <span class="math inline">\(1\)</span>.</li>
+</ul>
+<p>The transition probabilities are therefore</p>
+<p><span class="math display">\[
+\begin{aligned}
+p_{00}&amp;=1-p, &amp; p_{01}&amp;=p, &amp; p_{02}&amp;=0,\\
+p_{10}&amp;=1-p, &amp; p_{11}&amp;=0, &amp; p_{12}&amp;=p,\\
+p_{20}&amp;=0, &amp; p_{21}&amp;=1-p, &amp; p_{22}&amp;=p.
+\end{aligned}
+\]</span></p>
+<p>Hence, the transition matrix is</p>
+<p><span class="math display">\[
+P=
+\begin{pmatrix}
+1-p &amp; p &amp; 0\\
+1-p &amp; 0 &amp; p\\
+0 &amp; 1-p &amp; p
+\end{pmatrix}.
+\]</span></p>
+<div id="fig-ncd-matrix" class="lightbox quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-ncd-matrix-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="../figures/NCD_Markov_Chain_Model.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="Figure&nbsp;3.2: Transition matrix for the NCD model"><img src="../figures/NCD_Markov_Chain_Model.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ncd-matrix-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3.2: Transition matrix for the NCD model
+</figcaption>
+</figure>
+</div>
+<p>For example, the second row gives the probabilities of the next NCD level when the current level is <span class="math inline">\(1\)</span>:</p>
+<p><span class="math display">\[
+\Pr(X_{n+1}=0\mid X_n=1)=1-p,
+\]</span></p>
+<p><span class="math display">\[
+\Pr(X_{n+1}=1\mid X_n=1)=0,
+\]</span></p>
+<p>and</p>
+<p><span class="math display">\[
+\Pr(X_{n+1}=2\mid X_n=1)=p.
+\]</span></p>
+<p>The row sums to one:</p>
+<p><span class="math display">\[
+(1-p)+0+p=1.
+\]</span></p>
+<p>The transition matrix provides a compact representation of the rules governing the NCD system. Once the current state is known, the corresponding row of <span class="math inline">\(P\)</span> gives the probability distribution of the next state.</p>
+</section>
+<section id="example-health-insurance-model" class="level3" data-number="3.5.3">
+<h3 data-number="3.5.3" class="anchored" data-anchor-id="example-health-insurance-model"><span class="header-section-number">3.5.3</span> Example: Health insurance model</h3>
+<p>Consider a health insurance system in which a policyholder is classified at the end of each day as Healthy, Sick, or Dead. Let</p>
+<p><span class="math display">\[
+S={H,S,D}.
+\]</span></p>
+<p>Suppose the transition probability matrix is</p>
+<p><span class="math display">\[
+P=
+\begin{pmatrix}
+p_{HH} &amp; p_{HS} &amp; p_{HD}\\
+p_{SH} &amp; p_{SS} &amp; p_{SD}\\
+0 &amp; 0 &amp; 1
+\end{pmatrix}.
+\]</span></p>
+<div id="fig-hsd-chain" class="lightbox quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-hsd-chain-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="../figures/Healthy-Sick-Dead_Markov_Chain.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3" title="Figure&nbsp;3.3: Healthy-Sick-Dead Markov Chain"><img src="../figures/Healthy-Sick-Dead_Markov_Chain.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-hsd-chain-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3.3: Healthy-Sick-Dead Markov Chain
+</figcaption>
+</figure>
+</div>
+<p>The entry</p>
+<p><span class="math display">\[
+p_{HS}
+=\Pr(X_{n+1}=S\mid X_n=H)
+\]</span></p>
+<p>is the probability that a healthy policyholder becomes sick during the next day.</p>
+<p>Similarly,</p>
+<p><span class="math display">\[
+p_{HD}
+=\Pr(X_{n+1}=D\mid X_n=H)
+\]</span></p>
+<p>is the probability that a healthy policyholder dies during the next day.</p>
+<p>The last row is</p>
+<p><span class="math display">\[
+(0,0,1),
+\]</span></p>
+<p>which means that once the process enters state <span class="math inline">\(D\)</span>, it remains there. Thus, <span class="math inline">\(D\)</span> is an <strong>absorbing state</strong>.</p>
+<p>We will return to absorbing states and their properties later in the chapter.</p>
+</section>
+<section id="why-the-transition-matrix-is-useful" class="level3" data-number="3.5.4">
+<h3 data-number="3.5.4" class="anchored" data-anchor-id="why-the-transition-matrix-is-useful"><span class="header-section-number">3.5.4</span> Why the transition matrix is useful</h3>
+<p>The transition matrix gives a complete description of the one-step behaviour of a time-homogeneous Markov chain. For a finite state space, instead of specifying each conditional probability separately, we can work with the single matrix <span class="math inline">\(P\)</span>.</p>
+<p>For example, if the current state is known to be <span class="math inline">\(i\)</span>, then the <span class="math inline">\(i\)</span>-th row of <span class="math inline">\(P\)</span> gives</p>
+<p><span class="math display">\[
+\Pr(X_{n+1}=j\mid X_n=i),
+\qquad j\in S.
+\]</span></p>
+<p>This matrix representation also allows us to study transitions over several time steps using matrix multiplication. The next section develops this idea through <strong><span class="math inline">\(n\)</span>-step transition probabilities</strong> and the <strong>Chapman–Kolmogorov equation</strong>.</p>
+</section>
+</section>
+<section id="n-step-transition-probabilities-and-the-chapmankolmogorov-equation" class="level2" data-number="3.6">
+<h2 data-number="3.6" class="anchored" data-anchor-id="n-step-transition-probabilities-and-the-chapmankolmogorov-equation"><span class="header-section-number">3.6</span> <span class="math inline">\(n\)</span>-Step Transition Probabilities and the Chapman–Kolmogorov Equation</h2>
+<p>The transition matrix <span class="math inline">\(P\)</span> describes how a Markov chain moves from one state to another in <strong>one time step</strong>. In many applications, however, we are interested in what happens over several time steps.</p>
+<p>For example, in the NCD system, we may want to know the probability that a policyholder currently at discount level <span class="math inline">\(1\)</span> will be at discount level <span class="math inline">\(2\)</span> three years from now. This is a three-step transition probability.</p>
+<section id="n-step-transition-probabilities" class="level3" data-number="3.6.1">
+<h3 data-number="3.6.1" class="anchored" data-anchor-id="n-step-transition-probabilities"><span class="header-section-number">3.6.1</span> <span class="math inline">\(n\)</span>-step transition probabilities</h3>
+<p>Let <span class="math inline">\(\{X_n:n=0,1,2,\ldots\}\)</span> be a time-homogeneous Markov chain with state space <span class="math inline">\(S\)</span>. The <strong><span class="math inline">\(n\)</span>-step transition probability</strong> from state <span class="math inline">\(i\)</span> to state <span class="math inline">\(j\)</span> is</p>
+<p><span class="math display">\[
+p_{ij}^{(n)}
+=
+\Pr(X_{m+n}=j\mid X_m=i).
+\]</span></p>
+<p>For a time-homogeneous Markov chain, this probability does not depend on the starting time <span class="math inline">\(m\)</span>. Thus, we can equivalently write</p>
+<p><span class="math display">\[
+p_{ij}^{(n)}
+=
+\Pr(X_n=j\mid X_0=i).
+\]</span></p>
+<p>The superscript <span class="math inline">\((n)\)</span> indicates the number of transitions, not a power of the probability <span class="math inline">\(p_{ij}\)</span>.</p>
+<p>In particular,</p>
+<p><span class="math display">\[
+p_{ij}^{(1)}
+=
+\Pr(X_{n+1}=j\mid X_n=i)
+=
+p_{ij}.
+\]</span></p>
+<p>Thus, the one-step transition probabilities are the special case <span class="math inline">\(n=1\)</span>.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Interpreting <span class="math inline">\(n\)</span>-step transition probabilities
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The quantity</p>
+<p><span class="math display">\[
+p_{ij}^{(n)}
+=
+\Pr(X_{m+n}=j\mid X_m=i)
+\]</span></p>
+<p>is the probability that the chain is in state <span class="math inline">\(j\)</span> <strong><span class="math inline">\(n\)</span> steps after starting in state <span class="math inline">\(i\)</span></strong>.</p>
+</div>
+</div>
+</section>
+<section id="from-one-step-to-two-steps" class="level3" data-number="3.6.2">
+<h3 data-number="3.6.2" class="anchored" data-anchor-id="from-one-step-to-two-steps"><span class="header-section-number">3.6.2</span> From one step to two steps</h3>
+<p>Suppose that the chain starts in state <span class="math inline">\(i\)</span> and we want to calculate the probability that it is in state <span class="math inline">\(j\)</span> after two steps.</p>
+<p>The chain must be in some state <span class="math inline">\(k\)</span> after the first step. Therefore, we consider all possible intermediate states <span class="math inline">\(k\in S\)</span>.</p>
+<p>For a particular intermediate state <span class="math inline">\(k\)</span>,</p>
+<p><span class="math display">\[
+\Pr(X_2=j\mid X_0=i,X_1=k)
+=
+\Pr(X_2=j\mid X_1=k)
+=
+p_{kj},
+\]</span></p>
+<p>by the Markov property.</p>
+<p>Also,</p>
+<p><span class="math display">\[
+\Pr(X_1=k\mid X_0=i)=p_{ik}.
+\]</span></p>
+<p>Therefore,</p>
+<p><span class="math display">\[
+\begin{aligned}
+\Pr(X_2=j\mid X_0=i)
+&amp;=
+\sum_{k\in S}
+\Pr(X_2=j,X_1=k\mid X_0=i)\\
+&amp;=
+\sum_{k\in S}
+\Pr(X_2=j\mid X_1=k,X_0=i)
+\Pr(X_1=k\mid X_0=i)\\
+&amp;=
+\sum_{k\in S}
+p_{kj}p_{ik}.
+\end{aligned}
+\]</span></p>
+<p>Hence,</p>
+<p><span class="math display">\[
+\boxed{
+p_{ij}^{(2)}
+=
+\sum_{k\in S}p_{ik}p_{kj}.
+}
+\]</span></p>
+<p>The two-step transition probability is therefore obtained by considering all possible intermediate states and adding the probabilities of the corresponding two-step paths.</p>
+</section>
+<section id="example-ncd-system-1" class="level3" data-number="3.6.3">
+<h3 data-number="3.6.3" class="anchored" data-anchor-id="example-ncd-system-1"><span class="header-section-number">3.6.3</span> Example: NCD system</h3>
+<p>Consider the NCD system with transition matrix</p>
+<p><span class="math display">\[
+P=
+\begin{pmatrix}
+1-p &amp; p &amp; 0\\
+1-p &amp; 0 &amp; p\\
+0 &amp; 1-p &amp; p
+\end{pmatrix}.
+\]</span></p>
+<p>Suppose that the policyholder is currently in state <span class="math inline">\(1\)</span>. To find the probability of being in state <span class="math inline">\(2\)</span> two years later, there are two possible intermediate states.</p>
+<p>The chain can move</p>
+<p><span class="math display">\[
+1\longrightarrow 0\longrightarrow 2
+\]</span></p>
+<p>or</p>
+<p><span class="math display">\[
+1\longrightarrow 2\longrightarrow 2.
+\]</span></p>
+<p>Therefore,</p>
+<p><span class="math display">\[
+\begin{aligned}
+p_{12}^{(2)}
+&amp;=
+p_{10}p_{02}+p_{12}p_{22}\\
+&amp;=
+(1-p)(0)+p(p)\\
+&amp;=
+p^2.
+\end{aligned}
+\]</span></p>
+<p>Thus,</p>
+<p><span class="math display">\[
+\Pr(X_{n+2}=2\mid X_n=1)=p^2.
+\]</span></p>
+<p>This calculation illustrates the general principle: <strong>to calculate a multi-step transition probability, consider all possible paths through the intermediate states.</strong></p>
+</section>
+<section id="the-chapmankolmogorov-equation" class="level3" data-number="3.6.4">
+<h3 data-number="3.6.4" class="anchored" data-anchor-id="the-chapmankolmogorov-equation"><span class="header-section-number">3.6.4</span> The Chapman–Kolmogorov Equation</h3>
+<p>The same argument can be extended to an arbitrary number of steps.</p>
+<p>Suppose that the chain starts in state <span class="math inline">\(i\)</span> and we want to find the probability of reaching state <span class="math inline">\(j\)</span> after <span class="math inline">\(n\)</span> steps. Choose an intermediate time <span class="math inline">\(l\)</span>, where</p>
+<p><span class="math display">\[
+0&lt;l&lt;n.
+\]</span></p>
+<p>At time <span class="math inline">\(l\)</span>, the chain must be in some state <span class="math inline">\(k\in S\)</span>. We can therefore divide the journey into two parts:</p>
+<p><span class="math display">\[
+i
+\overset{l\text{ steps}}{\longrightarrow}
+k
+\overset{n-l\text{ steps}}{\longrightarrow}
+j.
+\]</span></p>
+<p>For a particular intermediate state <span class="math inline">\(k\)</span>,</p>
+<p><span class="math display">\[
+\Pr(X_l=k\mid X_0=i)=p_{ik}^{(l)}
+\]</span></p>
+<p>and, by the Markov property,</p>
+<p><span class="math display">\[
+\Pr(X_n=j\mid X_l=k,X_0=i)
+=
+\Pr(X_n=j\mid X_l=k)
+=
+p_{kj}^{(n-l)}.
+\]</span></p>
+<p>Summing over all possible intermediate states gives</p>
+<p><span class="math display">\[
+\boxed{
+p_{ij}^{(n)}
+=
+\sum_{k\in S}
+p_{ik}^{(l)}p_{kj}^{(n-l)},
+\qquad 0&lt;l&lt;n.
+}
+\]</span></p>
+<p>This is the <strong>Chapman–Kolmogorov equation</strong>.</p>
+<div id="fig-ck-decomposition" class="lightbox quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-ck-decomposition-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="../figures/Decomposing_the_Chapman-Kolmogorov_Equation.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4" title="Figure&nbsp;3.4: Decomposing the Chapman-Kolmogorov Equation"><img src="../figures/Decomposing_the_Chapman-Kolmogorov_Equation.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ck-decomposition-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3.4: Decomposing the Chapman-Kolmogorov Equation
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="derivation" class="level3" data-number="3.6.5">
+<h3 data-number="3.6.5" class="anchored" data-anchor-id="derivation"><span class="header-section-number">3.6.5</span> Derivation</h3>
+<p>Starting from the definition of the <span class="math inline">\(n\)</span>-step transition probability,</p>
+<p><span class="math display">\[
+p_{ij}^{(n)}
+=
+\Pr(X_n=j\mid X_0=i),
+\]</span></p>
+<p>we partition the event according to the state occupied at time <span class="math inline">\(l\)</span>:</p>
+<p><span class="math display">\[
+\begin{aligned}
+p_{ij}^{(n)}
+&amp;=
+\sum_{k\in S}
+\Pr(X_n=j,X_l=k\mid X_0=i)\\
+&amp;=
+\sum_{k\in S}
+\Pr(X_n=j\mid X_l=k,X_0=i)
+\Pr(X_l=k\mid X_0=i)\\
+&amp;=
+\sum_{k\in S}
+\Pr(X_n=j\mid X_l=k)
+\Pr(X_l=k\mid X_0=i)\\
+&amp;=
+\sum_{k\in S}
+p_{kj}^{(n-l)}p_{ik}^{(l)}.
+\end{aligned}
+\]</span></p>
+<p>Hence,</p>
+<p><span class="math display">\[
+\boxed{
+p_{ij}^{(n)}
+=
+\sum_{k\in S}
+p_{ik}^{(l)}p_{kj}^{(n-l)}.
+}
+\]</span></p>
+<p>The equation states that an <span class="math inline">\(n\)</span>-step transition can be decomposed into an <span class="math inline">\(l\)</span>-step transition followed by an <span class="math inline">\((n-l)\)</span>-step transition.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Chapman–Kolmogorov equation
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>For a time-homogeneous Markov chain,</p>
+<p><span class="math display">\[
+\boxed{
+p_{ij}^{(n)}
+=
+\sum_{k\in S}
+p_{ik}^{(l)}p_{kj}^{(n-l)},
+\qquad 0&lt;l&lt;n.
+}
+\]</span></p>
+<p>The intermediate state <span class="math inline">\(k\)</span> is summed over all possible states of the chain at the intermediate time.</p>
+</div>
+</div>
+</section>
+<section id="matrix-representation" class="level3" data-number="3.6.6">
+<h3 data-number="3.6.6" class="anchored" data-anchor-id="matrix-representation"><span class="header-section-number">3.6.6</span> Matrix representation</h3>
+<p>The Chapman–Kolmogorov equation has a simple matrix interpretation.</p>
+<p>Let</p>
+<p><span class="math display">\[
+P^{(n)}=(p_{ij}^{(n)})
+\]</span></p>
+<p>denote the matrix of <span class="math inline">\(n\)</span>-step transition probabilities. The Chapman–Kolmogorov equation gives</p>
+<p><span class="math display">\[
+P^{(n)}
+=
+P^{(l)}P^{(n-l)}.
+\]</span></p>
+<p>For a time-homogeneous Markov chain,</p>
+<p><span class="math display">\[
+P^{(1)}=P.
+\]</span></p>
+<p>Consequently,</p>
+<p><span class="math display">\[
+P^{(2)}=P^2,
+\]</span></p>
+<p><span class="math display">\[
+P^{(3)}=P^3,
+\]</span></p>
+<p>and, in general,</p>
+<p><span class="math display">\[
+\boxed{
+P^{(n)}=P^n.
+}
+\]</span></p>
+<p>Thus, the <span class="math inline">\((i,j)\)</span>-th entry of <span class="math inline">\(P^n\)</span> is the <span class="math inline">\(n\)</span>-step transition probability:</p>
+<p><span class="math display">\[
+\boxed{
+(P^n)_{ij}
+=
+p_{ij}^{(n)}
+=
+\Pr(X_{m+n}=j\mid X_m=i).
+}
+\]</span></p>
+<p>This is one of the main reasons why transition matrices are useful. Multi-step probabilities can be calculated using ordinary matrix multiplication.</p>
+<div id="exm-ncd" class="theorem example">
+<p><span class="theorem-title"><strong>Example 3.2 (NCD system: a three-year transition)</strong></span> Consider the NCD system with <span class="math inline">\(p=3/4\)</span>, so that the transition matrix is</p>
+<p><span class="math display">\[
+P=
+\begin{pmatrix}
+1/4 &amp; 3/4 &amp; 0\\
+1/4 &amp; 0 &amp; 3/4\\
+0 &amp; 1/4 &amp; 3/4
+\end{pmatrix}.
+\]</span></p>
+<p>Suppose that a policyholder is currently in state <span class="math inline">\(1\)</span>. What is the probability that the policyholder will be in state <span class="math inline">\(1\)</span> three years later?</p>
+<p>We first calculate</p>
+<p><span class="math display">\[
+P^3
+=
+\begin{pmatrix}
+7/64 &amp; 21/64 &amp; 9/16\\
+7/64 &amp; 3/16 &amp; 45/64\\
+1/16 &amp; 15/64 &amp; 45/64
+\end{pmatrix}.
+\]</span></p>
+<p>The required probability is the <span class="math inline">\((1,1)\)</span> entry of <span class="math inline">\(P^3\)</span>:</p>
+<p><span class="math display">\[
+\Pr(X_{n+3}=1\mid X_n=1)
+=
+p_{11}^{(3)}
+=
+(P^3)_{11}
+=
+\frac{3}{16}.
+\]</span></p>
+<p>Thus, the probability of returning to discount level <span class="math inline">\(1\)</span> after three years, given that the current level is <span class="math inline">\(1\)</span>, is</p>
+<p><span class="math display">\[
+\boxed{\frac{3}{16}}.
+\]</span></p>
+</div>
+</section>
+<section id="a-path-interpretation" class="level3" data-number="3.6.7">
+<h3 data-number="3.6.7" class="anchored" data-anchor-id="a-path-interpretation"><span class="header-section-number">3.6.7</span> A path interpretation</h3>
+<p>The matrix calculation above combines the probabilities of all possible three-step paths from state <span class="math inline">\(1\)</span> to state <span class="math inline">\(1\)</span>.</p>
+<p>For example, one possible path is</p>
+<p><span class="math display">\[
+1\longrightarrow 0\longrightarrow 1\longrightarrow 1.
+\]</span></p>
+<p>Its probability is</p>
+<p><span class="math display">\[
+p_{10}p_{01}p_{11}.
+\]</span></p>
+<p>Another possible path is</p>
+<p><span class="math display">\[
+1\longrightarrow 2\longrightarrow 1\longrightarrow 1,
+\]</span></p>
+<p>with probability</p>
+<p><span class="math display">\[
+p_{12}p_{21}p_{11}.
+\]</span></p>
+<p>The entry <span class="math inline">\((P^3)_{11}\)</span> adds the probabilities of all possible three-step paths that start at state <span class="math inline">\(1\)</span> and finish at state <span class="math inline">\(1\)</span>.</p>
+<p>This gives a useful interpretation of matrix multiplication in Markov chains:</p>
+<p><span class="math display">\[
+\boxed{
+\text{matrix multiplication}
+\quad\longleftrightarrow\quad
+\text{summing probabilities over intermediate states}.
+}
+\]</span></p>
+</section>
+</section>
+<section id="distribution-after-n-steps" class="level2" data-number="3.7">
+<h2 data-number="3.7" class="anchored" data-anchor-id="distribution-after-n-steps"><span class="header-section-number">3.7</span> Distribution after <span class="math inline">\(n\)</span> steps</h2>
+<p>The transition matrix describes conditional probabilities given the current state. We can also use it to determine the <strong>unconditional distribution</strong> of the process.</p>
+<p>Let the initial distribution of <span class="math inline">\(X_0\)</span> be</p>
+<p><span class="math display">\[
+\boldsymbol{\mu}^{(0)}
+=
+(\mu_0,\mu_1,\ldots),
+\]</span></p>
+<p>where</p>
+<p><span class="math display">\[
+\mu_i=\Pr(X_0=i).
+\]</span></p>
+<p>Let</p>
+<p><span class="math display">\[
+\boldsymbol{\mu}^{(n)}
+=
+(\mu_0^{(n)},\mu_1^{(n)},\ldots)
+\]</span></p>
+<p>denote the distribution of <span class="math inline">\(X_n\)</span>, where</p>
+<p><span class="math display">\[
+\mu_j^{(n)}=\Pr(X_n=j).
+\]</span></p>
+<p>Using the law of total probability,</p>
+<p><span class="math display">\[
+\begin{aligned}
+\Pr(X_{n+1}=j)
+&amp;=
+\sum_{i\in S}
+\Pr(X_{n+1}=j\mid X_n=i)\Pr(X_n=i)\\
+&amp;=
+\sum_{i\in S}
+p_{ij}\mu_i^{(n)}.
+\end{aligned}
+\]</span></p>
+<p>In matrix notation,</p>
+<p><span class="math display">\[
+\boxed{
+\boldsymbol{\mu}^{(n+1)}
+=
+\boldsymbol{\mu}^{(n)}P.
+}
+\]</span></p>
+<p>Applying this relation repeatedly gives</p>
+<p><span class="math display">\[
+\boxed{
+\boldsymbol{\mu}^{(n)}
+=
+\boldsymbol{\mu}^{(0)}P^n.
+}
+\]</span></p>
+<p>Therefore, once the initial distribution and transition matrix are known, the distribution of the process at any future time can be calculated.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Distribution of <span class="math inline">\(X_n\)</span>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>If</p>
+<p><span class="math display">\[
+\boldsymbol{\mu}^{(0)}
+=
+(\Pr(X_0=i))_{i\in S}
+\]</span></p>
+<p>is the initial distribution and <span class="math inline">\(P\)</span> is the transition matrix, then</p>
+<p><span class="math display">\[
+\boxed{
+\boldsymbol{\mu}^{(n)}
+=
+\boldsymbol{\mu}^{(0)}P^n.
+}
+\]</span></p>
+<p>The <span class="math inline">\(j\)</span>-th component gives</p>
+<p><span class="math display">\[
+\Pr(X_n=j)
+=
+\left(\boldsymbol{\mu}^{(0)}P^n\right)_j.
+\]</span></p>
+</div>
+</div>
+<p>The distinction between the two types of probabilities is useful:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Quantity</th>
+<th style="text-align: left;">Interpretation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><span class="math inline">\((P^n)_{ij}\)</span></td>
+<td style="text-align: left;">Probability of being in state <span class="math inline">\(j\)</span> after <span class="math inline">\(n\)</span> steps, given that the chain starts in state <span class="math inline">\(i\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="math inline">\((\boldsymbol{\mu}^{(0)}P^n)_j\)</span></td>
+<td style="text-align: left;">Probability of being in state <span class="math inline">\(j\)</span> after <span class="math inline">\(n\)</span> steps, given an initial distribution <span class="math inline">\(\boldsymbol{\mu}^{(0)}\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>The first is a <strong>conditional probability</strong> based on a specified initial state. The second is an <strong>unconditional probability</strong> based on a probability distribution for the initial state.</p>
+<div id="exm-ncd-2" class="theorem example">
+<p><span class="theorem-title"><strong>Example 3.3 (NCD system: distribution after three years)</strong></span> Suppose again that</p>
+<p><span class="math display">\[
+P=
+\begin{pmatrix}
+1/4 &amp; 3/4 &amp; 0\\
+1/4 &amp; 0 &amp; 3/4\\
+0 &amp; 1/4 &amp; 3/4
+\end{pmatrix}
+\]</span></p>
+<p>and that the policyholder starts in state <span class="math inline">\(1\)</span> with probability one. Then</p>
+<p><span class="math display">\[
+\boldsymbol{\mu}^{(0)}
+=
+(0,1,0).
+\]</span></p>
+<p>After three years,</p>
+<p><span class="math display">\[
+\boldsymbol{\mu}^{(3)}
+=
+\boldsymbol{\mu}^{(0)}P^3.
+\]</span></p>
+<p>Since <span class="math inline">\(\boldsymbol{\mu}^{(0)}\)</span> selects the second row of <span class="math inline">\(P^3\)</span>,</p>
+<p><span class="math display">\[
+\boldsymbol{\mu}^{(3)}
+=
+\left(
+\frac{7}{64},
+\frac{3}{16},
+\frac{45}{64}
+\right).
+\]</span></p>
+<p>Thus,</p>
+<p><span class="math display">\[
+\Pr(X_3=0)=\frac{7}{64},
+\]</span></p>
+<p><span class="math display">\[
+\Pr(X_3=1)=\frac{3}{16},
+\]</span></p>
+<p>and</p>
+<p><span class="math display">\[
+\Pr(X_3=2)=\frac{45}{64}.
+\]</span></p>
+<p>As a check,</p>
+<p><span class="math display">\[
+\frac{7}{64}+\frac{3}{16}+\frac{45}{64}=1.
+\]</span></p>
+</div>
+<p>The transition matrix therefore allows us to move between three related levels of description:</p>
+<p><span class="math display">\[
+\boxed{
+P
+\quad\longrightarrow\quad
+P^n
+\quad\longrightarrow\quad
+\boldsymbol{\mu}^{(0)}P^n.
+}
+\]</span></p>
+<p>Here,</p>
+<ul>
+<li><span class="math inline">\(P\)</span> describes one-step transitions;</li>
+<li><span class="math inline">\(P^n\)</span> describes <span class="math inline">\(n\)</span>-step transitions;</li>
+<li><span class="math inline">\(\boldsymbol{\mu}^{(0)}P^n\)</span> gives the distribution of <span class="math inline">\(X_n\)</span>.</li>
+</ul>
+<p>These results provide the basic computational framework for discrete-time Markov chains. We can now use them to study more detailed questions about the joint behaviour of the process and, later, its long-run behaviour.</p>
+</section>
+<section id="joint-distributions-and-probabilities-of-paths" class="level2" data-number="3.8">
+<h2 data-number="3.8" class="anchored" data-anchor-id="joint-distributions-and-probabilities-of-paths"><span class="header-section-number">3.8</span> Joint Distributions and Probabilities of Paths</h2>
+<p>The transition probabilities developed so far describe the state of a Markov chain at one future time. For example,</p>
+<p><span class="math display">\[
+p_{ij}^{(n)}
+=
+\Pr(X_{m+n}=j\mid X_m=i)
+\]</span></p>
+<p>gives the probability of reaching state <span class="math inline">\(j\)</span> after <span class="math inline">\(n\)</span> steps, given that the chain starts in state <span class="math inline">\(i\)</span>.</p>
+<p>In some applications, however, we are interested in the probability of observing a particular sequence of states. For example,</p>
+<p><span class="math display">\[
+\Pr(X_0=i_0,X_1=i_1,\ldots,X_n=i_n).
+\]</span></p>
+<p>Such a probability is a <strong>joint probability</strong> because it involves several random variables simultaneously.</p>
+<p>The Markov property makes these probabilities particularly simple to calculate.</p>
+<section id="probability-of-a-particular-path" class="level3" data-number="3.8.1">
+<h3 data-number="3.8.1" class="anchored" data-anchor-id="probability-of-a-particular-path"><span class="header-section-number">3.8.1</span> Probability of a particular path</h3>
+<p>Let <span class="math inline">\(\{X_n:n=0,1,2,\ldots\}\)</span> be a time-homogeneous Markov chain with initial distribution</p>
+<p><span class="math display">\[
+\boldsymbol{\mu}
+=
+(\mu_i)_{i\in S},
+\qquad
+\mu_i=\Pr(X_0=i),
+\]</span></p>
+<p>and transition matrix <span class="math inline">\(P=(p_{ij})\)</span>.</p>
+<p>Consider a particular path</p>
+<p><span class="math display">\[
+i_0\longrightarrow i_1\longrightarrow\cdots\longrightarrow i_n.
+\]</span></p>
+<p>By the multiplication rule for conditional probabilities,</p>
+<p><span class="math display">\[
+\begin{aligned}
+&amp;\Pr(X_0=i_0,X_1=i_1,\ldots,X_n=i_n)\\
+&amp;=
+\Pr(X_0=i_0)
+\Pr(X_1=i_1\mid X_0=i_0)\\
+&amp;\qquad\times
+\Pr(X_2=i_2\mid X_0=i_0,X_1=i_1)
+\cdots\\
+&amp;\qquad\times
+\Pr(X_n=i_n\mid X_0=i_0,\ldots,X_{n-1}=i_{n-1}).
+\end{aligned}
+\]</span></p>
+<p>The Markov property allows each conditional probability after the first step to depend only on the state immediately before the transition. Therefore,</p>
+<p><span class="math display">\[
+\boxed{
+\Pr(X_0=i_0,X_1=i_1,\ldots,X_n=i_n)
+=
+\mu_{i_0}
+p_{i_0i_1}
+p_{i_1i_2}
+\cdots
+p_{i_{n-1}i_n}.
+}
+\]</span></p>
+<p>Thus, the probability of a particular path is the product of the initial probability and the transition probabilities along the path.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Probability of a path
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>For a time-homogeneous Markov chain,</p>
+<p><span class="math display">\[
+\boxed{
+\Pr(X_0=i_0,\ldots,X_n=i_n)
+=
+\mu_{i_0}
+\prod_{r=0}^{n-1}p_{i_ri_{r+1}}.
+}
+\]</span></p>
+<p>The formula applies to a specific sequence of states. If several paths satisfy an event of interest, their probabilities must be added.</p>
+</div>
+</div>
+<div id="exm-3" class="theorem example">
+<p><span class="theorem-title"><strong>Example 3.4 (A path in the NCD system)</strong></span> Consider the NCD system with states</p>
+<p><span class="math display">\[
+S=\{0,1,2\}
+\]</span></p>
+<p>and transition matrix</p>
+<p><span class="math display">\[
+P=
+\begin{pmatrix}
+1/4 &amp; 3/4 &amp; 0\\
+1/4 &amp; 0 &amp; 3/4\\
+0 &amp; 1/4 &amp; 3/4
+\end{pmatrix}.
+\]</span></p>
+<p>Suppose the initial distribution is</p>
+<p><span class="math display">\[
+\boldsymbol{\mu}=(0.5,0.3,0.2).
+\]</span></p>
+<p>Find the probability of the path</p>
+<p><span class="math display">\[
+X_0=2,\qquad X_1=1,\qquad X_2=0.
+\]</span></p>
+</div>
+<p>The path is</p>
+<p><span class="math display">\[
+2\longrightarrow1\longrightarrow0.
+\]</span></p>
+<p>Therefore,</p>
+<p><span class="math display">\[
+\begin{aligned}
+\Pr(X_0=2,X_1=1,X_2=0)
+&amp;=
+\mu_2p_{21}p_{10}\\
+&amp;=
+0.2\left(\frac14\right)\left(\frac14\right)\\
+&amp;=
+\frac{1}{80}.
+\end{aligned}
+\]</span></p>
+<p>Hence,</p>
+<p><span class="math display">\[
+\boxed{
+\Pr(X_0=2,X_1=1,X_2=0)=\frac{1}{80}.
+}
+\]</span></p>
+<p>The calculation does not require us to consider the entire transition matrix. We only need the initial probability of state <span class="math inline">\(2\)</span> and the transition probabilities along the specified path.</p>
+</section>
+</section>
+<section id="conditional-probabilities-of-future-paths" class="level2" data-number="3.9">
+<h2 data-number="3.9" class="anchored" data-anchor-id="conditional-probabilities-of-future-paths"><span class="header-section-number">3.9</span> Conditional probabilities of future paths</h2>
+<p>The same idea applies when the initial state is given.</p>
+<p>Suppose that <span class="math inline">\(X_n=i_n\)</span> is known, and consider a particular future path</p>
+<p><span class="math display">\[
+i_n\longrightarrow i_{n+1}\longrightarrow\cdots\longrightarrow i_{n+m}.
+\]</span></p>
+<p>The Markov property gives</p>
+<p><span class="math display">\[
+\begin{aligned}
+&amp;\Pr(
+X_{n+1}=i_{n+1},
+\ldots,
+X_{n+m}=i_{n+m}
+\mid X_n=i_n)\\
+&amp;=
+p_{i_ni_{n+1}}
+p_{i_{n+1}i_{n+2}}
+\cdots
+p_{i_{n+m-1}i_{n+m}}.
+\end{aligned}
+\]</span></p>
+<p>More generally, conditioning on the entire history up to time <span class="math inline">\(n\)</span> does not change this probability:</p>
+<p><span class="math display">\[
+\begin{aligned}
+&amp;\Pr(
+X_{n+1}=i_{n+1},
+\ldots,
+X_{n+m}=i_{n+m}
+\mid X_n=i_n,\ldots,X_0=i_0)\\
+&amp;=
+\Pr(
+X_{n+1}=i_{n+1},
+\ldots,
+X_{n+m}=i_{n+m}
+\mid X_n=i_n).
+\end{aligned}
+\]</span></p>
+<p>This is a direct consequence of the Markov property.</p>
+<div id="exm-ncd-4" class="theorem example">
+<p><span class="theorem-title"><strong>Example 3.5 (A future path in the NCD system)</strong></span> Suppose the policyholder is currently in state <span class="math inline">\(2\)</span>. Find the probability of the future path</p>
+<p><span class="math display">\[
+2\longrightarrow1\longrightarrow0.
+\]</span></p>
+<p>Using the transition matrix above,</p>
+<p><span class="math display">\[
+\begin{aligned}
+&amp;\Pr(X_{n+1}=1,X_{n+2}=0\mid X_n=2)\\
+&amp;=
+p_{21}p_{10}\\
+&amp;=
+\frac14\cdot\frac14\\
+&amp;=
+\frac{1}{16}.
+\end{aligned}
+\]</span></p>
+<p>Thus,</p>
+<p><span class="math display">\[
+\boxed{
+\Pr(X_{n+1}=1,X_{n+2}=0\mid X_n=2)
+=
+\frac{1}{16}.
+}
+\]</span></p>
+</div>
+<p>Notice that the initial distribution <span class="math inline">\(\boldsymbol{\mu}\)</span> is not needed because the current state is already specified.</p>
+</section>
+<section id="paths-with-gaps-between-observation-times" class="level2" data-number="3.10">
+<h2 data-number="3.10" class="anchored" data-anchor-id="paths-with-gaps-between-observation-times"><span class="header-section-number">3.10</span> Paths with gaps between observation times</h2>
+<p>The path does not need to be observed at every time point.</p>
+<p>Suppose that</p>
+<p><span class="math display">\[
+0\leq n_1&lt;n_2&lt;\cdots&lt;n_k
+\]</span></p>
+<p>and that we want to calculate</p>
+<p><span class="math display">\[
+\Pr(X_{n_1}=i_1,\ldots,X_{n_k}=i_k).
+\]</span></p>
+<p>The first state, <span class="math inline">\(X_{n_1}\)</span>, has distribution</p>
+<p><span class="math display">\[
+\Pr(X_{n_1}=i_1)
+=
+(\boldsymbol{\mu}P^{n_1})_{i_1}.
+\]</span></p>
+<p>After reaching <span class="math inline">\(i_1\)</span> at time <span class="math inline">\(n_1\)</span>, the probability of reaching <span class="math inline">\(i_2\)</span> at time <span class="math inline">\(n_2\)</span> is</p>
+<p><span class="math display">\[
+p_{i_1i_2}^{(n_2-n_1)}
+=
+(P^{n_2-n_1})_{i_1i_2}.
+\]</span></p>
+<p>The same argument applies to each subsequent transition. Hence,</p>
+<p><span class="math display">\[
+\boxed{
+\begin{aligned}
+&amp;\Pr(X_{n_1}=i_1,\ldots,X_{n_k}=i_k)\\
+&amp;=
+(\boldsymbol{\mu}P^{n_1})_{i_1}
+(P^{n_2-n_1})_{i_1i_2}
+\cdots
+(P^{n_k-n_{k-1}})_{i_{k-1}i_k}.
+\end{aligned}
+}
+\]</span></p>
+<p>This formula combines the two main results developed so far:</p>
+<ul>
+<li><span class="math inline">\(P^n\)</span> gives transition probabilities over several time steps;</li>
+<li>the Markov property allows the path to be broken into successive transitions.</li>
+</ul>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Joint probabilities at selected times
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>For</p>
+<p><span class="math display">\[
+0\leq n_1&lt;n_2&lt;\cdots&lt;n_k,
+\]</span></p>
+<p>the joint probability is</p>
+<p><span class="math display">\[
+\boxed{
+\Pr(X_{n_1}=i_1,\ldots,X_{n_k}=i_k)
+=
+(\boldsymbol{\mu}P^{n_1})_{i_1}
+\prod_{r=2}^{k}
+(P^{n_r-n_{r-1}})_{i_{r-1}i_r}.
+}
+\]</span></p>
+<p>Thus, the joint distribution of a Markov chain is determined by its initial distribution and its transition matrix.</p>
+</div>
+</div>
+<div id="exm-weather" class="theorem example">
+<p><span class="theorem-title"><strong>Example 3.6 (Weather model)</strong></span> Consider the weather model with states</p>
+<p><span class="math display">\[
+S=\{R,C,S\},
+\]</span></p>
+<p>where <span class="math inline">\(R\)</span>, <span class="math inline">\(C\)</span>, and <span class="math inline">\(S\)</span> denote rainy, cloudy, and sunny days. Suppose the transition matrix is</p>
+<p><span class="math display">\[
+P=
+\begin{pmatrix}
+0.7&amp;0.2&amp;0.1\\
+0.75&amp;0.15&amp;0.1\\
+0.2&amp;0.4&amp;0.4
+\end{pmatrix}.
+\]</span></p>
+<p>Suppose that on Sunday the three weather states have equal probabilities:</p>
+<p><span class="math display">\[
+\boldsymbol{\mu}
+=
+\left(\frac13,\frac13,\frac13\right).
+\]</span></p>
+<p>Find the probability that it is sunny on Wednesday and Friday, and cloudy on Saturday.</p>
+</div>
+<p>Wednesday is three days after Sunday, Friday is two days after Wednesday, and Saturday is one day after Friday. Therefore,</p>
+<p><span class="math display">\[
+\begin{aligned}
+&amp;\Pr(X_3=S,X_5=S,X_6=C)\\
+&amp;=
+(\boldsymbol{\mu}P^3)_S
+(P^2)_{SS}
+P_{SC}.
+\end{aligned}
+\]</span></p>
+<p>Using</p>
+<p><span class="math display">\[
+\boldsymbol{\mu}P^3
+=
+(0.631375,\;0.220625,\;0.148),
+\]</span></p>
+<p>together with</p>
+<p><span class="math display">\[
+(P^2)_{SS}=0.22
+\qquad\text{and}\qquad
+P_{SC}=0.4,
+\]</span></p>
+<p>we obtain</p>
+<p><span class="math display">\[
+\begin{aligned}
+\Pr(X_3=S,X_5=S,X_6=C)
+&amp;=
+0.148(0.22)(0.4)\\
+&amp;=
+0.013024.
+\end{aligned}
+\]</span></p>
+<p>Hence,</p>
+<p><span class="math display">\[
+\boxed{
+\Pr(X_3=S,X_5=S,X_6=C)=0.013024.
+}
+\]</span></p>
+<p>The important point is that we do not need to specify the weather on Thursday. The two-day transition probability</p>
+<p><span class="math display">\[
+(P^2)_{SS}
+\]</span></p>
+<p>automatically accounts for all possible weather states on Thursday.</p>
+</section>
+<section id="from-specified-paths-to-events" class="level2" data-number="3.11">
+<h2 data-number="3.11" class="anchored" data-anchor-id="from-specified-paths-to-events"><span class="header-section-number">3.11</span> From specified paths to events</h2>
+<p>A joint probability may involve a specific path, such as</p>
+<p><span class="math display">\[
+\Pr(X_0=i_0,X_1=i_1,X_2=i_2),
+\]</span></p>
+<p>but many questions of interest concern an event that can occur through several different paths.</p>
+<p>For example, suppose we want</p>
+<p><span class="math display">\[
+\Pr(X_2=j\mid X_0=i).
+\]</span></p>
+<p>There may be many possible states at time <span class="math inline">\(1\)</span>. Therefore,</p>
+<p><span class="math display">\[
+\begin{aligned}
+\Pr(X_2=j\mid X_0=i)
+&amp;=
+\sum_{k\in S}
+\Pr(X_2=j,X_1=k\mid X_0=i)\\
+&amp;=
+\sum_{k\in S}
+p_{ik}p_{kj}.
+\end{aligned}
+\]</span></p>
+<p>This is precisely the two-step transition probability</p>
+<p><span class="math display">\[
+p_{ij}^{(2)}.
+\]</span></p>
+<p>Thus, the Chapman–Kolmogorov equation can be viewed as a way of <strong>summing the probabilities of all paths that connect two states over a specified number of steps</strong>.</p>
+<p>This gives a useful connection between the results developed in this chapter:</p>
+<p><span class="math display">\[
+\boxed{
+\begin{array}{c}
+\text{Path probabilities}\\[2mm]
+\downarrow\\
+\text{Sum over intermediate states}\\[2mm]
+\downarrow\\
+\text{$n$-step transition probabilities}\\[2mm]
+\downarrow\\
+\text{Matrix powers }P^n
+\end{array}
+}
+\]</span></p>
+<p>The next section applies these ideas to a familiar process—the random walk—when its state space has absorbing or reflecting boundaries.</p>
+</section>
+<section id="random-walks-with-absorbing-and-reflecting-barriers" class="level2" data-number="3.12">
+<h2 data-number="3.12" class="anchored" data-anchor-id="random-walks-with-absorbing-and-reflecting-barriers"><span class="header-section-number">3.12</span> Random Walks with Absorbing and Reflecting Barriers</h2>
+<p>The simple random walk introduced at the beginning of this chapter allows the process to move freely between neighbouring states. In many applications, however, the process is subject to <strong>boundaries</strong>.</p>
+<p>For example, consider the fortune of a gambler. If the gambler’s fortune reaches <span class="math inline">\(0\)</span>, the gambler is ruined and the game ends. Similarly, suppose the game ends when the gambler reaches a target fortune <span class="math inline">\(N\)</span>. The states <span class="math inline">\(0\)</span> and <span class="math inline">\(N\)</span> then act as boundaries that the process cannot leave.</p>
+<p>Boundaries can also behave differently. A boundary may stop the process permanently, or it may force the process back into the interior of the state space.</p>
+<p>These situations lead to two useful types of boundary behaviour:</p>
+<ul>
+<li>an <strong>absorbing boundary</strong>, where the process remains at the boundary once it reaches it;</li>
+<li>a <strong>reflecting barrier</strong>, where the process can move back into the state space after reaching the boundary.</li>
+</ul>
+<p>The transition matrix provides a convenient way to describe both types of random walks.</p>
+<section id="random-walk-with-absorbing-barriers" class="level3" data-number="3.12.1">
+<h3 data-number="3.12.1" class="anchored" data-anchor-id="random-walk-with-absorbing-barriers"><span class="header-section-number">3.12.1</span> Random walk with absorbing barriers</h3>
+<p>Consider a random walk on the finite state space</p>
+<p><span class="math display">\[
+S=\{0,1,\ldots,N\}.
+\]</span></p>
+<p>Suppose that, for <span class="math inline">\(i=1,\ldots,N-1\)</span>,</p>
+<p><span class="math display">\[
+\Pr(X_{n+1}=i+1\mid X_n=i)=p,
+\]</span></p>
+<p>and</p>
+<p><span class="math display">\[
+\Pr(X_{n+1}=i-1\mid X_n=i)=q,
+\]</span></p>
+<p>where</p>
+<p><span class="math display">\[
+p+q=1.
+\]</span></p>
+<p>Thus, when the process is in an interior state, it moves one step to the right with probability <span class="math inline">\(p\)</span> and one step to the left with probability <span class="math inline">\(q\)</span>.</p>
+<p>Now suppose that states <span class="math inline">\(0\)</span> and <span class="math inline">\(N\)</span> are absorbing. Once the process reaches either boundary, it remains there:</p>
+<p><span class="math display">\[
+p_{00}=1,
+\qquad
+p_{NN}=1.
+\]</span></p>
+<p>The transition matrix is therefore</p>
+<p><span class="math display">\[
+P=
+\begin{pmatrix}
+1 &amp; 0 &amp; 0 &amp; 0 &amp; \cdots &amp; 0 &amp; 0\\
+q &amp; 0 &amp; p &amp; 0 &amp; \cdots &amp; 0 &amp; 0\\
+0 &amp; q &amp; 0 &amp; p &amp; \cdots &amp; 0 &amp; 0\\
+\vdots &amp; &amp; \ddots &amp; \ddots &amp; \ddots &amp; &amp; \vdots\\
+0 &amp; 0 &amp; \cdots &amp; q &amp; 0 &amp; p &amp; 0\\
+0 &amp; 0 &amp; \cdots &amp; 0 &amp; q &amp; 0 &amp; p\\
+0 &amp; 0 &amp; \cdots &amp; 0 &amp; 0 &amp; 0 &amp; 1
+\end{pmatrix}.
+\]</span></p>
+<p>The transition diagram has the form</p>
+<p><span class="math display">\[
+0
+\longleftarrow
+1
+\longleftrightarrow
+2
+\longleftrightarrow
+\cdots
+\longleftrightarrow
+N-1
+\longrightarrow
+N,
+\]</span></p>
+<p>with states <span class="math inline">\(0\)</span> and <span class="math inline">\(N\)</span> absorbing.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Absorbing state
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A state <span class="math inline">\(i\)</span> is called <strong>absorbing</strong> if</p>
+<p><span class="math display">\[
+p_{ii}=1.
+\]</span></p>
+<p>Once a Markov chain enters an absorbing state, it remains there forever.</p>
+</div>
+</div>
+<p>For the random walk above, both <span class="math inline">\(0\)</span> and <span class="math inline">\(N\)</span> are absorbing states. The states</p>
+<p><span class="math display">\[
+1,2,\ldots,N-1
+\]</span></p>
+<p>are the interior states.</p>
+<p>This model is often called the <strong>gambler’s ruin model</strong>. The state <span class="math inline">\(X_n\)</span> can represent the gambler’s current fortune, with <span class="math inline">\(0\)</span> representing ruin and <span class="math inline">\(N\)</span> representing a target fortune at which the game stops.</p>
+<div id="exm-gambler-ruin" class="theorem example">
+<p><span class="theorem-title"><strong>Example 3.7 (Gambler’s ruin)</strong></span> A gambler starts with a fortune of <span class="math inline">\(i\)</span> units and plays a sequence of independent games. In each game, the gambler:</p>
+<ul>
+<li>wins one unit with probability <span class="math inline">\(p\)</span>;</li>
+<li>loses one unit with probability <span class="math inline">\(q=1-p\)</span>.</li>
+</ul>
+<p>The gambler stops playing when the fortune reaches either <span class="math inline">\(0\)</span> or <span class="math inline">\(N\)</span>.</p>
+<p>Let <span class="math inline">\(X_n\)</span> denote the gambler’s fortune after <span class="math inline">\(n\)</span> games.</p>
+<ol type="1">
+<li>What is the state space?</li>
+<li>Which states are absorbing?</li>
+<li>What is the probability of moving from state <span class="math inline">\(i\)</span> to state <span class="math inline">\(j\)</span> in one step?</li>
+</ol>
+</div>
+<p>The state space is</p>
+<p><span class="math display">\[
+S=\{0,1,\ldots,N\}.
+\]</span></p>
+<p>States <span class="math inline">\(0\)</span> and <span class="math inline">\(N\)</span> are absorbing because</p>
+<p><span class="math display">\[
+p_{00}=p_{NN}=1.
+\]</span></p>
+<p>For an interior state <span class="math inline">\(i\)</span>,</p>
+<p><span class="math display">\[
+p_{ij}
+=
+\begin{cases}
+q, &amp; j=i-1,\\
+p, &amp; j=i+1,\\
+0, &amp; \text{otherwise}.
+\end{cases}
+\]</span></p>
+<p>Thus, the Markov chain has the same local movement as the simple random walk, but its behaviour changes when it reaches either boundary.</p>
+<p>This example illustrates an important modelling idea: <strong>the transition rules determine the behaviour of the process at the boundaries</strong>.</p>
+</section>
+<section id="reflecting-barriers" class="level3" data-number="3.12.2">
+<h3 data-number="3.12.2" class="anchored" data-anchor-id="reflecting-barriers"><span class="header-section-number">3.12.2</span> Reflecting barriers</h3>
+<p>A boundary does not always have to stop the process. In some applications, reaching a boundary means that the process is pushed back into the interior.</p>
+<p>Consider a random walk on</p>
+<p><span class="math display">\[
+S=\{0,1,\ldots,N\}.
+\]</span></p>
+<p>Suppose that for the interior states,</p>
+<p><span class="math display">\[
+\Pr(X_{n+1}=i+1\mid X_n=i)=p,
+\]</span></p>
+<p>and</p>
+<p><span class="math display">\[
+\Pr(X_{n+1}=i-1\mid X_n=i)=q,
+\]</span></p>
+<p>where <span class="math inline">\(p+q=1\)</span>.</p>
+<p>At state <span class="math inline">\(0\)</span>, suppose that</p>
+<p><span class="math display">\[
+\Pr(X_{n+1}=0\mid X_n=0)=\alpha
+\]</span></p>
+<p>and</p>
+<p><span class="math display">\[
+\Pr(X_{n+1}=1\mid X_n=0)=1-\alpha.
+\]</span></p>
+<p>The process therefore cannot move to state <span class="math inline">\(-1\)</span>. Instead, it either remains at <span class="math inline">\(0\)</span> or moves back to state <span class="math inline">\(1\)</span>.</p>
+<p>In this case, state <span class="math inline">\(0\)</span> is called a <strong>reflecting barrier</strong>.</p>
+<p>For example, if <span class="math inline">\(\alpha=0\)</span>, then the process must move from <span class="math inline">\(0\)</span> to <span class="math inline">\(1\)</span> on the next step:</p>
+<p><span class="math display">\[
+p_{01}=1.
+\]</span></p>
+<p>If <span class="math inline">\(0&lt;\alpha&lt;1\)</span>, the process may remain at the boundary for one or more periods before returning to the interior.</p>
+<p>A similar construction can be used at the upper boundary <span class="math inline">\(N\)</span>.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Absorbing versus reflecting boundaries
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The difference can be summarized as follows.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Boundary type</th>
+<th>Behaviour after reaching the boundary</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Absorbing</td>
+<td>The process remains at the boundary forever</td>
+</tr>
+<tr class="even">
+<td>Reflecting</td>
+<td>The process can move back into the state space</td>
+</tr>
+</tbody>
+</table>
+<p>For an absorbing state <span class="math inline">\(i\)</span>,</p>
+<p><span class="math display">\[
+p_{ii}=1.
+\]</span></p>
+<p>A reflecting barrier does not require <span class="math inline">\(p_{ii}=1\)</span>; the process may leave the boundary on the next step.</p>
+</div>
+</div>
+</section>
+<section id="a-random-walk-with-a-reflecting-lower-barrier" class="level3" data-number="3.12.3">
+<h3 data-number="3.12.3" class="anchored" data-anchor-id="a-random-walk-with-a-reflecting-lower-barrier"><span class="header-section-number">3.12.3</span> A random walk with a reflecting lower barrier</h3>
+<p>Suppose the state space is</p>
+<p><span class="math display">\[
+S=\{0,1,2,\ldots\}
+\]</span></p>
+<p>and, for <span class="math inline">\(i\geq1\)</span>,</p>
+<p><span class="math display">\[
+\Pr(X_{n+1}=i+1\mid X_n=i)=p,
+\]</span></p>
+<p><span class="math display">\[
+\Pr(X_{n+1}=i-1\mid X_n=i)=q,
+\]</span></p>
+<p>where <span class="math inline">\(p+q=1\)</span>.</p>
+<p>At state <span class="math inline">\(0\)</span>, suppose</p>
+<p><span class="math display">\[
+\Pr(X_{n+1}=0\mid X_n=0)=\alpha,
+\]</span></p>
+<p>and</p>
+<p><span class="math display">\[
+\Pr(X_{n+1}=1\mid X_n=0)=1-\alpha.
+\]</span></p>
+<p>The transition matrix has the form</p>
+<p><span class="math display">\[
+P=
+\begin{pmatrix}
+\alpha &amp; 1-\alpha &amp; 0 &amp; 0 &amp; \cdots\\
+q &amp; 0 &amp; p &amp; 0 &amp; \cdots\\
+0 &amp; q &amp; 0 &amp; p &amp; \cdots\\
+0 &amp; 0 &amp; q &amp; 0 &amp; \ddots\\
+\vdots &amp; \vdots &amp; \vdots &amp; \ddots &amp; \ddots
+\end{pmatrix}.
+\]</span></p>
+<p>The first row differs from the rows corresponding to the interior states because the process cannot move from <span class="math inline">\(0\)</span> to <span class="math inline">\(-1\)</span>.</p>
+<p>This is a useful example of how a transition matrix can encode boundary conditions directly.</p>
+</section>
+<section id="why-boundary-behaviour-matters" class="level3" data-number="3.12.4">
+<h3 data-number="3.12.4" class="anchored" data-anchor-id="why-boundary-behaviour-matters"><span class="header-section-number">3.12.4</span> Why boundary behaviour matters</h3>
+<p>The choice between absorbing and reflecting boundaries can lead to very different long-term behaviour.</p>
+<p>With absorbing boundaries, the process eventually remains at a boundary once one is reached. For the gambler’s ruin model,</p>
+<p><span class="math display">\[
+X_n\in\{0,N\}
+\]</span></p>
+<p>for all sufficiently large <span class="math inline">\(n\)</span>, once an absorbing boundary has been reached.</p>
+<p>With reflecting boundaries, the process can continue moving indefinitely. It may return to the boundary many times, but it is not permanently trapped there.</p>
+<p>These differences lead to questions that we will study later in the chapter, such as:</p>
+<ul>
+<li>What is the probability that the chain is eventually absorbed at <span class="math inline">\(N\)</span>?</li>
+<li>What is the probability that it is eventually absorbed at <span class="math inline">\(0\)</span>?</li>
+<li>How long does it take, on average, to reach an absorbing state?</li>
+<li>What is the long-run distribution when the boundaries are reflecting?</li>
+</ul>
+<p>For now, the main point is that these questions can be formulated using the same Markov-chain framework developed earlier.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Key idea
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A random walk with boundaries is still a Markov chain. The boundary conditions are incorporated into its transition probabilities and therefore into its transition matrix.</p>
+<p>Once the transition matrix has been specified, the methods developed earlier—such as matrix powers, <span class="math inline">\(n\)</span>-step transition probabilities, and state distributions—remain available.</p>
+</div>
+</div>
+
+
+</section>
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../chapters/01_Introduction_to_Stochastic_Processes.html" class="pagination-link" aria-label="Introduction to Stochastic Processes">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction to Stochastic Processes</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+  </div>
+</nav>
+</div> <!-- /content -->
+<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
+    }
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
+          </script>
+
+
+
+
+</body></html>
