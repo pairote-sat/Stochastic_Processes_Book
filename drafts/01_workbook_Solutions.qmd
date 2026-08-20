@@ -1,0 +1,68 @@
+---
+title: "01 Workbook: Solutions"
+---
+
+### 1. Identifying stochastic processes
+
+| Situation          | $X_t$                                   | Time domain $T$                    | State space      | Time       | State      |
+| ------------------ | --------------------------------------- | ---------------------------------- | ---------------- | ---------- | ---------- |
+| (a) Bank customers | Number of customers waiting at time $t$ | Time during the day, e.g. $[0,24]$ | ${0,1,2,\ldots}$ | Continuous | Discrete   |
+| (b) Stock price    | Closing stock price on day $t$          | $T={1,2,3,\ldots}$                 | $\mathbb{R}_+$   | Discrete   | Continuous |
+| (c) NCD            | NCD level after policy year $n$         | $T={0,1,2,\ldots}$                 | ${0,1,2,3,4}$    | Discrete   | Discrete   |
+| (d) Rainfall       | Rainfall amount recorded at hour $t$    | $T={0,1,2,\ldots}$                 | $\mathbb{R}_+$   | Discrete   | Continuous |
+
+---
+
+### 2. Modelling decisions
+
+| Situation                                                    | Model      | Time domain             | State space | Markov assumption   | Brief justification                                                                                                                                                                                                                                                   |
+| ------------------------------------------------------------ | ---------- | ----------------------- | ----------- | ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **(a) Number of insurance claims reported to a call centre** | Stochastic | **Continuous**          | Discrete    | **Not necessarily** | Claims arrive randomly at arbitrary times, so continuous time is natural. The number of claims is integer-valued. A Markov assumption does not generally hold unless the current number of claims adequately captures the relevant information about future arrivals. |
+| **(b) Balance of a customer's bank account**                 | Stochastic | Discrete or continuous* | Continuous  | **Not necessarily** | The balance changes randomly because of deposits, withdrawals, and other transactions. Its value is continuous. Future transactions may depend on the customer's past behaviour, so the Markov property does not generally hold.                                      |
+| **(c) Health status of a patient**                           | Stochastic | **Continuous**          | Discrete    | **Not necessarily** | A patient's health status can change at any time, while the possible states are discrete. The future health status may depend on the patient's history, duration in the current state, and other factors, so the Markov property does not generally hold.             |
+| **(d) Temperature in a city**                                | Stochastic | Continuous              | Continuous  | **Not necessarily** | Temperature varies randomly over continuous time and takes continuous values. Its future depends not only on the current temperature but potentially also on previous temperatures and other environmental factors.                                                   |
+
+* For (b), **continuous time** is arguably more natural if the actual transaction times are modelled. If the balance is observed only at the end of each day, then a discrete time domain is appropriate. This is actually a useful example for students because it demonstrates that the time domain depends partly on **what aspect of the phenomenon is being modelled**.
+
+
+
+---
+
+### 3. NCD process
+
+**Solution**
+
+1. A **stochastic process** ${X_n:n\in T}$ describes the collection of random variables representing the NCD level at each policy year. A **sample path** is one particular realization of the process for a particular policyholder.
+
+2. For example, two possible sample paths over six years could be
+   $$
+   (0,1,2,3,4,4,4)
+   $$
+   and
+   $$
+   (0,1,2,1,2,3,4).
+   $$
+   The first path represents a policyholder with no claims, while the second includes a claim that causes the NCD level to decrease.
+
+3. Both paths belong to the same stochastic process because they are possible realizations governed by the **same NCD rules and transition probabilities**.
+
+4. The paths may differ because of random events such as **whether a claim occurs during a policy year** and, depending on the NCD rules, the number or type of claims.
+
+---
+
+### 4. Other real-world stochastic processes
+
+| Process                                     | Time domain        | State space      | Time     | State      | Possible topic              |
+| ------------------------------------------- | ------------------ | ---------------- | -------- | ---------- | --------------------------- |
+| **Queue length at a service counter**       | $T={0,1,2,\ldots}$ | ${0,1,2,\ldots}$ | Discrete | Discrete   | Discrete-time Markov chains |
+| **Daily exchange rate**                     | $T={1,2,3,\ldots}$ | $\mathbb{R}_+$   | Discrete | Continuous | Time series                 |
+| **Number of claims reported by an insurer** | $T={0,1,2,\ldots}$ | ${0,1,2,\ldots}$ | Discrete | Discrete   | Counting processes          |
+| **Daily temperature**                       | $T={1,2,3,\ldots}$ | $\mathbb{R}$     | Discrete | Continuous | Time series                 |
+
+**Brief justification:** The queue length and number of claims are counts, so their state spaces are discrete. Exchange rates and temperatures can take values on a continuous numerical scale, so their state spaces are continuous. The examples use daily or event-based observations, making a discrete time domain appropriate.
+
+
+
+
+
+
