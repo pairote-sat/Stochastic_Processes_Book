@@ -282,11 +282,12 @@ window.Quarto = {
   <ul class="collapse">
   <li><a href="#what-happens-within-a-closed-communicating-class" id="toc-what-happens-within-a-closed-communicating-class" class="nav-link" data-scroll-target="#what-happens-within-a-closed-communicating-class"><span class="header-section-number">2.15.1</span> What happens within a closed communicating class?</a></li>
   <li><a href="#stationary-distributions" id="toc-stationary-distributions" class="nav-link" data-scroll-target="#stationary-distributions"><span class="header-section-number">2.15.2</span> Stationary distributions</a></li>
-  <li><a href="#limiting-distributions" id="toc-limiting-distributions" class="nav-link" data-scroll-target="#limiting-distributions"><span class="header-section-number">2.15.3</span> Limiting distributions</a></li>
-  <li><a href="#conditions-for-convergence" id="toc-conditions-for-convergence" class="nav-link" data-scroll-target="#conditions-for-convergence"><span class="header-section-number">2.15.4</span> Conditions for convergence</a></li>
-  <li><a href="#multiple-closed-classes-1" id="toc-multiple-closed-classes-1" class="nav-link" data-scroll-target="#multiple-closed-classes-1"><span class="header-section-number">2.15.5</span> Multiple closed classes</a></li>
-  <li><a href="#main-result" id="toc-main-result" class="nav-link" data-scroll-target="#main-result"><span class="header-section-number">2.15.6</span> Main result</a></li>
-  <li><a href="#application-long-run-ncd" id="toc-application-long-run-ncd" class="nav-link" data-scroll-target="#application-long-run-ncd"><span class="header-section-number">2.15.7</span> Application: Long-Run Behaviour of an NCD System</a></li>
+  <li><a href="#why-this-example-is-useful" id="toc-why-this-example-is-useful" class="nav-link" data-scroll-target="#why-this-example-is-useful"><span class="header-section-number">2.15.3</span> Why this example is useful</a></li>
+  <li><a href="#limiting-distributions" id="toc-limiting-distributions" class="nav-link" data-scroll-target="#limiting-distributions"><span class="header-section-number">2.15.4</span> Limiting distributions</a></li>
+  <li><a href="#conditions-for-convergence" id="toc-conditions-for-convergence" class="nav-link" data-scroll-target="#conditions-for-convergence"><span class="header-section-number">2.15.5</span> Conditions for convergence</a></li>
+  <li><a href="#multiple-closed-classes-1" id="toc-multiple-closed-classes-1" class="nav-link" data-scroll-target="#multiple-closed-classes-1"><span class="header-section-number">2.15.6</span> Multiple closed classes</a></li>
+  <li><a href="#main-result" id="toc-main-result" class="nav-link" data-scroll-target="#main-result"><span class="header-section-number">2.15.7</span> Main result</a></li>
+  <li><a href="#application-long-run-ncd" id="toc-application-long-run-ncd" class="nav-link" data-scroll-target="#application-long-run-ncd"><span class="header-section-number">2.15.8</span> Application: Long-Run Behaviour of an NCD System</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -3896,6 +3897,85 @@ P=
 \end{aligned}
 \]</span></p>
 <p>Thus, if the chain starts with distribution <span class="math inline">\(\boldsymbol{\pi}=(2/3,1/3)\)</span>, its distribution remains <span class="math inline">\((2/3,1/3)\)</span> after every transition.</p>
+<div id="exm-ncd-stationary" class="callout-example theorem example">
+<p><span class="theorem-title"><strong>Example 2.20 (Example: Stationary Distribution of the NCD Chain)</strong></span> Consider the NCD Markov chain with transition matrix</p>
+<p><span class="math display">\[
+P=
+\begin{bmatrix}
+1-p&amp;p&amp;0\\
+1-p&amp;0&amp;p\\
+0&amp;1-p&amp;p
+\end{bmatrix}.
+\]</span></p>
+<p>Find the stationary probability distribution of this chain.</p>
+</div>
+<p><strong>Solution.</strong></p>
+<p>Let the stationary distribution be</p>
+<p><span class="math display">\[
+\boldsymbol{\pi}=(\pi_1,\pi_2,\pi_3).
+\]</span></p>
+<p>A stationary distribution satisfies</p>
+<p><span class="math display">\[
+\boldsymbol{\pi}P=\boldsymbol{\pi},
+\qquad
+\pi_1+\pi_2+\pi_3=1.
+\]</span></p>
+<p>Thus,</p>
+<p><span class="math display">\[
+(\pi_1,\pi_2,\pi_3)
+\begin{bmatrix}
+1-p&amp;p&amp;0\\
+1-p&amp;0&amp;p\\
+0&amp;1-p&amp;p
+\end{bmatrix}
+=
+(\pi_1,\pi_2,\pi_3),
+\]</span></p>
+<p>which gives</p>
+<p><span class="math display">\[
+\begin{aligned}
+(1-p)\pi_1+(1-p)\pi_2&amp;=\pi_1,\\
+p\pi_1+(1-p)\pi_3&amp;=\pi_2,\\
+p\pi_2+p\pi_3&amp;=\pi_3.
+\end{aligned}
+\]</span></p>
+<p>Only two of these three equations are independent. Using two equations together with</p>
+<p><span class="math display">\[
+\pi_1+\pi_2+\pi_3=1,
+\]</span></p>
+<p>we obtain</p>
+<p><span class="math display">\[
+\boxed{
+\begin{aligned}
+\pi_1&amp;=\frac{(1-p)^2}{p^2-p+1},\\
+\pi_2&amp;=\frac{p(1-p)}{p^2-p+1},\\
+\pi_3&amp;=\frac{p^2}{p^2-p+1}.
+\end{aligned}
+}
+\]</span></p>
+<p>Hence,</p>
+<p><span class="math display">\[
+\boxed{
+\boldsymbol{\pi}
+=
+\left(
+\frac{(1-p)^2}{p^2-p+1},
+\frac{p(1-p)}{p^2-p+1},
+\frac{p^2}{p^2-p+1}
+\right).
+}
+\]</span></p>
+</section>
+</section>
+<section id="why-this-example-is-useful" class="level3" data-number="2.15.3">
+<h3 data-number="2.15.3" class="anchored" data-anchor-id="why-this-example-is-useful"><span class="header-section-number">2.15.3</span> Why this example is useful</h3>
+<p>This example shows how to find a stationary distribution for an actuarial Markov chain. We have found a distribution that remains unchanged after each transition.</p>
+<p>However, a stationary distribution does not by itself tell us whether the chain will approach this distribution when it starts from another initial distribution.</p>
+<p>This leads to the next question:</p>
+<blockquote class="blockquote">
+<p><strong>Under what conditions does the distribution of a Markov chain converge to its stationary distribution?</strong></p>
+</blockquote>
+<p>The theorem on the long-run behaviour of a finite, irreducible, and aperiodic Markov chain answers this question.</p>
 <!-- ### Limiting distributions -->
 <!-- A stationary distribution describes a distribution that remains unchanged under the transition mechanism. We now consider a different question: **does the distribution of the chain approach a stationary distribution as the number of transitions becomes large?** -->
 <!-- For states $i,j\in S$, a **limiting distribution** $\boldsymbol{\pi}$ satisfies -->
@@ -3947,9 +4027,8 @@ P=
 <!-- * aperiodicity prevents the chain from being trapped in a regular cycle. -->
 <!-- Together, these conditions imply convergence to the unique stationary distribution. -->
 </section>
-</section>
-<section id="limiting-distributions" class="level3" data-number="2.15.3">
-<h3 data-number="2.15.3" class="anchored" data-anchor-id="limiting-distributions"><span class="header-section-number">2.15.3</span> Limiting distributions</h3>
+<section id="limiting-distributions" class="level3" data-number="2.15.4">
+<h3 data-number="2.15.4" class="anchored" data-anchor-id="limiting-distributions"><span class="header-section-number">2.15.4</span> Limiting distributions</h3>
 <p>A stationary distribution describes a probability distribution that remains unchanged under the transition mechanism. We now consider a different question:</p>
 <blockquote class="blockquote">
 <p>What happens to the distribution of the chain after a large number of transitions?</p>
@@ -4102,7 +4181,7 @@ P^{n+1}=P^nP,
 }
 \]</span></p>
 <p>A stationary distribution can exist even when the probabilities do not converge.</p>
-<p>For example, consider</p>
+<p>For example, consider the Markov chain with state space <span class="math inline">\(\mathcal{S}={0,1}\)</span> and transition matrix</p>
 <p><span class="math display">\[
 P=
 \begin{bmatrix}
@@ -4116,11 +4195,11 @@ P=
 =
 \left(\frac12,\frac12\right).
 \]</span></p>
-<p>However, if <span class="math inline">\(X_0=0\)</span>, then</p>
+<p>However, suppose the chain starts in state <span class="math inline">\(0\)</span>. Then</p>
 <p><span class="math display">\[
-\boldsymbol{\pi}^{(0)}=(1,0),
+\boldsymbol{\pi}^{(0)}=(1,0).
 \]</span></p>
-<p>and the distributions alternate:</p>
+<p>After each transition, the chain moves to the other state, so the distributions alternate:</p>
 <p><span class="math display">\[
 (1,0),
 \quad
@@ -4131,7 +4210,7 @@ P=
 (0,1),
 \quad\ldots
 \]</span></p>
-<p>Thus, <span class="math inline">\(\boldsymbol{\pi}^{(n)}\)</span> does not converge.</p>
+<p>Therefore, <span class="math inline">\(\boldsymbol{\pi}^{(n)}\)</span> does not converge to the stationary distribution. This occurs because the Markov chain is <strong>periodic</strong>.</p>
 <p>The reason is that this chain is periodic. We will study this condition in the next section.</p>
 </section>
 <section id="worked-example-convergence-to-a-limiting-distribution" class="level4">
@@ -4220,8 +4299,8 @@ P=
 <p>Whether a finite Markov chain has this convergence depends on its structural properties, particularly <strong>irreducibility and aperiodicity</strong>.</p>
 </section>
 </section>
-<section id="conditions-for-convergence" class="level3" data-number="2.15.4">
-<h3 data-number="2.15.4" class="anchored" data-anchor-id="conditions-for-convergence"><span class="header-section-number">2.15.4</span> Conditions for convergence</h3>
+<section id="conditions-for-convergence" class="level3" data-number="2.15.5">
+<h3 data-number="2.15.5" class="anchored" data-anchor-id="conditions-for-convergence"><span class="header-section-number">2.15.5</span> Conditions for convergence</h3>
 <p>The existence of a stationary distribution does not by itself guarantee that the distribution of a Markov chain converges. For a finite irreducible chain, the additional condition required is <strong>aperiodicity</strong>.</p>
 <section id="periodicity" class="level4">
 <h4 class="anchored" data-anchor-id="periodicity">Periodicity</h4>
@@ -4290,7 +4369,7 @@ d(i)=1.
 <p>Hence, state <span class="math inline">\(i\)</span> is aperiodic.</p>
 <p>For an irreducible chain, if one state has a self-loop, then every state is aperiodic. Thus, an irreducible chain with at least one state satisfying <span class="math inline">\(p_{ii}&gt;0\)</span> is aperiodic.</p>
 <div id="exm-ncd-aperiodic" class="callout-example theorem example">
-<p><span class="theorem-title"><strong>Example 2.20 (Example: Aperiodicity in an NCD system)</strong></span> Consider an NCD system with four states, representing the policyholder’s current discount level:</p>
+<p><span class="theorem-title"><strong>Example 2.21 (Example: Aperiodicity in an NCD system)</strong></span> Consider an NCD system with four states, representing the policyholder’s current discount level:</p>
 <p><span class="math display">\[
 \text{NCD 0},\quad \text{NCD 1},\quad \text{NCD 2},\quad \text{NCD 3}.
 \]</span></p>
@@ -4340,7 +4419,7 @@ d(i)=\gcd(2,3)=1,
 \]</span></p>
 <p>so the state is aperiodic.</p>
 <div id="exm-aperiodicity-gcd" class="callout-example theorem example">
-<p><span class="theorem-title"><strong>Example 2.21 (Example: Two return times with greatest common divisor <span class="math inline">\(1\)</span>)</strong></span> Suppose the states of the system are</p>
+<p><span class="theorem-title"><strong>Example 2.22 (Example: Two return times with greatest common divisor <span class="math inline">\(1\)</span>)</strong></span> Suppose the states of the system are</p>
 <p><span class="math display">\[
 S=\{1,2,3,4\},
 \]</span></p>
@@ -4391,7 +4470,7 @@ P=
 \]</span></p>
 <p>has period <span class="math inline">\(2\)</span>.</p>
 <div id="exm-period-two-alternating" class="callout-example theorem example">
-<p><span class="theorem-title"><strong>Example 2.22 (Example: Period <span class="math inline">\(2\)</span>)</strong></span> Suppose the states of the system are</p>
+<p><span class="theorem-title"><strong>Example 2.23 (Example: Period <span class="math inline">\(2\)</span>)</strong></span> Suppose the states of the system are</p>
 <p><span class="math display">\[
 S=\{1,2,3,4\},
 \]</span></p>
@@ -4557,8 +4636,8 @@ p_{ij}^{(n)}
 <!-- This connects the long-run analysis to the absorption probabilities considered earlier. The absorption probabilities determine **which closed class is eventually reached**; the limiting behaviour within that class determines **how the chain behaves after entering it**. -->
 </section>
 </section>
-<section id="multiple-closed-classes-1" class="level3" data-number="2.15.5">
-<h3 data-number="2.15.5" class="anchored" data-anchor-id="multiple-closed-classes-1"><span class="header-section-number">2.15.5</span> Multiple closed classes</h3>
+<section id="multiple-closed-classes-1" class="level3" data-number="2.15.6">
+<h3 data-number="2.15.6" class="anchored" data-anchor-id="multiple-closed-classes-1"><span class="header-section-number">2.15.6</span> Multiple closed classes</h3>
 <p>The convergence result above assumes that the Markov chain is irreducible. It is useful to see what can happen when a finite chain has more than one closed communicating class.</p>
 <p>Suppose that the chain has closed classes</p>
 <p><span class="math display">\[
@@ -4590,8 +4669,8 @@ u_i\boldsymbol{\pi}^{(1)}
 <p>This explains why irreducibility is an important condition for a limiting distribution that is independent of the initial state. With a single communicating class, the chain does not have different closed classes between which its long-run behaviour can differ.</p>
 <p>I would make this the <strong>culminating theorem of the section</strong>, bringing together stationary distributions, limiting distributions, irreducibility, and aperiodicity without repeating their earlier explanations.</p>
 </section>
-<section id="main-result" class="level3" data-number="2.15.6">
-<h3 data-number="2.15.6" class="anchored" data-anchor-id="main-result"><span class="header-section-number">2.15.6</span> Main result</h3>
+<section id="main-result" class="level3" data-number="2.15.7">
+<h3 data-number="2.15.7" class="anchored" data-anchor-id="main-result"><span class="header-section-number">2.15.7</span> Main result</h3>
 <p>We can now combine the results on stationary distributions and limiting distributions.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -4676,6 +4755,125 @@ P^n
 }
 \]</span></p>
 <p>Thus, after a sufficiently large number of transitions, the initial state has no effect on the distribution of the chain.</p>
+<p>It is useful to see how its conditions and conclusion apply to specific Markov chains. The following examples illustrate two cases. The first gives a simple two-state chain for which the limiting distribution can be obtained explicitly. The second applies the theorem to the NCD system and shows how the limiting probabilities describe its long-run behaviour.</p>
+<div id="exm-two-state-aperiodic" class="callout-example theorem example">
+<p><span class="theorem-title"><strong>Example 2.24 (Example: A Two-State Markov Chain)</strong></span> Consider the Markov chain with state space <span class="math inline">\(\mathcal{S}={1,2}\)</span> and transition matrix</p>
+<p><span class="math display">\[
+P=
+\begin{bmatrix}
+1-a &amp; a\\
+b &amp; 1-b
+\end{bmatrix},
+\qquad 0&lt;a,b&lt;1.
+\]</span></p>
+<p>Since the chain is finite, irreducible, and aperiodic, the theorem applies. Therefore, the limiting distribution exists and is the unique stationary distribution.</p>
+<p>Solving <span class="math inline">\(\boldsymbol{\pi}P=\boldsymbol{\pi}\)</span> with <span class="math inline">\(\pi_1+\pi_2=1\)</span> gives</p>
+<p><span class="math display">\[
+\boldsymbol{\pi}
+=
+\left(
+\frac{b}{a+b},
+\frac{a}{a+b}
+\right).
+\]</span></p>
+<p>Hence,</p>
+<p><span class="math display">\[
+\lim_{n\to\infty}p_{ij}^{(n)}
+=
+\pi_j,
+\qquad j\in\{1,2\},
+\]</span></p>
+<p>independently of the initial state <span class="math inline">\(i\)</span>. Thus, the limiting distribution is also the unique stationary distribution of the chain.</p>
+<p>Indeed,</p>
+<p><span class="math display">\[
+\left(
+\frac{b}{a+b},
+\frac{a}{a+b}
+\right)
+\begin{bmatrix}
+1-a &amp; a\\
+b &amp; 1-b
+\end{bmatrix}
+=
+\left(
+\frac{b}{a+b},
+\frac{a}{a+b}
+\right).
+\]</span></p>
+</div>
+<div id="exm-ncd-aperiodic" class="callout-example theorem example">
+<p><span class="theorem-title"><strong>Example 2.25 (Example: Long-run Behaviour of the NCD System)</strong></span> Consider the NCD Markov chain introduced earlier. Its state space is finite, and the chain is irreducible and aperiodic. Therefore, the theorem applies, and there is a unique limiting distribution, which is also the unique stationary distribution.</p>
+<p>The stationary distribution is</p>
+<p><span class="math display">\[
+\boldsymbol{\pi}
+=
+\left(
+\frac{(p-1)^2}{p^2-p+1},
+\frac{p-p^2}{p^2-p+1},
+\frac{p^2}{p^2-p+1}
+\right).
+\]</span></p>
+<p>Thus, for every initial state <span class="math inline">\(i\)</span>,</p>
+<p><span class="math display">\[
+\lim_{n\to\infty}p_{ij}^{(n)}
+=
+\pi_j,
+\qquad j\in\{1,2,3\}.
+\]</span></p>
+<p>In particular, the long-run probability of being in state <span class="math inline">\(j\)</span> is <span class="math inline">\(\pi_j\)</span>, independently of the initial state.</p>
+<p>For example, let <span class="math inline">\(p=0.8\)</span>. Then</p>
+<p><span class="math display">\[
+P=
+\begin{bmatrix}
+0.2&amp;0.8&amp;0\\
+0.2&amp;0&amp;0.8\\
+0&amp;0.2&amp;0.8
+\end{bmatrix}.
+\]</span></p>
+<p>Several powers of <span class="math inline">\(P\)</span> are</p>
+<p><span class="math display">\[
+P^2=
+\begin{bmatrix}
+0.2&amp;0.16&amp;0.64\\
+0.04&amp;0.32&amp;0.64\\
+0.04&amp;0.16&amp;0.8
+\end{bmatrix},
+\]</span></p>
+<p><span class="math display">\[
+P^4=
+\begin{bmatrix}
+0.072&amp;0.1856&amp;0.7424\\
+0.0464&amp;0.2112&amp;0.7424\\
+0.0464&amp;0.1856&amp;0.768
+\end{bmatrix},
+\]</span></p>
+<p>and</p>
+<p><span class="math display">\[
+P^8=
+\begin{bmatrix}
+0.0482432&amp;0.1903514&amp;0.7614054\\
+0.04758784&amp;0.1910067&amp;0.7614054\\
+0.04758784&amp;0.1903514&amp;0.7620608
+\end{bmatrix}.
+\]</span></p>
+<p>As <span class="math inline">\(n\)</span> increases, the rows of <span class="math inline">\(P^n\)</span> become increasingly similar. In the limit,</p>
+<p><span class="math display">\[
+\lim_{n\to\infty}P^n
+=
+\begin{bmatrix}
+0.04761905&amp;0.1904762&amp;0.7619048\\
+0.04761905&amp;0.1904762&amp;0.7619048\\
+0.04761905&amp;0.1904762&amp;0.7619048
+\end{bmatrix}.
+\]</span></p>
+<p>Each row is the limiting distribution</p>
+<p><span class="math display">\[
+\boldsymbol{\pi}
+=
+(0.04761905,\ 0.1904762,\ 0.7619048).
+\]</span></p>
+<p>This illustrates the theorem: regardless of the initial state, the distribution of the NCD level converges to the same limiting distribution.</p>
+</div>
 <section id="what-if-the-conditions-are-not-satisfied" class="level4">
 <h4 class="anchored" data-anchor-id="what-if-the-conditions-are-not-satisfied">What if the conditions are not satisfied?</h4>
 <p>The assumptions in the theorem are important.</p>
@@ -4688,8 +4886,8 @@ P^n
 <p>The next step is to interpret the limiting distribution in terms of the <strong>long-run proportion of time spent in each state</strong>.</p>
 </section>
 </section>
-<section id="application-long-run-ncd" class="level3" data-number="2.15.7">
-<h3 data-number="2.15.7" class="anchored" data-anchor-id="application-long-run-ncd"><span class="header-section-number">2.15.7</span> Application: Long-Run Behaviour of an NCD System</h3>
+<section id="application-long-run-ncd" class="level3" data-number="2.15.8">
+<h3 data-number="2.15.8" class="anchored" data-anchor-id="application-long-run-ncd"><span class="header-section-number">2.15.8</span> Application: Long-Run Behaviour of an NCD System</h3>
 <p>The long-run results for finite, irreducible and aperiodic Markov chains can be applied to a no-claims discount (NCD) system. The following example illustrates how the limiting distribution can be used to assess the long-run composition of an insurance portfolio and its premium income.</p>
 <div class="example">
 <p>Consider a no-claims discount system for motor insurance with three levels:</p>
