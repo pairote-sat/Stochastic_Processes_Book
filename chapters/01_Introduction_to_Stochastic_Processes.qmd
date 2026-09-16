@@ -1,5 +1,5 @@
 ---
-title: "Introduction to Stochastic Processes"
+title: "Chapter 1: Introduction to Stochastic Processes"
 ---
 
 <!-- # Introduction to Stochastic Processes {#intro} -->

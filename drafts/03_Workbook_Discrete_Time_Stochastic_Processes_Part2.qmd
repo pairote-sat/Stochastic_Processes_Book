@@ -1,0 +1,426 @@
+---
+title: "Simulation and Monte Carlo Methods for an Absorbing Random Walk"
+---
+
+# Simulation and Monte Carlo Methods for an Absorbing Random Walk
+
+Consider a simple random walk with absorbing boundaries at $0$ and $N$:
+
+$$
+X_{n+1} =
+\begin{cases}
+X_n+1, & \text{with probability } p,\\
+X_n-1, & \text{with probability } q=1-p,
+\end{cases}
+$$
+
+where
+
+$$
+X_0=i, \qquad 0<N.
+$$
+
+The process stops when it reaches either boundary. Define the absorption time
+
+$$
+T=\min\{n\geq 0:X_n=0\text{ or }X_n=N\}.
+$$
+
+We use simulation to estimate quantities such as
+
+$$
+\Pr(X_T=N\mid X_0=i)
+$$
+
+and
+
+$$
+E[T\mid X_0=i].
+$$
+
+The simulation results can then be compared with the exact results obtained analytically.
+
+## 1. Set up the random walk
+
+We consider
+
+$$
+N=10,\qquad X_0=4,\qquad p=0.6,\qquad q=0.4.
+$$
+
+```{r}
+N <- 10
+i <- 4
+p <- 0.6
+q <- 1 - p
+```
+
+For this example, the exact probability of absorption at $N$ is
+
+$$
+u_i
+=
+\frac{1-(q/p)^i}{1-(q/p)^N}.
+$$
+
+The exact expected time to absorption is
+
+$$
+v_i
+=
+\frac{
+N\left[1-(q/p)^i\right]/\left[1-(q/p)^N\right]-i
+}{p-q}.
+$$
+
+```{r static-walk-output-1}
+u_exact <- (1 - (q / p)^i) / (1 - (q / p)^N)
+
+v_exact <- (
+  N * (1 - (q / p)^i) / (1 - (q / p)^N) - i
+) / (p - q)
+
+u_exact
+v_exact
+```
+
+For these parameter values,
+
+$$
+u_4\approx 0.817,
+\qquad
+v_4\approx 20.8.
+$$
+
+## 2. Simulating one path
+
+We first simulate a single realization of the random walk.
+
+At each step, we generate a random number from a Bernoulli distribution:
+
+* with probability $p$, the walk moves one step to the right;
+* with probability $q$, it moves one step to the left.
+
+The simulation stops when the walk reaches either $0$ or $N$.
+
+```{r}
+simulate_walk <- function(i, N, p) {
+  
+  x <- i
+  path <- x
+  
+  while (x > 0 && x < N) {
+    
+    step <- sample(c(-1, 1), size = 1, prob = c(1 - p, p))
+    x <- x + step
+    
+    path <- c(path, x)
+  }
+  
+  path
+}
+```
+
+Generate one sample path.
+
+```{r}
+set.seed(123)
+
+path <- simulate_walk(i, N, p)
+
+path
+```
+
+The final value of the path identifies the absorbing state:
+
+```{r}
+tail(path, 1)
+```
+
+The number of transitions before absorption is
+
+```{r}
+length(path) - 1
+```
+
+### Visualising one sample path
+
+```{r}
+plot(
+  0:(length(path) - 1),
+  path,
+  type = "o",
+  pch = 16,
+  xlab = "Step n",
+  ylab = expression(X[n]),
+  ylim = c(0, N)
+)
+
+abline(h = c(0, N), lty = 2)
+```
+
+A single simulated path gives one possible history of the process. It does not, however, provide a reliable estimate of a probability or an expected value.
+
+This leads to the Monte Carlo method.
+
+## 3. Monte Carlo estimation of the absorption probability
+
+We now simulate many independent random-walk paths.
+
+For each path, record whether the walk is eventually absorbed at $N$.
+
+Define
+
+$$
+I_k=
+\begin{cases}
+1, & \text{if the $k$th path is absorbed at }N,\\
+0, & \text{if the $k$th path is absorbed at }0.
+\end{cases}
+$$
+
+Then
+
+$$
+\widehat{u}_i
+=
+\frac{1}{M}\sum_{k=1}^M I_k
+$$
+
+is the Monte Carlo estimate of
+
+$$
+u_i=\Pr(X_T=N\mid X_0=i).
+$$
+
+### Simulating many paths
+
+```{r}
+simulate_absorption <- function(i, N, p) {
+  
+  path <- simulate_walk(i, N, p)
+  
+  final_state <- tail(path, 1)
+  absorption_time <- length(path) - 1
+  
+  c(
+    final_state = final_state,
+    absorption_time = absorption_time
+  )
+}
+```
+
+For example, simulate $M=10{,}000$ paths.
+
+```{r}
+set.seed(123)
+
+M <- 10000
+
+results <- replicate(
+  M,
+  simulate_absorption(i, N, p)
+)
+
+results <- t(results)
+```
+
+The Monte Carlo estimate of the probability of absorption at $N$ is
+
+```{r}
+u_mc <- mean(results[, "final_state"] == N)
+
+u_mc
+```
+
+Compare this with the exact value:
+
+```{r}
+c(
+  Exact = u_exact,
+  Monte_Carlo = u_mc
+)
+```
+
+The Monte Carlo estimate should be close to the exact probability. It will not usually be exactly equal because it is based on a finite number of simulations.
+
+## 4. Monte Carlo estimation of the expected absorption time
+
+The same simulation can estimate the expected time to absorption.
+
+For each simulated path, record its absorption time $T_k$.
+
+The Monte Carlo estimator is
+
+$$
+\widehat{v}_i
+=
+\frac{1}{M}\sum_{k=1}^M T_k.
+$$
+
+Thus, we can estimate $E[T\mid X_0=i]$ by taking the average absorption time over the simulated paths.
+
+```{r}
+v_mc <- mean(results[, "absorption_time"])
+
+v_mc
+```
+
+Compare the simulation result with the exact value:
+
+```{r}
+c(
+  Exact = v_exact,
+  Monte_Carlo = v_mc
+)
+```
+
+The two values should be reasonably close.
+
+## 5. How does the Monte Carlo estimate improve?
+
+Monte Carlo estimates become more stable as the number of simulations increases.
+
+We can investigate this by repeating the simulation for different values of $M$.
+
+```{r}
+set.seed(123)
+
+M_values <- c(100, 500, 1000, 5000, 10000)
+
+mc_probability <- numeric(length(M_values))
+
+for (j in seq_along(M_values)) {
+  
+  M <- M_values[j]
+  
+  final_states <- replicate(
+    M,
+    tail(simulate_walk(i, N, p), 1)
+  )
+  
+  mc_probability[j] <- mean(final_states == N)
+}
+
+data.frame(
+  M = M_values,
+  Monte_Carlo = mc_probability
+)
+```
+
+We can also visualise the convergence.
+
+```{r}
+plot(
+  M_values,
+  mc_probability,
+  type = "o",
+  pch = 16,
+  xlab = "Number of simulations M",
+  ylab = "Estimated probability",
+  ylim = c(0.75, 0.90)
+)
+
+abline(h = u_exact, lty = 2)
+```
+
+The horizontal line shows the exact probability $u_4$. As $M$ increases, the Monte Carlo estimate tends to become more stable around the exact value.
+
+## 6. Simulation versus Monte Carlo
+
+It is useful to distinguish two related ideas.
+
+**Simulation** generates possible sample paths of the stochastic process. For example, one simulated path shows one possible sequence
+
+$$
+X_0,X_1,X_2,\ldots,X_T.
+$$
+
+**Monte Carlo estimation** uses many independent simulated paths to estimate a quantity of interest. For example,
+
+$$
+\widehat{u}_i
+=
+\frac{1}{M}
+\sum_{k=1}^M
+I_k
+$$
+
+estimates the probability of absorption at $N$, while
+
+$$
+\widehat{v}_i
+=
+\frac{1}{M}
+\sum_{k=1}^M T_k
+$$
+
+estimates the expected absorption time.
+
+Thus, simulation provides the data, while the Monte Carlo method uses the simulated data to estimate a probability, expectation, or other quantity.
+
+::: {.callout-note}
+
+## Key Idea
+
+For an absorbing random walk, simulation can reproduce individual sample paths, while Monte Carlo methods use a large number of simulated paths to approximate quantities such as
+
+$$
+\Pr(X_T=N\mid X_0=i)
+\quad\text{and}\quad
+E[T\mid X_0=i].
+$$
+
+The exact analytical results provide a benchmark against which the simulation estimates can be checked.
+
+:::
+
+## 7. A complete Monte Carlo function
+
+The simulation can be combined into one function that estimates both quantities.
+
+```{r}
+monte_carlo_absorbing_walk <- function(i, N, p, M = 10000) {
+  
+  results <- replicate(
+    M,
+    simulate_absorption(i, N, p)
+  )
+  
+  results <- t(results)
+  
+  probability <- mean(results[, "final_state"] == N)
+  expected_time <- mean(results[, "absorption_time"])
+  
+  c(
+    absorption_probability = probability,
+    expected_absorption_time = expected_time
+  )
+}
+```
+
+For example,
+
+```{r}
+set.seed(123)
+
+monte_carlo_absorbing_walk(
+  i = 4,
+  N = 10,
+  p = 0.6,
+  M = 10000
+)
+```
+
+The output can be compared directly with
+
+```{r}
+c(
+  absorption_probability = u_exact,
+  expected_absorption_time = v_exact
+)
+```
+
+This gives a computational verification of the analytical results for the absorbing random walk.
+:::
+

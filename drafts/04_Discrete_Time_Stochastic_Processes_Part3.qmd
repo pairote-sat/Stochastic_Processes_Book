@@ -1,0 +1,2200 @@
+## Classification of States
+
+So far, we have studied how a Markov chain moves from one state to another and how to calculate its $n$-step transition probabilities. We can now ask a different question: **what does the structure of the chain tell us about its long-term behaviour?**
+
+Consider a Markov chain with several groups of states. Some states may lead to other states but cannot be reached again, while other groups of states may form a closed system from which the chain cannot escape. For example, in the five-state chain considered below, the chain may eventually enter either $\{1\}$ or $\{4,5\}$, and once it enters one of these sets, it cannot leave.
+
+To analyse such behaviour, we need to identify which states can be reached from one another and which groups of states can be left. This leads to the classification of states into **communication classes**, **closed and non-closed classes**, and **transient and recurrent states**.
+
+
+::: {.callout-note}
+
+## Applications in Insurance
+
+State classification is useful when a Markov chain models the evolution of an insurance system over time. For example:
+
+* In an **NCD system**, communication between states helps determine whether policyholders can move between different premium levels and whether the system has a single long-run class.
+* In a **health insurance model**, some health states may form a closed class, such as a death state, while other states may be transient because the policyholder can eventually leave them.
+* In a **claims or risk model**, transient states can describe temporary conditions, while closed classes can describe long-term regimes from which the process cannot escape.
+
+This classification helps us answer questions such as:
+
+* Which states can the process eventually reach?
+* Which states can be revisited indefinitely?
+* Which states can be left permanently?
+* Does the process eventually enter a particular closed class?
+* What are the possible long-run outcomes of the insurance system?
+
+These questions will lead naturally to the study of **absorption probabilities** and, later, the **long-run behaviour** of Markov chains.
+:::
+
+Throughout this section, $\{X_n\}_{n\geq 0}$ is a time-homogeneous Markov chain with state space $S$ and transition matrix $P=(p_{ij})$.
+
+We begin with accessibility and communication.
+
+### Accessibility and communication
+
+For any $i,j\in S$, state $j$ is **accessible** from state $i$, denoted by
+
+$$
+i\rightarrow j,
+$$
+
+if
+
+$$
+p_{ij}^{(n)}>0
+$$
+
+for some $n\geq 0$. Thus, starting from $i$, there is a positive probability of reaching $j$ after some number of transitions.
+
+Accessibility does not require $j$ to be reached in one step. For example, if there are states $k_1,\ldots,k_r$ such that
+
+$$
+p_{ik_1}p_{k_1k_2}\cdots p_{k_rj}>0,
+$$
+
+then $i\rightarrow j$.
+
+Two states $i$ and $j$ **communicate**, denoted by
+
+$$
+i\leftrightarrow j,
+$$
+
+if
+
+$$
+i\rightarrow j
+\quad\text{and}\quad
+j\rightarrow i.
+$$
+
+Communication is an equivalence relation, so it partitions the state space into **communication classes**. Within a communication class, every pair of states communicates.
+
+### Closed classes
+
+A communication class $C$ is **closed** if, once the chain enters $C$, it cannot move to a state outside $C$. Equivalently,
+
+$$
+p_{ij}=0
+\qquad
+\text{for all }i\in C,\ j\notin C.
+$$
+
+A class that is not closed is called a **non-closed class**.
+
+A closed class consisting of a single state is an **absorbing state**. Thus, state $i$ is absorbing if
+
+$$
+p_{ii}=1.
+$$
+
+If the entire state space consists of one communication class, then the Markov chain is **irreducible**. Otherwise, it is **reducible**.
+
+::: {.callout-note}
+## Irreducible Markov Chains
+
+A Markov chain is **irreducible** if every state can be reached from every other state. Equivalently, the entire state space consists of a single communication class.
+
+Thus, for every pair of states $i$ and $j$,
+
+$$
+i \leftrightarrow j.
+$$
+
+If the state space contains more than one communication class, the Markov chain is **reducible**.
+:::
+
+::: {.callout-note}
+## Why Is Irreducibility Important?
+
+Irreducibility means that the Markov chain can move between all states in the state space. No state or group of states is permanently separated from the others.
+
+This matters for long-run behaviour. For a finite irreducible Markov chain, there is a unique stationary distribution, and every state is visited repeatedly in the long run.
+
+Irreducibility therefore allows us to study the long-run behaviour of the **entire** Markov chain through a single stationary distribution.
+:::
+
+### Transient and recurrent states
+
+A state is **recurrent** if, starting from that state, the chain returns to it with probability $1$. A state is **transient** if there is a positive probability that the chain never returns to it.
+
+For a finite Markov chain, the classification can be determined from the communication classes:
+
+* states in a closed communication class are recurrent;
+* states in a non-closed communication class are transient.
+
+Thus, for a finite Markov chain, a non-closed class describes states that the chain can eventually leave, while a closed class contains states that the chain cannot leave once it enters.
+
+
+::: {.callout-note}
+
+## Mathematical Definition
+
+Let
+
+$$
+T_i=\min\{n\geq 1:X_n=i\}
+$$
+
+be the first return time to state $i$, given that $X_0=i$.
+
+State $i$ is **recurrent** if
+
+$$
+\Pr(T_i<\infty\mid X_0=i)=1,
+$$
+
+and **transient** if
+
+$$
+\Pr(T_i<\infty\mid X_0=i)<1.
+$$
+
+Equivalently, a recurrent state is one that the chain returns to with probability $1$, whereas a transient state has a positive probability of never returning.
+
+:::
+
+::: {.callout-note}
+
+## Key Idea
+
+The communication structure tells us where the chain can move in the long run.
+
+* A **closed class** cannot be left once entered.
+* A **non-closed class** can be left.
+* A **recurrent state** is returned to with probability $1$.
+* A **transient state** has a positive probability of being left forever.
+* In a finite Markov chain, states in closed classes are **recurrent**, while states in non-closed classes are **transient**.
+
+Thus, the communication classes help us identify which states can be left permanently and which states the chain will revisit indefinitely.
+
+:::
+
+
+![**Markov Chain State Classification Guide**](../figures/Markov_Chain_State_Classification_Guide.png){width=80% fig-align="center"}
+
+
+::: {#exm-five-state-classification}
+Consider a Markov chain with state space $S=\{1,2,3,4,5\}$ and transition matrix
+
+$$
+P=
+\begin{bmatrix}
+1 & 0 & 0 & 0 & 0\\
+1/5 & 1/5 & 1/5 & 1/5 & 1/5\\
+1/3 & 1/3 & 0 & 1/3 & 0\\
+0 & 0 & 0 & 0 & 1\\
+0 & 0 & 0 & 1/2 & 1/2
+\end{bmatrix}.
+$$
+
+Identify the communication classes. Which classes are closed? Classify the states as transient or recurrent. Is the Markov chain irreducible?
+
+**Solution.**
+
+The communication classes are
+
+$$
+C_1=\{1\},\qquad
+C_2=\{2,3\},\qquad
+C_3=\{4,5\}.
+$$
+
+The class $C_1=\{1\}$ is closed because
+
+$$
+p_{11}=1.
+$$
+
+The class $C_3=\{4,5\}$ is also closed. States $4$ and $5$ communicate because
+
+$$
+p_{45}>0
+\quad\text{and}\quad
+p_{54}>0,
+$$
+
+and neither state can move to a state outside $\{4,5\}$.
+
+The class $C_2=\{2,3\}$ is non-closed. States $2$ and $3$ communicate, but the chain can leave this class. For example,
+
+$$
+p_{21}>0
+$$
+
+and
+
+$$
+p_{24}>0.
+$$
+
+Therefore,
+
+$$
+\boxed{\{1\}\text{ and }\{4,5\}\text{ are closed classes}}
+$$
+
+and
+
+$$
+\boxed{\{2,3\}\text{ is a non-closed class}.}
+$$
+
+Since the chain is finite, states $1,4,5$ are recurrent, while states $2,3$ are transient.
+
+The chain is reducible because there is more than one communication class.
+:::
+
+
+::: {#exm-communication-classes}
+
+Consider each of the following Markov chains:
+
+1. the NCD system;  
+2. the health insurance system; and
+3. a simple random walk with absorbing boundaries.
+
+Identify the communication classes. Is the Markov chain irreducible?
+
+:::
+
+**Solution.**
+
+It is useful to draw the transition diagram and verify the answers from the transition probabilities.
+
+**(a) NCD system**
+
+Every pair of states communicates. Therefore, $\{0,1,2\}$ is a single communication class. Since it contains the entire state space, it is closed, and the Markov chain is **irreducible**.
+
+For example,
+
+$$
+0 \to 1 \quad \text{and} \quad 1 \to 0,
+$$
+
+because $p_{01}>0$ and $p_{10}>0$. Similarly,
+
+$$
+1 \to 2 \quad \text{and} \quad 2 \to 1,
+$$
+
+because $p_{12}>0$ and $p_{21}>0$.
+
+Hence, all three states communicate.
+
+**(b) Health insurance system**
+
+There are two communication classes:
+
+$$
+O=\{H,S\}, \qquad C=\{D\}.
+$$
+
+The class $O$ is non-closed, while $C$ is closed. Moreover, $D$ is an absorbing state since
+
+$$
+p_{DD}=1.
+$$
+
+The states $H$ and $S$ communicate because
+
+$$
+p_{HS}>0
+\quad\text{and}\quad
+p_{SH}>0.
+$$
+
+However, the class $O$ is not closed because $p_{HD}>0$. Once the chain reaches $D$, it cannot return to $H$ or $S$.
+
+Therefore, the Markov chain is **reducible**.
+
+**(c) Simple random walk with absorbing boundaries**
+
+There are three communication classes:
+
+$$
+\{1,2,\ldots,N-1\}, \qquad \{0\}, \qquad \{N\}.
+$$
+
+The class $\{1,2,\ldots,N-1\}$ is non-closed, since the chain can move from an interior state to either boundary. The classes $\{0\}$ and $\{N\}$ are closed because $0$ and $N$ are absorbing states.
+
+Since there is more than one communication class, the Markov chain is **reducible**.
+
+
+
+
+## Absorption Probabilities in a General Markov Chain
+
+The random walk with absorbing barriers showed how we can calculate the probability that a chain eventually reaches a particular absorbing state. We now extend this idea to a general finite Markov chain, where there may be several closed classes.
+
+Suppose that $C$ is a closed communication class. Define
+
+$$
+u_i^C
+=
+\Pr(\text{the chain eventually enters }C\mid X_0=i).
+$$
+
+Thus, $u_i^C$ is the probability that the chain eventually enters the closed class $C$, given that it starts in state $i$.
+
+If $i\in C$, then the chain is already in $C$ and cannot leave. Therefore,
+
+$$
+u_i^C=1,
+\qquad i\in C.
+$$
+
+If $i$ belongs to another closed communication class, then the chain cannot move from that class to $C$. Hence,
+
+$$
+u_i^C=0.
+$$
+
+For a transient state $i$, the chain makes one transition to some state $j$ before eventually entering $C$. Conditioning on the state after this first transition gives
+
+$$
+u_i^C
+=
+\sum_{j\in S}p_{ij}u_j^C.
+$$
+
+This is the same first-step analysis used for the random walk, but it now applies to any finite Markov chain.
+
+### Matrix formulation
+
+Let
+
+$$
+\mathbf{u}^C
+=
+\begin{bmatrix}
+u_1^C\\
+u_2^C\\
+\vdots\\
+u_m^C
+\end{bmatrix},
+$$
+
+where $m$ is the number of states. The first-step equations can be written compactly as
+
+$$
+\boxed{
+\mathbf{u}^C=P\mathbf{u}^C
+}
+$$
+
+together with the boundary conditions
+
+$$
+u_i^C=
+\begin{cases}
+1, & i\in C,\\
+0, & i\in C',\quad C'\neq C,
+\end{cases}
+$$
+
+for states in closed classes.
+
+The remaining equations determine the absorption probabilities for the transient states.
+
+::: {.callout-note}
+
+## Key Idea
+
+For a closed class $C$,
+
+$$
+u_i^C
+=
+\Pr(\text{eventually enter }C\mid X_0=i)
+$$
+
+measures the probability of each possible long-run destination.
+
+The probabilities are found using **first-step analysis**:
+
+$$
+u_i^C=\sum_{j\in S}p_{ij}u_j^C.
+$$
+
+Thus, the classification of states tells us the possible closed classes, while the absorption probabilities tell us the probability of eventually entering each one.
+:::
+
+::: {#exm-general-absorption}
+*Consider the five-state Markov chain from the previous section, with transition matrix*
+
+$$
+P=
+\begin{bmatrix}
+1 & 0 & 0 & 0 & 0\\
+1/5 & 1/5 & 1/5 & 1/5 & 1/5\\
+1/3 & 1/3 & 0 & 1/3 & 0\\
+0 & 0 & 0 & 0 & 1\\
+0 & 0 & 0 & 1/2 & 1/2
+\end{bmatrix}.
+$$
+
+The closed classes are $C_1=\{1\}$ and $C_3=\{4,5\}$. Find the probability that the chain eventually enters $C_3$, given that it starts in state $2$.
+
+**Solution.**
+
+Define
+
+$$
+u_i
+=
+\Pr(\text{eventually enter }C_3\mid X_0=i).
+$$
+
+Since $C_3=\{4,5\}$ is closed,
+
+$$
+u_4=u_5=1.
+$$
+
+Since $C_1=\{1\}$ is another closed class,
+
+$$
+u_1=0.
+$$
+
+For states $2$ and $3$, first-step analysis gives
+
+$$
+u_2
+=
+\frac15u_1+\frac15u_2+\frac15u_3+\frac15u_4+\frac15u_5
+$$
+
+and
+
+$$
+u_3
+=
+\frac13u_1+\frac13u_2+\frac13u_4.
+$$
+
+Substituting the known values,
+
+$$
+u_2
+=
+\frac15u_2+\frac15u_3+\frac25
+$$
+
+and
+
+$$
+u_3
+=
+\frac13u_2+\frac13.
+$$
+
+Solving these equations gives
+
+$$
+u_2=\frac{7}{11},
+\qquad
+u_3=\frac{6}{11}.
+$$
+
+Therefore,
+
+$$
+\boxed{
+\Pr(\text{eventually enter }\{4,5\}\mid X_0=2)
+=
+\frac{7}{11}
+}
+$$
+
+There are two possible closed classes in this example. Thus, the probability of eventually entering $\{1\}$, starting from state $2$, is
+
+$$
+1-u_2=\frac{4}{11}.
+$$
+
+The two probabilities sum to $1$:
+
+$$
+\frac{7}{11}+\frac{4}{11}=1.
+$$
+
+Similarly, for a chain starting in state 3:
+
+$$\boxed{ \Pr(\text{eventually enter }\{4,5\}\mid X_0=3) = \frac{6}{11} }$$ 
+
+The probability of eventually entering $\{1\}$, starting from state $3$, is
+$$1-u_3=\frac{5}{11}.$$ 
+The two probabilities sum to $1$:
+$$\frac{6}{11}+\frac{5}{11}=1.$$ 
+
+
+
+:::
+
+
+### Multiple closed classes
+
+The previous example has two closed classes, $C_1=\{1\}$ and $C_3=\{4,5\}$. In general, suppose a finite Markov chain has closed classes
+
+$$
+C_1,C_2,\ldots,C_r.
+$$
+
+For each closed class $C_k$, define
+
+$$
+u_i^{(k)}
+=
+\Pr(\text{eventually enter }C_k\mid X_0=i).
+$$
+
+These probabilities describe the possible long-run destinations of the chain.
+
+For a state $i$ that belongs to a closed class $C_k$,
+
+$$
+u_i^{(k)}=1,
+$$
+
+because the chain is already in $C_k$ and cannot leave it. For a state $i$ in another closed class $C_\ell$, where $\ell\neq k$,
+
+$$
+u_i^{(k)}=0.
+$$
+
+For transient states, the probabilities are obtained from the first-step equations
+
+$$
+u_i^{(k)}
+=
+\sum_{j\in S}p_{ij}u_j^{(k)}.
+$$
+
+Since the chain is finite, it eventually enters one of the closed classes with probability $1$. Therefore, for every state $i$,
+
+$$
+\boxed{
+\sum_{k=1}^r u_i^{(k)}=1.
+}
+$$
+
+For the five-state example,
+
+$$
+u_i^{(1)}
+=
+\Pr(\text{eventually enter }\{1\}\mid X_0=i)
+$$
+
+and
+
+$$
+u_i^{(3)}
+=
+\Pr(\text{eventually enter }\{4,5\}\mid X_0=i).
+$$
+
+Starting from state $2$, we found
+
+$$
+u_2^{(3)}=\frac{7}{11}.
+$$
+
+Hence,
+
+$$
+u_2^{(1)}
+=
+1-u_2^{(3)}
+=
+\frac{4}{11}.
+$$
+
+Thus, starting from state $2$, the chain eventually enters $\{1\}$ with probability $\frac{4}{11}$ and $\{4,5\}$ with probability $\frac{7}{11}$.
+
+::: {.callout-note}
+
+## Key Idea
+
+For a finite Markov chain, the closed communication classes are the possible long-run destinations.
+
+The quantity
+
+$$
+u_i^{(k)}
+=
+\Pr(\text{eventually enter }C_k\mid X_0=i)
+$$
+
+gives the probability of each destination when the chain starts from state $i$.
+
+Therefore,
+
+$$
+\boxed{
+\sum_{k=1}^r u_i^{(k)}=1.
+}
+$$
+
+This extends the idea of absorption probabilities from a random walk with absorbing states to a general Markov chain with several closed classes.
+
+:::
+
+### From absorption to long-run behaviour
+
+Absorption probabilities tell us **which closed class the chain eventually enters**. Once the chain enters a closed class, it remains there, but it can continue to move between the states within that class.
+
+This leads to the next question:
+
+> **What does the chain do in the long run after it enters a closed class?**
+
+To answer this question, we need to study the **long-run behaviour of Markov chains**, including stationary distributions and limiting probabilities.
+
+
+
+## Long-Run Behaviour of Markov Chains
+
+In the previous section, we studied the structure of a Markov chain and identified its closed communication classes. For a finite Markov chain, the chain eventually enters one of these closed classes with probability $1$.
+
+This leads to a natural question:
+
+> **What happens after the chain enters a closed communicating class?**
+
+The chain cannot leave the class, but it can continue to move between the states within the class. Over a long period of time, the probabilities of being in the different states may approach stable values.
+
+For example, suppose a Markov chain models the no-claims discount level of a policyholder. After a sufficiently long period, the probability of finding a policyholder at each discount level may become approximately stable, even though the policyholder continues to move between levels from year to year.
+
+We will use the term **long-run behaviour** to describe the behaviour of a Markov chain as $n\rightarrow\infty$. In particular, we will study:
+
+* **stationary distributions**, which remain unchanged after each transition;
+* **limiting distributions**, which describe the probabilities approached by the chain as $n\rightarrow\infty$;
+* **periodicity**, which can prevent the distribution from converging even when a stationary distribution exists.
+
+The key distinction is that a stationary distribution describes an equilibrium distribution, whereas a limiting distribution describes the distribution that the chain approaches over time. Under suitable conditions, these two distributions are the same.
+
+
+![Stationary vs. Limiting Distributions Analogy](../figures/Stationary_vs._Limiting_Distributions_Analogy.png)
+
+
+### What happens within a closed communicating class?
+
+Suppose that $C$ is a closed communicating class.
+
+Once the Markov chain enters $C$, it cannot leave. However, the chain can continue to move between the states in $C$. Since every pair of states in $C$ communicates, each state can eventually be reached from every other state in the class.
+
+Thus, a closed communicating class can be viewed as a self-contained part of the Markov chain:
+
+$$
+\text{enter }C
+\quad\longrightarrow\quad
+\text{remain in }C
+\quad\longrightarrow\quad
+\text{continue moving within }C.
+$$
+
+For a finite closed communicating class, there is a unique stationary probability distribution on that class. Denote it by
+
+$$
+\boldsymbol{\pi}
+=
+(\pi_i)_{i\in C}.
+$$
+
+It satisfies
+
+$$
+\boldsymbol{\pi}P_C=\boldsymbol{\pi},
+$$
+
+where $P_C$ is the transition matrix restricted to the states in $C$, together with
+
+$$
+\pi_i\geq 0,
+\qquad
+\sum_{i\in C}\pi_i=1.
+$$
+
+The stationary distribution has an important interpretation. If the chain starts with distribution $\boldsymbol{\pi}$, then its distribution remains $\boldsymbol{\pi}$ after every transition:
+
+$$
+\boldsymbol{\pi}P_C^n=\boldsymbol{\pi},
+\qquad n\geq1.
+$$
+
+Thus, the stationary distribution describes a distribution that is in equilibrium with respect to the transition mechanism.
+
+However, the existence of a stationary distribution does **not** by itself mean that the distribution of the chain will converge to it. Periodicity can prevent convergence. For example, a chain that alternates deterministically between two states has a stationary distribution $(1/2,1/2)$, but its distribution oscillates between the two states when it starts from a particular state.
+
+This distinction leads to two separate questions:
+
+1. **Does a stationary distribution exist?**
+2. **Does the distribution of the chain converge to the stationary distribution?**
+
+For a finite irreducible Markov chain, a stationary distribution exists and is unique. If the chain is also aperiodic, its distribution converges to this stationary distribution, regardless of its initial state.
+
+::: {.callout-note}
+
+## Key Idea
+
+A **closed communicating class** cannot be left once it is entered.
+
+Within a finite closed communicating class:
+
+* the chain continues to move between states;
+* there is a unique stationary distribution;
+* if the class is also aperiodic, the distribution of the chain converges to this stationary distribution.
+
+Thus, after identifying the closed classes, we can study the long-run behaviour within each class.
+
+:::
+
+
+<!-- ### Stationary distributions -->
+
+<!-- Consider a Markov chain with transition matrix $P$ and state space $S$. A probability distribution -->
+
+<!-- $$ -->
+<!-- \boldsymbol{\pi}=(\pi_i)_{i\in S} -->
+<!-- $$ -->
+
+<!-- is called a **stationary distribution** if -->
+
+<!-- $$ -->
+<!-- \boxed{ -->
+<!-- \boldsymbol{\pi}P=\boldsymbol{\pi}. -->
+<!-- } -->
+<!-- $$ -->
+
+<!-- Equivalently, for each $j\in S$, -->
+
+<!-- $$ -->
+<!-- \pi_j -->
+<!-- = -->
+<!-- \sum_{i\in S}\pi_i p_{ij}. -->
+<!-- $$ -->
+
+<!-- The components of $\boldsymbol{\pi}$ must satisfy -->
+
+<!-- $$ -->
+<!-- \pi_i\geq0, -->
+<!-- \qquad -->
+<!-- \sum_{i\in S}\pi_i=1. -->
+<!-- $$ -->
+
+<!-- The equation -->
+
+<!-- $$ -->
+<!-- \boldsymbol{\pi}P=\boldsymbol{\pi} -->
+<!-- $$ -->
+
+<!-- means that if the distribution of $X_n$ is $\boldsymbol{\pi}$, then the distribution of $X_{n+1}$ is also $\boldsymbol{\pi}$. Therefore, -->
+
+<!-- $$ -->
+<!-- \boldsymbol{\pi}P^n=\boldsymbol{\pi}, -->
+<!-- \qquad n\geq1. -->
+<!-- $$ -->
+
+<!-- A stationary distribution is therefore an **equilibrium distribution** of the Markov chain. -->
+
+<!-- It is important to distinguish a stationary distribution from a limiting distribution. A stationary distribution can exist even when the distribution of the chain does not converge as $n\rightarrow\infty$. For example, a chain that alternates between two states has the stationary distribution -->
+
+<!-- $$ -->
+<!-- \boldsymbol{\pi} -->
+<!-- = -->
+<!-- \left(\frac12,\frac12\right), -->
+<!-- $$ -->
+
+<!-- but its distribution oscillates between the two states when it starts from one of them. -->
+
+<!-- For a finite irreducible Markov chain, there is a unique stationary distribution. Whether the distribution of the chain converges to this stationary distribution depends on an additional condition, which we will introduce later. -->
+
+<!-- ::: {.callout-note} -->
+
+<!-- ## Key Idea -->
+
+<!-- A stationary distribution is a probability distribution that is unchanged by the transition matrix: -->
+
+<!-- $$ -->
+<!-- \boxed{ -->
+<!-- \boldsymbol{\pi}P=\boldsymbol{\pi}. -->
+<!-- } -->
+<!-- $$ -->
+
+<!-- It describes an equilibrium distribution of the Markov chain. However, the existence of a stationary distribution does not by itself imply that the chain approaches this distribution over time. -->
+
+<!-- ::: -->
+
+
+### Stationary distributions
+
+Consider a Markov chain with transition matrix $P$ and state space $S$. A probability distribution
+
+$$
+\boldsymbol{\pi}=(\pi_i)_{i\in S}
+$$
+
+is called a **stationary distribution** if
+
+$$
+\boxed{
+\boldsymbol{\pi}P=\boldsymbol{\pi}.
+}
+$$
+
+Equivalently, for each $j\in S$,
+
+$$
+\pi_j
+=
+\sum_{i\in S}\pi_i p_{ij}.
+$$
+
+The components of $\boldsymbol{\pi}$ must satisfy
+
+$$
+\pi_i\geq0,
+\qquad
+\sum_{i\in S}\pi_i=1.
+$$
+
+The equation $\boldsymbol{\pi}P=\boldsymbol{\pi}$ means that a chain with distribution $\boldsymbol{\pi}$ has the same distribution after one transition. Consequently,
+
+$$
+\boldsymbol{\pi}P^n=\boldsymbol{\pi},
+\qquad n\geq1.
+$$
+
+Thus, a stationary distribution is an **equilibrium distribution** of the Markov chain.
+
+For a finite irreducible Markov chain, there is a unique stationary distribution. We can find it by solving
+
+$$
+\boldsymbol{\pi}P=\boldsymbol{\pi}
+$$
+
+together with
+
+$$
+\sum_{i\in S}\pi_i=1.
+$$
+
+It is important to distinguish a stationary distribution from a limiting distribution. A stationary distribution may exist even when the distribution of the chain does not converge as $n\rightarrow\infty$. The additional condition required for convergence will be introduced later.
+
+::: {.callout-note}
+
+## Key Idea
+
+A stationary distribution is a probability distribution that is unchanged by the transition matrix:
+
+$$
+\boxed{
+\boldsymbol{\pi}P=\boldsymbol{\pi}.
+}
+$$
+
+For a finite irreducible Markov chain, the stationary distribution is unique. Whether the distribution of the chain converges to it depends on additional properties of the chain.
+:::
+
+#### Worked example: Finding a stationary distribution
+
+Consider the two-state Markov chain with transition matrix
+
+$$
+P=
+\begin{bmatrix}
+1-a & a\\
+b & 1-b
+\end{bmatrix},
+\qquad 0<a,b<1.
+$$
+
+Let
+
+$$
+\boldsymbol{\pi}=(\pi_0,\pi_1)
+$$
+
+be its stationary distribution. We require
+
+$$
+\boldsymbol{\pi}P=\boldsymbol{\pi}.
+$$
+
+Therefore,
+
+$$
+(\pi_0,\pi_1)
+\begin{bmatrix}
+1-a & a\\
+b & 1-b
+\end{bmatrix}
+=
+(\pi_0,\pi_1).
+$$
+
+From the first component,
+
+$$
+\pi_0(1-a)+\pi_1b=\pi_0,
+$$
+
+which gives
+
+$$
+a\pi_0=b\pi_1.
+$$
+
+Together with the condition
+
+$$
+\pi_0+\pi_1=1,
+$$
+
+we obtain
+
+$$
+\pi_0=\frac{b}{a+b},
+\qquad
+\pi_1=\frac{a}{a+b}.
+$$
+
+Hence the stationary distribution is
+
+$$
+\boxed{
+\boldsymbol{\pi}
+=
+\left(
+\frac{b}{a+b},
+\frac{a}{a+b}
+\right).
+}
+$$
+
+For example, if $a=0.2$ and $b=0.4$, then
+
+$$
+P=
+\begin{bmatrix}
+0.8&0.2\\
+0.4&0.6
+\end{bmatrix},
+$$
+
+and
+
+$$
+\boldsymbol{\pi}
+=
+\left(
+\frac{0.4}{0.6},
+\frac{0.2}{0.6}
+\right)
+=
+\left(
+\frac23,\frac13
+\right).
+$$
+
+We can verify the result directly:
+
+$$
+\begin{aligned}
+\boldsymbol{\pi}P
+&=
+\left(\frac23,\frac13\right)
+\begin{bmatrix}
+0.8&0.2\\
+0.4&0.6
+\end{bmatrix}\\
+&=
+\left(
+\frac23,\frac13
+\right).
+\end{aligned}
+$$
+
+Thus, if the chain starts with distribution $\boldsymbol{\pi}=(2/3,1/3)$, its distribution remains $(2/3,1/3)$ after every transition.
+
+
+
+
+
+
+
+<!-- ### Limiting distributions -->
+
+<!-- A stationary distribution describes a distribution that remains unchanged under the transition mechanism. We now consider a different question: **does the distribution of the chain approach a stationary distribution as the number of transitions becomes large?** -->
+
+<!-- For states $i,j\in S$, a **limiting distribution** $\boldsymbol{\pi}$ satisfies -->
+
+<!-- $$ -->
+<!-- \boxed{ -->
+<!-- \lim_{n\rightarrow\infty} -->
+<!-- \Pr(X_n=j\mid X_0=i) -->
+<!-- = -->
+<!-- \pi_j. -->
+<!-- } -->
+<!-- $$ -->
+
+<!-- Thus, $\pi_j$ is the limiting probability of being in state $j$ after a large number of transitions, starting from state $i$. -->
+
+<!-- If this limit is the same for every initial state $i$, then the long-run distribution does not depend on the starting state. -->
+
+<!-- ### Conditions for convergence -->
+
+<!-- The existence of a stationary distribution does not by itself guarantee convergence. Periodicity can cause the probabilities to oscillate indefinitely. -->
+
+<!-- For example, consider the two-state chain -->
+
+<!-- $$ -->
+<!-- P= -->
+<!-- \begin{bmatrix} -->
+<!-- 0&1\\ -->
+<!-- 1&0 -->
+<!-- \end{bmatrix}. -->
+<!-- $$ -->
+
+<!-- Its stationary distribution is -->
+
+<!-- $$ -->
+<!-- \boldsymbol{\pi} -->
+<!-- = -->
+<!-- \left(\frac12,\frac12\right). -->
+<!-- $$ -->
+
+<!-- However, if $X_0=0$, then -->
+
+<!-- $$ -->
+<!-- \Pr(X_n=0\mid X_0=0) -->
+<!-- = -->
+<!-- \begin{cases} -->
+<!-- 1, & n\text{ even},\\ -->
+<!-- 0, & n\text{ odd}. -->
+<!-- \end{cases} -->
+<!-- $$ -->
+
+<!-- Therefore, the distribution alternates between -->
+
+<!-- $$ -->
+<!-- (1,0) -->
+<!-- \quad\text{and}\quad -->
+<!-- (0,1), -->
+<!-- $$ -->
+
+<!-- and does not converge. -->
+
+<!-- This example shows why **aperiodicity** is required for convergence. -->
+
+<!-- For a finite irreducible Markov chain: -->
+
+<!-- * irreducibility ensures that every state communicates with every other state; -->
+<!-- * aperiodicity prevents the chain from being trapped in a regular cycle. -->
+
+<!-- Together, these conditions imply convergence to the unique stationary distribution. -->
+
+
+
+### Limiting distributions
+
+A stationary distribution describes a probability distribution that remains unchanged under the transition mechanism. We now consider a different question:
+
+> What happens to the distribution of the chain after a large number of transitions?
+
+For states $i,j\in S$, suppose that
+
+$$
+\lim_{n\rightarrow\infty}
+\Pr(X_n=j\mid X_0=i)
+=
+\pi_j.
+$$
+
+Then $\pi_j$ is the **limiting probability** of being in state $j$ when the chain starts from state $i$.
+
+If the limit is the same for every initial state $i$, then the long-run probability of being in state $j$ does not depend on the starting state.
+
+Thus, a limiting distribution is a probability distribution
+
+$$
+\boldsymbol{\pi}
+=
+(\pi_j)_{j\in S}
+$$
+
+such that
+
+$$
+\boxed{
+\lim_{n\rightarrow\infty}p_{ij}^{(n)}
+=
+\pi_j
+\qquad\text{for all }i,j\in S.
+}
+$$
+
+The important feature of this result is that the limit depends on $j$, but not on the initial state $i$.
+
+#### Limiting behaviour of the transition matrix
+
+Recall that
+
+$$
+P^n
+=
+\begin{bmatrix}
+p_{11}^{(n)} & p_{12}^{(n)} & \cdots\\
+p_{21}^{(n)} & p_{22}^{(n)} & \cdots\\
+\vdots & \vdots & \ddots
+\end{bmatrix}.
+$$
+
+If
+
+$$
+p_{ij}^{(n)}\longrightarrow\pi_j
+$$
+
+for every $i,j$, then every row of $P^n$ approaches the same probability distribution:
+
+$$
+P^n
+\longrightarrow
+\begin{bmatrix}
+\boldsymbol{\pi}\\
+\boldsymbol{\pi}\\
+\vdots\\
+\boldsymbol{\pi}
+\end{bmatrix}.
+$$
+
+For a finite state space, this can be written as
+
+$$
+\boxed{
+P^n
+\longrightarrow
+\boldsymbol{1}\boldsymbol{\pi},
+}
+$$
+
+where $\boldsymbol{1}$ is a column vector of ones.
+
+This gives a useful interpretation of the entries of $P^n$. For large $n$, the $j$th entry of every row is approximately $\pi_j$, regardless of the state from which the chain started.
+
+#### Limiting distribution from an initial distribution
+
+The previous definition considers a particular initial state $X_0=i$. We can also start the chain with an arbitrary initial distribution
+
+$$
+\boldsymbol{\pi}^{(0)}
+=
+\left(
+\Pr(X_0=i)
+\right)_{i\in S}.
+$$
+
+After $n$ transitions, the distribution of $X_n$ is
+
+$$
+\boxed{
+\boldsymbol{\pi}^{(n)}
+=
+\boldsymbol{\pi}^{(0)}P^n.
+}
+$$
+
+Suppose that
+
+$$
+P^n
+\longrightarrow
+\boldsymbol{1}\boldsymbol{\pi}.
+$$
+
+Then
+
+$$
+\begin{aligned}
+\boldsymbol{\pi}^{(n)}
+&=
+\boldsymbol{\pi}^{(0)}P^n\\
+&\longrightarrow
+\boldsymbol{\pi}^{(0)}
+\boldsymbol{1}\boldsymbol{\pi}\\
+&=
+\boldsymbol{\pi},
+\end{aligned}
+$$
+
+because
+
+$$
+\boldsymbol{\pi}^{(0)}\boldsymbol{1}=1.
+$$
+
+Therefore,
+
+$$
+\boxed{
+\boldsymbol{\pi}^{(n)}
+\longrightarrow
+\boldsymbol{\pi}.
+}
+$$
+
+The limiting distribution is therefore independent of the initial distribution.
+
+#### Limiting and stationary distributions
+
+There is a close relationship between limiting and stationary distributions.
+
+Suppose that
+
+$$
+P^n\longrightarrow
+\boldsymbol{1}\boldsymbol{\pi}.
+$$
+
+Since
+
+$$
+P^{n+1}=P^nP,
+$$
+
+taking limits gives
+
+$$
+\boldsymbol{1}\boldsymbol{\pi}
+=
+\boldsymbol{1}\boldsymbol{\pi}P.
+$$
+
+Hence,
+
+$$
+\boxed{
+\boldsymbol{\pi}P=\boldsymbol{\pi}.
+}
+$$
+
+Therefore, whenever a limiting distribution exists, it is a stationary distribution.
+
+However, the converse is not necessarily true:
+
+$$
+\boxed{
+\text{stationary distribution}
+\;\not\Rightarrow\;
+\text{limiting distribution}.
+}
+$$
+
+A stationary distribution can exist even when the probabilities do not converge.
+
+For example, consider
+
+$$
+P=
+\begin{bmatrix}
+0&1\\
+1&0
+\end{bmatrix}.
+$$
+
+The stationary distribution is
+
+$$
+\boldsymbol{\pi}
+=
+\left(\frac12,\frac12\right).
+$$
+
+However, if $X_0=0$, then
+
+$$
+\boldsymbol{\pi}^{(0)}=(1,0),
+$$
+
+and the distributions alternate:
+
+$$
+(1,0),
+\quad
+(0,1),
+\quad
+(1,0),
+\quad
+(0,1),
+\quad\ldots
+$$
+
+Thus, $\boldsymbol{\pi}^{(n)}$ does not converge.
+
+The reason is that this chain is periodic. We will study this condition in the next section.
+
+#### Worked example: convergence to a limiting distribution
+
+Consider the Markov chain with transition matrix
+
+$$
+P=
+\begin{bmatrix}
+1/3&2/3\\
+2/3&1/3
+\end{bmatrix}.
+$$
+
+Its stationary distribution is
+
+$$
+\boldsymbol{\pi}
+=
+\left(\frac12,\frac12\right).
+$$
+
+Suppose that the chain starts in state $0$. Then
+
+$$
+\boldsymbol{\pi}^{(0)}=(1,0).
+$$
+
+After one transition,
+
+$$
+\boldsymbol{\pi}^{(1)}
+=
+(1,0)P
+=
+\left(\frac13,\frac23\right).
+$$
+
+After two transitions,
+
+$$
+\boldsymbol{\pi}^{(2)}
+=
+\left(\frac13,\frac23\right)P
+=
+\left(\frac59,\frac49\right).
+$$
+
+After four transitions,
+
+$$
+\boldsymbol{\pi}^{(4)}
+=
+\boldsymbol{\pi}^{(0)}P^4
+=
+\left(\frac{41}{81},\frac{40}{81}\right).
+$$
+
+As $n$ increases, the distribution approaches
+
+$$
+\left(\frac12,\frac12\right).
+$$
+
+For example,
+
+$$
+\begin{aligned}
+\boldsymbol{\pi}^{(8)}
+&\approx
+(0.5000762, 0.4999238),\\
+\boldsymbol{\pi}^{(16)}
+&\approx
+(0.50000,0.50000).
+\end{aligned}
+$$
+
+Thus,
+
+$$
+\boxed{
+\boldsymbol{\pi}^{(n)}
+\longrightarrow
+\left(\frac12,\frac12\right).
+}
+$$
+
+The same limiting distribution is obtained if the chain starts from state $1$, or from any other initial distribution.
+
+This example illustrates the distinction between the two concepts:
+
+$$
+\begin{array}{c}
+\text{Stationary distribution}\\[2mm]
+\boldsymbol{\pi}P=\boldsymbol{\pi}
+\end{array}
+\qquad
+\longrightarrow
+\qquad
+\begin{array}{c}
+\text{Limiting distribution}\\[2mm]
+\boldsymbol{\pi}^{(n)}\longrightarrow\boldsymbol{\pi}.
+\end{array}
+$$
+
+The stationary distribution describes an equilibrium distribution. The limiting distribution describes the distribution approached by the chain as the number of transitions becomes large.
+
+Whether a finite Markov chain has this convergence depends on its structural properties, particularly **irreducibility and aperiodicity**.
+
+
+
+
+
+### Conditions for convergence
+
+The existence of a stationary distribution does not by itself guarantee that the distribution of a Markov chain converges. For a finite irreducible chain, the additional condition required is **aperiodicity**.
+
+#### Periodicity
+
+A state $i$ is **periodic** if the chain can return to $i$ only at times that are multiples of some integer $d>1$. The period of state $i$ is
+
+$$
+d(i)
+=
+\gcd\left\{
+n\geq1:p_{ii}^{(n)}>0
+\right\}.
+$$
+
+If
+
+$$
+d(i)=1,
+$$
+
+then state $i$ is **aperiodic**.
+
+For an irreducible Markov chain, all states have the same period. Therefore, we can describe the entire chain as periodic or aperiodic.
+
+The key idea is whether the possible return times have a common factor greater than $1$.
+
+For example, consider
+
+$$
+P=
+\begin{bmatrix}
+0&1\\
+1&0
+\end{bmatrix}.
+$$
+
+Starting from state $0$, the chain returns to state $0$ only after an even number of transitions:
+
+$$
+0\longrightarrow1\longrightarrow0
+\longrightarrow1\longrightarrow0\longrightarrow\cdots
+$$
+
+Thus,
+
+$$
+p_{00}^{(n)}>0
+\quad\text{only when }n=2,4,6,\ldots,
+$$
+
+so
+
+$$
+d(0)=\gcd\{2,4,6,\ldots\}=2.
+$$
+
+The chain is therefore periodic.
+
+This periodicity causes the distribution to oscillate rather than converge.
+
+![Understanding Periodic Markov Chains](../figures/Understanding_Periodic_Markov_Chains.png)
+
+
+
+#### How to check aperiodicity
+
+In practice, it is usually unnecessary to calculate the period from the definition. Several simpler observations are useful.
+
+**1. A self-loop implies aperiodicity.**
+
+If
+
+$$
+p_{ii}>0,
+$$
+
+then
+
+$$
+p_{ii}^{(1)}>0.
+$$
+
+Therefore, $1$ is one of the possible return times, so
+
+$$
+d(i)=1.
+$$
+
+Hence, state $i$ is aperiodic.
+
+For an irreducible chain, if one state has a self-loop, then every state is aperiodic. Thus, an irreducible chain with at least one state satisfying $p_{ii}>0$ is aperiodic.
+
+::: {#exm-ncd-aperiodic .callout-example}
+## Example: Aperiodicity in an NCD system
+
+Consider an NCD system with four states, representing the policyholder's current discount level:
+
+$$
+\text{NCD 0},\quad \text{NCD 1},\quad \text{NCD 2},\quad \text{NCD 3}.
+$$
+
+Suppose that the transition matrix is
+
+$$
+P=
+\begin{bmatrix}
+0.80 & 0.20 & 0    & 0\\
+0.10 & 0.80 & 0.10 & 0\\
+0    & 0.10 & 0.80 & 0.10\\
+0    & 0    & 0.20 & 0.80
+\end{bmatrix}.
+$$
+
+The diagonal entries are all positive. For example,
+
+$$
+p_{22}=0.80>0.
+$$
+
+Thus, if a policyholder is currently in NCD 2, there is a positive probability of remaining in NCD 2 for one year. Hence,
+
+$$
+p_{22}^{(1)}>0,
+$$
+
+so the return time $1$ is possible and
+
+$$
+d(2)=1.
+$$
+
+The chain is irreducible because every NCD state can be reached from every other state. Therefore, once NCD 2 is known to be aperiodic, all four states are aperiodic.
+
+Hence, this NCD system is **aperiodic**.
+
+The self-loop has a simple interpretation: a policyholder can remain at the same NCD level from one year to the next. This breaks any fixed cycle in the possible return times.
+:::
+
+**2. Two return times with greatest common divisor $1$ imply aperiodicity.**
+
+More generally, if there are two possible return times $m$ and $n$ such that
+
+$$
+p_{ii}^{(m)}>0,
+\qquad
+p_{ii}^{(n)}>0,
+\qquad
+\gcd(m,n)=1,
+$$
+
+then
+
+$$
+d(i)=1,
+$$
+
+so state $i$ is aperiodic.
+
+For example, if returns to a state are possible after $2$ and $3$ transitions, then
+
+$$
+d(i)=\gcd(2,3)=1,
+$$
+
+so the state is aperiodic.
+
+::: {#exm-aperiodicity-gcd .callout-example}
+## Example: Two return times with greatest common divisor $1$
+
+Suppose the states of the system are
+
+$$
+S=\{1,2,3,4\},
+$$
+
+with the transition matrix
+
+$$
+P=
+\begin{bmatrix}
+0 & 1 & 0 & 0\\
+1/2 & 0 & 1/2 & 0\\
+1/2 & 1/2 & 0 & 0\\
+1/2 & 0 & 1/2 & 0
+\end{bmatrix}.
+$$
+
+Consider state $2$. A return to state $2$ is possible after two transitions:
+
+$$
+2\longrightarrow 1\longrightarrow 2.
+$$
+
+It is also possible after three transitions:
+
+$$
+2\longrightarrow 3\longrightarrow 1\longrightarrow 2.
+$$
+
+Hence,
+
+$$
+p_{22}^{(2)}>0
+\qquad\text{and}\qquad
+p_{22}^{(3)}>0.
+$$
+
+Since
+
+$$
+\gcd(2,3)=1,
+$$
+
+the period of state $2$ is
+
+$$
+d(2)=1.
+$$
+
+Therefore, state $2$ is **aperiodic**.
+
+Notice that state $2$ has no self-loop. Aperiodicity can arise from two possible return times whose greatest common divisor is $1$.
+:::
+
+**3. Alternating transitions often indicate period 2.**
+
+If the states split into two groups and every transition moves from one group to the other, then a return to the original state requires an even number of transitions. Such a chain has period $2$.
+
+For example,
+
+$$
+P=
+\begin{bmatrix}
+0&1\\
+1&0
+\end{bmatrix}
+$$
+
+has period $2$.
+
+::: {#exm-period-two-alternating .callout-example}
+## Example: Period $2$
+
+Suppose the states of the system are
+
+$$
+S=\{1,2,3,4\},
+$$
+
+with transition matrix
+
+$$
+P=
+\begin{bmatrix}
+0 & 1/2 & 0 & 1/2\\
+1/4 & 0 & 3/4 & 0\\
+0 & 1/3 & 0 & 2/3\\
+1/2 & 0 & 1/2 & 0
+\end{bmatrix}.
+$$
+
+The states can be divided into two groups,
+
+$$
+\{1,3\}
+\qquad\text{and}\qquad
+\{2,4\}.
+$$
+
+Every transition moves from one group to the other:
+
+$$
+\{1,3\}\longrightarrow\{2,4\}
+\longrightarrow\{1,3\}\longrightarrow\cdots
+$$
+
+Therefore, a return to any state is possible only after an even number of transitions. In particular,
+
+$$
+p_{ii}^{(2n)}>0,
+\qquad
+p_{ii}^{(2n+1)}=0,
+\qquad n=1,2,\ldots
+$$
+
+for every $i\in S$.
+
+Hence,
+
+$$
+d(i)=2
+$$
+
+for every state $i\in S$. Thus, all four states are **periodic with period $2$**.
+
+This illustrates a common pattern: when a chain alternates between two groups of states, returns to the original state can occur only at even times, giving period $2$.
+:::
+
+#### Why aperiodicity matters
+
+Suppose a finite irreducible chain is periodic. The chain may continue to move through its states indefinitely, but its probabilities can oscillate between different patterns. Consequently, the individual transition probabilities $p_{ij}^{(n)}$ may fail to converge.
+
+Aperiodicity removes this regular oscillation. Therefore, for a finite irreducible aperiodic chain,
+
+$$
+p_{ij}^{(n)}
+\longrightarrow
+\pi_j,
+\qquad n\rightarrow\infty,
+$$
+
+where $\boldsymbol{\pi}$ is the unique stationary distribution.
+
+Thus, the three conditions in the convergence result have distinct roles:
+
+* **Finite:** ensures the state space has finitely many states.
+* **Irreducible:** ensures all states belong to one communicating class.
+* **Aperiodic:** prevents persistent oscillation caused by periodic transitions.
+
+Together, these conditions give convergence to a unique limiting distribution.
+
+
+
+
+<!-- ### Limiting distribution from an initial distribution -->
+
+<!-- Suppose the initial distribution of the chain is -->
+
+<!-- $$ -->
+<!-- \boldsymbol{\pi}^{(0)} -->
+<!-- = -->
+<!-- \left( -->
+<!-- \Pr(X_0=i) -->
+<!-- \right)_{i\in S}. -->
+<!-- $$ -->
+
+<!-- After $n$ transitions, the distribution is -->
+
+<!-- $$ -->
+<!-- \boxed{ -->
+<!-- \boldsymbol{\pi}^{(n)} -->
+<!-- = -->
+<!-- \boldsymbol{\pi}^{(0)}P^n. -->
+<!-- } -->
+<!-- $$ -->
+
+<!-- If the chain is finite, irreducible, and aperiodic, then -->
+
+<!-- $$ -->
+<!-- \boxed{ -->
+<!-- \boldsymbol{\pi}^{(n)} -->
+<!-- \longrightarrow -->
+<!-- \boldsymbol{\pi} -->
+<!-- \qquad\text{as }n\rightarrow\infty, -->
+<!-- } -->
+<!-- $$ -->
+
+<!-- where $\boldsymbol{\pi}$ is the unique stationary distribution. -->
+
+<!-- Thus, the limiting distribution is independent of the initial distribution. -->
+
+<!-- ### Worked example -->
+
+<!-- Consider the two-state Markov chain -->
+
+<!-- $$ -->
+<!-- P= -->
+<!-- \begin{bmatrix} -->
+<!-- 1/3&2/3\\ -->
+<!-- 2/3&1/3 -->
+<!-- \end{bmatrix}. -->
+<!-- $$ -->
+
+<!-- The chain is irreducible because each state can be reached from the other. It is also aperiodic because -->
+
+<!-- $$ -->
+<!-- p_{00}>0 -->
+<!-- \quad\text{and}\quad -->
+<!-- p_{11}>0. -->
+<!-- $$ -->
+
+<!-- The stationary distribution is obtained from -->
+
+<!-- $$ -->
+<!-- \boldsymbol{\pi}P=\boldsymbol{\pi}, -->
+<!-- \qquad -->
+<!-- \pi_0+\pi_1=1. -->
+<!-- $$ -->
+
+<!-- By symmetry, -->
+
+<!-- $$ -->
+<!-- \boldsymbol{\pi} -->
+<!-- = -->
+<!-- \left(\frac12,\frac12\right). -->
+<!-- $$ -->
+
+<!-- Suppose the chain starts in state $0$. Then -->
+
+<!-- $$ -->
+<!-- \boldsymbol{\pi}^{(0)} -->
+<!-- = -->
+<!-- (1,0). -->
+<!-- $$ -->
+
+<!-- After one transition, -->
+
+<!-- $$ -->
+<!-- \boldsymbol{\pi}^{(1)} -->
+<!-- = -->
+<!-- (1,0) -->
+<!-- \begin{bmatrix} -->
+<!-- 1/3&2/3\\ -->
+<!-- 2/3&1/3 -->
+<!-- \end{bmatrix} -->
+<!-- = -->
+<!-- \left(\frac13,\frac23\right). -->
+<!-- $$ -->
+
+<!-- After two transitions, -->
+
+<!-- $$ -->
+<!-- \boldsymbol{\pi}^{(2)} -->
+<!-- = -->
+<!-- \left(\frac13,\frac23\right) -->
+<!-- \begin{bmatrix} -->
+<!-- 1/3&2/3\\ -->
+<!-- 2/3&1/3 -->
+<!-- \end{bmatrix} -->
+<!-- = -->
+<!-- \left(\frac59,\frac49\right). -->
+<!-- $$ -->
+
+<!-- Continuing in this way, -->
+
+<!-- $$ -->
+<!-- \boldsymbol{\pi}^{(n)} -->
+<!-- = -->
+<!-- \boldsymbol{\pi}^{(0)}P^n -->
+<!-- \longrightarrow -->
+<!-- \left(\frac12,\frac12\right). -->
+<!-- $$ -->
+
+<!-- The same limiting distribution is obtained from any initial distribution. -->
+
+<!-- ### Multiple closed classes -->
+
+<!-- The situation is different when a finite Markov chain has more than one closed communicating class. -->
+
+<!-- Suppose that the chain has closed classes -->
+
+<!-- $$ -->
+<!-- C_1,\ C_2,\ \ldots,\ C_r. -->
+<!-- $$ -->
+
+<!-- Once the chain enters one of these classes, it cannot leave. Therefore, the class eventually reached can depend on the initial state. -->
+
+<!-- For example, suppose that $C_1$ and $C_2$ are two closed classes. If the chain starts from a state that can reach only $C_1$, then the long-run behaviour is determined by $C_1$. If it starts from another state that can reach only $C_2$, the long-run behaviour is determined by $C_2$. -->
+
+<!-- Hence, there may be **no single limiting distribution that is independent of the initial state**. -->
+
+<!-- Even when several closed classes are reachable from the same transient state, the limiting distribution can depend on the probabilities of entering the different classes. These probabilities can depend on the initial state. -->
+
+<!-- This connects the long-run analysis to the absorption probabilities considered earlier. The absorption probabilities determine **which closed class is eventually reached**; the limiting behaviour within that class determines **how the chain behaves after entering it**. -->
+
+
+### Multiple closed classes
+
+The convergence result above assumes that the Markov chain is irreducible. It is useful to see what can happen when a finite chain has more than one closed communicating class.
+
+Suppose that the chain has closed classes
+
+$$
+C_1,\ C_2,\ \ldots,\ C_r.
+$$
+
+Once the chain enters one of these classes, it cannot leave. Therefore, different starting states can lead to different closed classes.
+
+For example, suppose that $C_1$ and $C_2$ are two closed classes. If the chain starts from a state that can reach only $C_1$, then its long-run behaviour is determined by $C_1$. If it starts from a state that can reach only $C_2$, its long-run behaviour is determined by $C_2$.
+
+In this situation, there may be no single limiting distribution that is independent of the initial state.
+
+Even when both $C_1$ and $C_2$ are reachable from the same transient state, the limiting distribution can depend on the initial state. Starting from different transient states can give different probabilities of eventually entering $C_1$ or $C_2$.
+
+This connects the long-run analysis to the absorption probabilities considered earlier. The absorption probabilities determine **which closed class is eventually reached**. The limiting behaviour within that class determines **the distribution of the chain after a large number of transitions**.
+
+Suppose, for example, that there are two closed classes, $C_1$ and $C_2$, and let
+
+$$
+u_i
+=
+\Pr(\text{eventually enter }C_1\mid X_0=i).
+$$
+
+Then
+
+$$
+1-u_i
+$$
+
+is the probability of eventually entering $C_2$.
+
+If the limiting distributions within $C_1$ and $C_2$ are $\boldsymbol{\pi}^{(1)}$ and $\boldsymbol{\pi}^{(2)}$, respectively, then the long-run distribution starting from state $i$ is determined by these probabilities:
+
+$$
+u_i\boldsymbol{\pi}^{(1)}
++
+(1-u_i)\boldsymbol{\pi}^{(2)}.
+$$
+
+Thus, the initial state can affect the long-run distribution through the probability of entering each closed class.
+
+This explains why irreducibility is an important condition for a limiting distribution that is independent of the initial state. With a single communicating class, the chain does not have different closed classes between which its long-run behaviour can differ.
+
+
+I would make this the **culminating theorem of the section**, bringing together stationary distributions, limiting distributions, irreducibility, and aperiodicity without repeating their earlier explanations.
+
+### Main result
+
+We can now combine the results on stationary distributions and limiting distributions.
+
+::: {.callout-note}
+
+## Theorem: Long-run behaviour of a finite irreducible aperiodic Markov chain
+
+Consider a finite, irreducible, aperiodic, time-homogeneous Markov chain with state space $S$ and transition matrix $P$.
+
+Then:
+
+1. **There is a unique stationary distribution.**
+
+   There is a unique probability distribution
+
+   $$
+   \boldsymbol{\pi}
+   =
+   (\pi_j)_{j\in S}
+   $$
+
+   satisfying
+
+   $$
+   \boxed{
+   \boldsymbol{\pi}P=\boldsymbol{\pi}.
+   }
+   $$
+
+2. **The transition probabilities converge.**
+
+   For every pair of states $i,j\in S$,
+
+   $$
+   \boxed{
+   \lim_{n\rightarrow\infty}p_{ij}^{(n)}
+   =
+   \pi_j.
+   }
+   $$
+
+   Thus, the limiting probability of being in state $j$ is $\pi_j$, regardless of the initial state.
+
+3. **The distribution converges for any initial distribution.**
+
+   If the initial distribution is $\boldsymbol{\pi}^{(0)}$, then
+
+   $$
+   \boldsymbol{\pi}^{(n)}
+   =
+   \boldsymbol{\pi}^{(0)}P^n
+   \longrightarrow
+   \boldsymbol{\pi}.
+   $$
+
+   Hence, the long-run distribution does not depend on how the chain starts.
+
+:::
+
+The three conditions have different roles:
+
+$$
+\boxed{
+\text{finite}
++
+\text{irreducible}
++
+\text{aperiodic}
+}
+$$
+
+give the setting in which the chain has a unique stationary distribution and converges to it.
+
+The result can be summarised as
+
+$$
+\boxed{
+\boldsymbol{\pi}^{(0)}P^n
+\longrightarrow
+\boldsymbol{\pi}
+\qquad\text{as }n\rightarrow\infty.
+}
+$$
+
+Equivalently, the rows of $P^n$ converge to the same probability distribution:
+
+$$
+\boxed{
+P^n
+\longrightarrow
+\begin{bmatrix}
+\boldsymbol{\pi}\\
+\boldsymbol{\pi}\\
+\vdots\\
+\boldsymbol{\pi}
+\end{bmatrix}.
+}
+$$
+
+Thus, after a sufficiently large number of transitions, the initial state has no effect on the distribution of the chain.
+
+#### What if the conditions are not satisfied?
+
+The assumptions in the theorem are important.
+
+* If the chain is **periodic**, a stationary distribution may exist, but the transition probabilities may oscillate and fail to converge.
+* If the chain is **reducible**, there may be several closed communicating classes, and the long-run distribution can depend on the initial state.
+* If the state space is **infinite**, a stationary distribution need not exist even when the chain is irreducible.
+
+These cases explain why the theorem requires all three conditions.
+
+The next step is to interpret the limiting distribution in terms of the **long-run proportion of time spent in each state**.
+
+
+
+
+### Application: Long-Run Behaviour of an NCD System {#application-long-run-ncd}
+
+The long-run results for finite, irreducible and aperiodic Markov chains can be applied to a no-claims discount (NCD) system. The following example illustrates how the limiting distribution can be used to assess the long-run composition of an insurance portfolio and its premium income.
+
+::: {.example}
+Consider a no-claims discount system for motor insurance with three levels:
+
+| Level    |  1 |   2 |   3 |
+| :------- | -: | --: | --: |
+| Discount | 0% | 30% | 50% |
+
+The rules for moving between levels are:
+
+* Following a claim-free year, move to the next higher level, or remain at level 3.
+* Following a year with one claim, move to the next lower level, or remain at level 1.
+* Following a year with two or more claims, move to level 1.
+
+Suppose that the number of claims in a year is Poisson distributed. The portfolio consists of 10,000 policyholders:
+
+* 5,000 are classified as good drivers, with the number of claims per year distributed as $\operatorname{Poisson}(0.1)$.
+* 5,000 are classified as bad drivers, with the number of claims per year distributed as $\operatorname{Poisson}(0.2)$.
+
+For each group:
+
+1. Calculate $\Pr(N=0)$, $\Pr(N=1)$, and $\Pr(N\geq2)$.
+
+2. Construct the transition probability matrix of the NCD system.
+
+3. Find the stationary distribution and interpret it as the long-run distribution of policyholders across the three NCD levels.
+
+4. Calculate the expected number of policyholders at each level once stability has been achieved.
+
+5. Suppose the full premium before discount is $B$ per year. Calculate the expected premium income per driver once stability has been achieved.
+
+6. Calculate the ratio of the expected premium income per driver for good drivers to that for bad drivers.
+
+7. Comment on the results. In particular, discuss whether the NCD system provides a meaningful financial incentive for good driving.
+:::
+
+For a claim count $N\sim\operatorname{Poisson}(\lambda)$,
+
+$$
+\Pr(N=0)=e^{-\lambda},
+\qquad
+\Pr(N=1)=\lambda e^{-\lambda},
+$$
+
+and therefore
+
+$$
+\Pr(N\geq2)
+=1-\Pr(N=0)-\Pr(N=1).
+$$
+
+If we write
+
+$$
+q_0=\Pr(N=0),\qquad
+q_1=\Pr(N=1),\qquad
+q_2=\Pr(N\geq2),
+$$
+
+the transition matrix is
+
+$$
+P=
+\begin{bmatrix}
+q_1+q_2 & q_0 & 0\\
+1-q_0 & 0 & q_0\\
+q_2 & q_1 & q_0
+\end{bmatrix}.
+$$
+
+For example, from level 3, a claim-free year gives a move to level 3, one claim gives a move to level 2, and two or more claims give a move to level 1.
+
+Once the stationary distribution
+
+$$
+\boldsymbol{\pi}=(\pi_1,\pi_2,\pi_3)
+$$
+
+has been found, the long-run expected number of policyholders at each level in a group of 5,000 drivers is
+
+$$
+5000\boldsymbol{\pi}
+=
+(5000\pi_1,5000\pi_2,5000\pi_3).
+$$
+
+If the full premium is $B$, the expected premium per driver is
+
+$$
+B\left(
+\pi_1+0.70\pi_2+0.50\pi_3
+\right).
+$$
+
+This application connects the mathematical result
+
+$$
+\boldsymbol{\pi}P=\boldsymbol{\pi}
+$$
+
+with an actuarial interpretation: **the stationary distribution gives the long-run proportions of policyholders at each NCD level, and these proportions determine long-run expected premium income.**
+
+::: {.callout-note}
+
+## Key Idea
+
+A stationary distribution gives the long-run composition of the portfolio when the Markov chain is finite, irreducible and aperiodic. In an NCD system, it can therefore be used to assess the long-run distribution of policyholders across discount levels and the resulting premium income.
+:::
+
+
+

@@ -1,0 +1,1058 @@
+
+
+### Absorbing States and Closed Classes
+
+In a random walk with an absorbing barrier, reaching the barrier means that the process remains there permanently. This is described using the concept of an **absorbing state**.
+
+Recall that a state $i$ is called an **absorbing state** if
+
+$$
+p_{ii} = 1.
+$$
+
+Thus, once the process enters an absorbing state, it cannot leave. For example, in a random walk with absorbing barriers at $0$ and $N$,
+
+$$
+p_{00} = 1
+\qquad\text{and}\qquad
+p_{NN} = 1.
+$$
+
+Hence, both $0$ and $N$ are absorbing states.
+
+More generally, a set of states can behave as a unit from which the process cannot escape. Such a set is called a **closed class**. A class $C$ is closed if, once the process enters $C$, it cannot move to any state outside $C$.
+
+For the random walk above, the two absorbing states form two closed classes:
+
+$$
+C_1 = \{0\}
+\qquad\text{and}\qquad
+C_2 = \{N\}.
+$$
+
+The process must eventually enter one of these closed classes if it reaches either boundary. This leads to two natural questions:
+
+1. What is the probability that the process is eventually absorbed at $0$ or at $N$?
+2. What is the expected time until the process is absorbed?
+
+These questions will be considered next.
+
+The ideas of absorbing states and closed classes apply to general Markov chains, not only to random walks. Their general definitions and their relationship with other types of states will be introduced in the subsequent section on **classification of states**.
+
+::: {.callout-note}
+## Why are these questions important?
+
+In applications, reaching an absorbing state often represents an important event, such as **ruin, failure, termination, or reaching a target**. Two quantities are therefore of particular interest:
+
+1. the probability that the process is eventually absorbed at each possible absorbing state;
+2. the expected time until absorption.
+
+These quantities help us assess both the **likelihood** of an outcome and the **time until it occurs**.
+:::
+
+### Absorption Probabilities
+
+Consider a random walk with absorbing barriers at $0$ and $N$. Suppose that the
+process starts at $X_0=i$, where $i \in \{1,2,\ldots,N-1\}$. The process
+eventually reaches one of the two absorbing states, $0$ or $N$.
+
+Two probabilities are therefore of interest:
+
+$$
+u_i = \Pr(X_T = N \mid X_0 = i)
+$$
+
+and
+
+$$
+1-u_i = \Pr(X_T = 0 \mid X_0 = i),
+$$
+
+where
+
+$$
+T = \min\{n \ge 0 : X_n = 0 \text{ or } X_n = N\}
+$$
+
+is the time of absorption.
+
+The probability $u_i$ depends on the initial state $i$. If the process starts
+closer to $N$, we would generally expect a higher probability of reaching
+$N$ before reaching $0$.
+
+The boundary conditions are
+
+$$
+u_0 = 0
+\qquad\text{and}\qquad
+u_N = 1.
+$$
+
+The value of $u_i$ for an interior state can be found by considering the first
+step of the random walk.
+
+::: {#exm-fair-absorption-probability}
+Consider a fair random walk with absorbing barriers at $0$ and $N$. At each
+step, the process moves one unit to the right or one unit to the left with
+probability $1/2$. Find the probability that the process is eventually
+absorbed at $N$ when it starts at $i$, where
+$i \in \{1,2,\ldots,N-1\}$.
+:::
+
+**Solution:**
+
+Let
+
+$$
+u_i = \Pr(X_T = N \mid X_0 = i).
+$$
+
+The boundary conditions are
+
+$$
+u_0 = 0
+\qquad\text{and}\qquad
+u_N = 1.
+$$
+
+For an interior state $i$, the first step takes the process to either
+$i+1$ or $i-1$. Therefore,
+
+$$
+u_i
+=
+\frac{1}{2}u_{i+1}
++
+\frac{1}{2}u_{i-1},
+\qquad i=1,2,\ldots,N-1.
+$$
+
+Rearranging gives
+
+$$
+u_{i+1}-u_i = u_i-u_{i-1}.
+$$
+
+Thus, the successive differences are constant, so $u_i$ is a linear
+function of $i$. Write
+
+$$
+u_i = a+bi.
+$$
+
+Using the boundary conditions,
+
+$$
+u_0=a=0
+$$
+
+and
+
+$$
+u_N=a+bN=1.
+$$
+
+Hence,
+
+$$
+b=\frac{1}{N},
+$$
+
+and therefore
+
+$$
+\boxed{
+u_i=\frac{i}{N}
+}.
+$$
+
+Thus, for a fair random walk, the probability of reaching the upper
+absorbing barrier is proportional to the starting position.
+
+The probability of absorption at $0$ is therefore
+
+$$
+\Pr(X_T=0\mid X_0=i)
+=
+1-u_i
+=
+1-\frac{i}{N}
+=
+\frac{N-i}{N}.
+$$
+
+For example, if the process starts halfway between the two barriers, the
+probability of reaching either barrier first is the same.
+
+
+The result changes when the random walk is biased. Suppose that the process
+moves one step to the right with probability $p$ and one step to the left
+with probability $q=1-p$. Then the same first-step argument gives
+
+$$
+u_i
+=
+p u_{i+1}+q u_{i-1},
+\qquad i=1,2,\ldots,N-1,
+$$
+
+with
+
+$$
+u_0=0
+\qquad\text{and}\qquad
+u_N=1.
+$$
+
+Solving this difference equation gives
+
+$$
+u_i =
+\begin{cases}
+\dfrac{i}{N}, & p=q=\dfrac{1}{2},\\
+\\
+\dfrac{1-(q/p)^i}{1-(q/p)^N}, & p\ne q.
+\end{cases}
+$$
+
+::: {#exm-biased-absorption-probability}
+Consider a random walk with absorbing barriers at $0$ and $10$. At each
+step, the process moves one unit to the right with probability $p=0.6$ and
+one unit to the left with probability $q=0.4$. If the process starts at
+$X_0=4$, find the probability that it is eventually absorbed at $10$.
+:::
+
+**Solution:**
+
+Since $p\ne q$,
+
+$$
+u_i
+=
+\frac{1-(q/p)^i}{1-(q/p)^N}.
+$$
+
+Here, $i=4$, $N=10$, and
+
+$$
+\frac{q}{p}=\frac{0.4}{0.6}=\frac{2}{3}.
+$$
+
+Therefore,
+
+$$
+u_4
+=
+\frac{1-(2/3)^4}{1-(2/3)^{10}}
+\approx 0.817.
+$$
+
+Thus, the probability that the process eventually reaches the upper
+absorbing barrier is approximately $0.884$.
+
+The probability of absorption at $0$ is
+
+$$
+1-u_4\approx 0.183.
+$$
+
+The upward bias makes absorption at $10$ substantially more likely than it
+would be for a fair random walk starting from the same state.
+
+### Expected Time to Absorption
+
+The absorption probabilities tell us where the random walk is likely to
+end. Another natural question is how long it takes to reach one of the
+absorbing barriers.
+
+For a random walk with absorbing barriers at $0$ and $N$, define the
+**time of absorption** by
+
+$$
+T = \min\{n \ge 0 : X_n = 0 \text{ or } X_n = N\}.
+$$
+
+If the process starts at $X_0=i$, where
+$i \in \{1,2,\ldots,N-1\}$, the expected time to absorption is
+
+$$
+v_i = \mathrm{E}[T \mid X_0=i].
+$$
+
+The value of $v_i$ depends on the starting position. If the process starts
+close to either absorbing barrier, we would generally expect absorption to
+occur sooner than if it starts near the middle.
+
+::: {.callout-note}
+## Why is the expected time important?
+
+In applications, knowing which outcome is likely to occur is often not
+enough. We may also want to know how long it takes for the process to reach
+that outcome. The expected time to absorption provides a measure of the
+typical duration until an absorbing event occurs.
+:::
+
+::: {#exm-fair-expected-time-absorption}
+Consider a fair random walk with absorbing barriers at $0$ and $N$. At each
+step, the process moves one unit to the right or one unit to the left with
+probability $1/2$. Find the expected time to absorption when the process
+starts at $i$, where $i \in \{1,2,\ldots,N-1\}$.
+:::
+
+**Solution:**
+
+Let
+
+$$
+v_i = \mathrm{E}[T \mid X_0=i].
+$$
+
+If the process starts at an absorbing state, the time to absorption is
+zero. Hence,
+
+$$
+v_0=0
+\qquad\text{and}\qquad
+v_N=0.
+$$
+
+For an interior state $i$, the first step always takes one unit of time.
+After that step, the process is either at $i+1$ or at $i-1$. Therefore,
+
+$$
+v_i
+=
+1+\frac{1}{2}v_{i+1}
++\frac{1}{2}v_{i-1},
+\qquad i=1,2,\ldots,N-1.
+$$
+
+Rearranging gives
+
+$$
+v_{i+1}-2v_i+v_{i-1}=-2.
+$$
+
+The solution to this difference equation is
+
+$$
+v_i=-i^2+ai+b.
+$$
+
+Using the boundary conditions $v_0=0$ and $v_N=0$ gives
+
+$$
+b=0
+$$
+
+and
+
+$$
+-N^2+aN=0,
+$$
+
+so that
+
+$$
+a=N.
+$$
+
+Therefore,
+
+$$
+\boxed{
+v_i=i(N-i)
+}.
+$$
+
+Thus, for a fair random walk, the expected time to absorption is largest
+when the process starts near the middle of the interval and decreases as
+the starting point approaches either absorbing barrier.
+
+For example, if $N=10$ and $X_0=4$, then
+
+$$
+\mathrm{E}[T\mid X_0=4]
+=
+4(10-4)
+=
+24.
+$$
+
+
+
+The expected time to absorption can also be found when the random walk is
+biased. Suppose that the process moves one unit to the right with
+probability $p$ and one unit to the left with probability $q=1-p$.
+
+For an interior state $i$,
+
+$$
+v_i
+=
+1+pv_{i+1}+qv_{i-1},
+\qquad i=1,2,\ldots,N-1,
+$$
+
+with
+
+$$
+v_0=0
+\qquad\text{and}\qquad
+v_N=0.
+$$
+
+For $p\ne q$, solving this difference equation gives
+
+$$
+v_i
+=
+\frac{
+N\dfrac{1-(q/p)^i}{1-(q/p)^N}-i
+}{
+p-q
+}.
+$$
+
+When $p=q=1/2$, this expression is replaced by the fair-random-walk
+result
+
+$$
+v_i=i(N-i).
+$$
+
+::: {#exm-biased-expected-time-absorption}
+Consider a random walk with absorbing barriers at $0$ and $10$. At each
+step, the process moves one unit to the right with probability $p=0.6$ and
+one unit to the left with probability $q=0.4$. If the process starts at
+$X_0=4$, find the expected time to absorption.
+:::
+
+**Solution:**
+
+Since $p\ne q$,
+
+$$
+v_i
+=
+\frac{
+N\dfrac{1-(q/p)^i}{1-(q/p)^N}-i
+}{
+p-q
+}.
+$$
+
+Here, $i=4$, $N=10$, and
+
+$$
+\frac{q}{p}=\frac{0.4}{0.6}=\frac{2}{3}.
+$$
+
+Therefore,
+
+$$
+v_4
+=
+\frac{
+10\dfrac{1-(2/3)^4}{1-(2/3)^{10}}-4
+}{
+0.2
+}
+\approx 20.8.
+$$
+
+Thus, the expected time to absorption is approximately $20.8$ steps.
+
+### First-Step Analysis
+
+The calculations for absorption probabilities and expected times are
+examples of a general method called **first-step analysis**.
+
+The basic idea is simple: starting from a given state, consider all possible
+states that can be reached after one transition. After this first transition,
+the Markov property allows us to treat the process as a new process starting
+from the state reached. This gives a system of equations for the quantities
+of interest.
+
+#### Absorption probabilities
+
+Consider a Markov chain with an absorbing set $A$. Let
+
+$$
+u_i = \Pr(\text{the process is eventually absorbed in } A \mid X_0=i).
+$$
+
+For a state $i$ outside $A$, condition on the state reached after the first
+transition. By the law of total probability and the Markov property,
+
+$$
+u_i
+=
+\sum_{j \in S} p_{ij}u_j.
+$$
+
+For an absorbing state in $A$,
+
+$$
+u_i=1,
+$$
+
+while for an absorbing state outside $A$,
+
+$$
+u_i=0.
+$$
+
+These boundary conditions, together with the first-step equations for the
+remaining states, determine the absorption probabilities.
+
+::: {#exm-first-step-absorption}
+Consider the Markov chain with state space
+$S=\{0,1,2\}$ and transition matrix
+
+$$
+P=
+\begin{bmatrix}
+1 & 0 & 0\\
+p_{10} & p_{11} & p_{12}\\
+0 & 0 & 1
+\end{bmatrix}.
+$$
+
+States $0$ and $2$ are absorbing. Find the probability that the process is
+eventually absorbed at state $0$, given that it starts at state $1$.
+:::
+
+**Solution:**
+
+Let
+
+$$
+u_i=\Pr(X_T=0\mid X_0=i),
+$$
+
+where
+
+$$
+T=\min\{n\geq 0:X_n=0\text{ or }X_n=2\}.
+$$
+
+The boundary conditions are
+
+$$
+u_0=1
+\qquad\text{and}\qquad
+u_2=0.
+$$
+
+Starting from state $1$, the first transition can lead to states $0$, $1$,
+or $2$. Therefore, first-step analysis gives
+
+$$
+u_1
+=
+p_{10}u_0+p_{11}u_1+p_{12}u_2.
+$$
+
+Using the boundary conditions,
+
+$$
+u_1
+=
+p_{10}+p_{11}u_1.
+$$
+
+Hence,
+
+$$
+u_1
+=
+\frac{p_{10}}{1-p_{11}}.
+$$
+
+Since the entries in row $1$ of $P$ sum to $1$,
+
+$$
+1-p_{11}=p_{10}+p_{12}.
+$$
+
+Therefore,
+
+$$
+\boxed{
+u_1=\frac{p_{10}}{p_{10}+p_{12}}
+}.
+$$
+
+Thus, the probability of eventual absorption at state $0$ depends on the
+relative probabilities of leaving state $1$ towards the two absorbing
+states.
+
+#### Expected time to absorption
+
+First-step analysis can also be used to find the expected time until
+absorption.
+
+Let
+
+$$
+v_i=\mathrm{E}[T\mid X_0=i],
+$$
+
+where $T$ is the time of absorption. If $i$ is an absorbing state, then
+
+$$
+v_i=0.
+$$
+
+For a non-absorbing state $i$, one transition occurs before the process can
+be absorbed. After this first transition, the expected additional time
+depends on the state reached. Therefore,
+
+$$
+v_i
+=
+1+\sum_{j\in S}p_{ij}v_j.
+$$
+
+The term $1$ accounts for the first transition.
+
+For absorbing states, $v_i=0$, so only the non-absorbing states contribute
+to the sum.
+
+::: {#exm-first-step-expected-time}
+*Consider the Markov chain with state space
+$S=\{0,1,2\}$ and transition matrix*
+
+$$
+P=
+\begin{bmatrix}
+1 & 0 & 0\\
+p_{10} & p_{11} & p_{12}\\
+0 & 0 & 1
+\end{bmatrix}.
+$$
+
+*States $0$ and $2$ are absorbing. Find the expected time to absorption when
+the process starts at state $1$.*
+:::
+
+**Solution:**
+
+Let
+
+$$
+v_i=\mathrm{E}[T\mid X_0=i],
+$$
+
+where
+
+$$
+T=\min\{n\geq 0:X_n=0\text{ or }X_n=2\}.
+$$
+
+Since states $0$ and $2$ are absorbing,
+
+$$
+v_0=0
+\qquad\text{and}\qquad
+v_2=0.
+$$
+
+Starting from state $1$, one transition occurs first. The process then
+moves to state $0$, $1$, or $2$. Hence,
+
+$$
+v_1
+=
+1+p_{10}v_0+p_{11}v_1+p_{12}v_2.
+$$
+
+Using $v_0=v_2=0$,
+
+$$
+v_1=1+p_{11}v_1.
+$$
+
+Therefore,
+
+$$
+v_1=\frac{1}{1-p_{11}}.
+$$
+
+Thus,
+
+$$
+\boxed{
+\mathrm{E}[T\mid X_0=1]
+=
+\frac{1}{1-p_{11}}
+}.
+$$
+
+The result has a simple interpretation. The quantity $1-p_{11}$ is the
+probability of leaving state $1$ on each step. A larger probability of
+remaining in state $1$ therefore leads to a longer expected time to
+absorption.
+
+#### A system of first-step equations
+
+When there are several non-absorbing states, first-step analysis produces a
+system of simultaneous equations.
+
+::: {#exm-first-step-system}
+*Consider a Markov chain with state space
+$S=\{0,1,2,3\}$ and transition matrix*
+
+$$
+P=
+\begin{bmatrix}
+1 & 0 & 0 & 0\\
+p_{10} & p_{11} & p_{12} & p_{13}\\
+p_{20} & p_{21} & p_{22} & p_{23}\\
+0 & 0 & 0 & 1
+\end{bmatrix}.
+$$
+
+*States $0$ and $3$ are absorbing. Let*
+
+$$
+T=\min\{n\geq 0:X_n=0\text{ or }X_n=3\}.
+$$
+
+*Find the equations satisfied by the probability of absorption at $0$ and
+the expected time to absorption, starting from states $1$ and $2$.*
+:::
+
+**Solution:**
+
+Let
+
+$$
+u_i=\Pr(X_T=0\mid X_0=i),
+\qquad i=1,2.
+$$
+
+The boundary conditions are
+
+$$
+u_0=1
+\qquad\text{and}\qquad
+u_3=0.
+$$
+
+First-step analysis gives
+
+$$
+u_1
+=
+p_{10}+p_{11}u_1+p_{12}u_2,
+$$
+
+and
+
+$$
+u_2
+=
+p_{20}+p_{21}u_1+p_{22}u_2.
+$$
+
+Thus, the absorption probabilities are obtained by solving the system
+
+$$
+\begin{aligned}
+u_1 &= p_{10}+p_{11}u_1+p_{12}u_2,\\
+u_2 &= p_{20}+p_{21}u_1+p_{22}u_2.
+\end{aligned}
+$$
+
+Now let
+
+$$
+v_i=\mathrm{E}[T\mid X_0=i],
+\qquad i=1,2.
+$$
+
+Since $v_0=v_3=0$, first-step analysis gives
+
+$$
+v_1
+=
+1+p_{11}v_1+p_{12}v_2,
+$$
+
+and
+
+$$
+v_2
+=
+1+p_{21}v_1+p_{22}v_2.
+$$
+
+Hence, the expected times to absorption are obtained by solving
+
+$$
+\begin{aligned}
+v_1 &= 1+p_{11}v_1+p_{12}v_2,\\
+v_2 &= 1+p_{21}v_1+p_{22}v_2.
+\end{aligned}
+$$
+
+The same approach applies whenever the quantity of interest after the
+first transition can be expressed in terms of its value from the new
+state.
+
+First-step analysis therefore provides a systematic way to calculate
+absorption probabilities, expected absorption times, and other quantities
+associated with a Markov chain.
+
+
+::: {.callout-note}
+## A more compact formulation
+
+When a Markov chain has several non-absorbing states, first-step analysis
+leads to a system of simultaneous equations. For larger state spaces, these
+systems can become lengthy.
+
+Later, when we consider general Markov chains, we will express these
+equations in **matrix form**. This provides a more compact way to organise
+the calculations and makes it easier to solve systems involving many
+states.
+:::
+
+
+### Simulation
+
+Simulation provides a way to study the behaviour of a random walk by
+generating sample paths from the model. For a random walk with absorbing
+barriers, each simulated path starts from a specified state and continues
+until it reaches one of the absorbing states.
+
+Consider a random walk with absorbing barriers at $0$ and $N$. For each
+simulated path:
+
+1. Set the initial state to $X_0=i$.
+2. Generate the next state according to the transition probabilities.
+3. Continue until the process reaches $0$ or $N$.
+4. Record the absorbing state and the time of absorption.
+
+Repeating this procedure produces many independent sample paths. These
+paths can be used to investigate both the probability of absorption at each
+boundary and the distribution of the absorption time.
+
+::: {#exm-simulating-absorbing-random-walk}
+Consider a fair random walk with absorbing barriers at $0$ and $10$,
+starting from $X_0=4$. Simulate several sample paths and record the
+absorbing state and the time of absorption.
+:::
+
+**Solution:**
+
+For a fair random walk, at each step we generate a move of $+1$ or $-1$,
+each with probability $1/2$. The process stops when it reaches either $0$
+or $10$.
+
+A possible set of simulated paths is shown below. The particular results
+will vary each time the simulation is performed.
+
+| Path | Starting state | Absorbing state | Time of absorption |
+|---:|---:|---:|---:|
+| 1 | $4$ | $10$ | $18$ |
+| 2 | $4$ | $0$ | $8$ |
+| 3 | $4$ | $10$ | $30$ |
+| 4 | $4$ | $0$ | $12$ |
+| 5 | $4$ | $10$ | $24$ |
+
+Each row corresponds to one simulated sample path. The absorbing state
+shows where the path eventually ends, while the time of absorption records
+how many transitions were required to reach that state.
+
+The exact results derived earlier are
+
+$$
+\Pr(X_T=10\mid X_0=4)
+=
+\frac{4}{10}
+=
+0.4
+$$
+
+and
+
+$$
+\mathrm{E}[T\mid X_0=4]
+=
+4(10-4)
+=
+24.
+$$
+
+A small number of simulated paths will generally not reproduce these
+values exactly. As the number of simulated paths increases, the simulated
+results should become closer to the corresponding theoretical values.
+
+Simulation also provides a visual way to understand the effect of the
+starting position. Paths starting closer to an absorbing barrier tend to
+reach that barrier sooner, while paths starting near the middle tend to
+take longer to be absorbed.
+
+::: {.callout-note}
+## Simulation and exact results
+
+Simulation does not replace the exact analysis when the required
+probabilities and expectations can be calculated analytically. Instead, it
+provides a way to visualise the process and to check whether simulated
+results are consistent with the theoretical results.
+
+For more complicated models, exact calculations may be difficult or
+impossible. Simulation can then be used to estimate quantities of interest.
+This idea leads to **Monte Carlo methods**.
+:::
+
+
+### Monte Carlo Methods
+
+Simulation can be used to estimate quantities of interest by generating a
+large number of independent sample paths. This approach is called a
+**Monte Carlo method**.
+
+Consider a random walk with absorbing barriers at $0$ and $N$, starting from
+$X_0=i$. Suppose that $M$ independent sample paths are simulated, with
+absorption times
+
+$$
+T_1,T_2,\ldots,T_M.
+$$
+
+For each path, we also record whether the process is eventually absorbed at
+the upper barrier $N$.
+
+#### Estimating an absorption probability
+
+Let
+
+$$
+I_m =
+\begin{cases}
+1, & \text{if path }m\text{ is absorbed at }N,\\
+0, & \text{if path }m\text{ is absorbed at }0.
+\end{cases}
+$$
+
+The proportion of simulated paths absorbed at $N$ is
+
+$$
+\widehat{u}_i
+=
+\frac{1}{M}\sum_{m=1}^{M}I_m.
+$$
+
+This provides a Monte Carlo estimate of
+
+$$
+u_i
+=
+\Pr(X_T=N\mid X_0=i).
+$$
+
+As $M$ increases, $\widehat{u}_i$ will generally become closer to the
+theoretical absorption probability $u_i$.
+
+#### Estimating the expected time to absorption
+
+The absorption time for the $m$th simulated path is $T_m$. The sample mean
+
+$$
+\widehat{v}_i
+=
+\frac{1}{M}\sum_{m=1}^{M}T_m
+$$
+
+provides a Monte Carlo estimate of
+
+$$
+v_i
+=
+\mathrm{E}[T\mid X_0=i].
+$$
+
+Thus, the same simulated paths can be used to estimate both the probability
+of a particular absorbing outcome and the expected time until absorption.
+
+::: {#exm-monte-carlo-absorption}
+Consider a fair random walk with absorbing barriers at $0$ and $10$,
+starting from $X_0=4$. Suppose that $M=1{,}000$ independent sample paths
+are simulated. Of these paths, $397$ are absorbed at $10$. The total of the
+$1{,}000$ absorption times is $23{,}850$. Estimate the probability of
+absorption at $10$ and the expected time to absorption.
+:::
+
+**Solution:**
+
+The estimated probability of absorption at $10$ is
+
+$$
+\widehat{u}_4
+=
+\frac{397}{1{,}000}
+=
+0.397.
+$$
+
+The estimated expected time to absorption is
+
+$$
+\widehat{v}_4
+=
+\frac{23{,}850}{1{,}000}
+=
+23.85.
+$$
+
+Therefore, the Monte Carlo estimates are
+
+$$
+\boxed{\widehat{u}_4=0.397}
+$$
+
+and
+
+$$
+\boxed{\widehat{v}_4=23.85}.
+$$
+
+For comparison, the exact results for a fair random walk are
+
+$$
+u_4=\frac{4}{10}=0.4
+$$
+
+and
+
+$$
+v_4=4(10-4)=24.
+$$
+
+The Monte Carlo estimates are close to the exact values. They would
+generally become more stable as the number of simulated paths increases.
+
+::: {.callout-note}
+## Monte Carlo estimation
+
+A Monte Carlo estimate is based on a finite number of simulated sample
+paths, so it is subject to simulation error. Increasing the number of
+simulated paths generally reduces this error, but it does not make the
+estimate exactly equal to the theoretical value.
+
+Monte Carlo methods are particularly useful when the quantity of interest
+cannot be obtained easily by analytical methods.
+:::
+
+The random walk therefore provides a simple setting in which we can compare
+three approaches:
+
+- **Analytical calculation**, using results such as
+  $u_i=i/N$ and $v_i=i(N-i)$ for the fair random walk;
+- **Simulation**, by generating individual sample paths;
+- **Monte Carlo estimation**, by using many simulated paths to estimate
+  probabilities and expectations.

@@ -1,67 +1,149 @@
 ---
 title: "01 Workbook: Solutions"
+format:
+  pdf:
+    toc: false
+number-sections: true
 ---
 
-### 1. Identifying stochastic processes
 
-| Situation          | $X_t$                                   | Time domain $T$                    | State space      | Time       | State      |
-| ------------------ | --------------------------------------- | ---------------------------------- | ---------------- | ---------- | ---------- |
-| (a) Bank customers | Number of customers waiting at time $t$ | Time during the day, e.g. $[0,24]$ | ${0,1,2,\ldots}$ | Continuous | Discrete   |
-| (b) Stock price    | Closing stock price on day $t$          | $T={1,2,3,\ldots}$                 | $\mathbb{R}_+$   | Discrete   | Continuous |
-| (c) NCD            | NCD level after policy year $n$         | $T={0,1,2,\ldots}$                 | ${0,1,2,3,4}$    | Discrete   | Discrete   |
-| (d) Rainfall       | Rainfall amount recorded at hour $t$    | $T={0,1,2,\ldots}$                 | $\mathbb{R}_+$   | Discrete   | Continuous |
+1. Identifying Stochastic Processes
 
----
+**(a) Bank customers**
 
-### 2. Modelling decisions
+- **$X_t$:** Number of customers waiting at time $t$
+- **Time domain:** Time during the day, e.g. $T=[0,24]$
+- **State space:** $\{0,1,2,\ldots\}$
+- **Time:** Continuous
+- **State:** Discrete
 
-| Situation                                                    | Model      | Time domain             | State space | Markov assumption   | Brief justification                                                                                                                                                                                                                                                   |
-| ------------------------------------------------------------ | ---------- | ----------------------- | ----------- | ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **(a) Number of insurance claims reported to a call centre** | Stochastic | **Continuous**          | Discrete    | **Not necessarily** | Claims arrive randomly at arbitrary times, so continuous time is natural. The number of claims is integer-valued. A Markov assumption does not generally hold unless the current number of claims adequately captures the relevant information about future arrivals. |
-| **(b) Balance of a customer's bank account**                 | Stochastic | Discrete or continuous* | Continuous  | **Not necessarily** | The balance changes randomly because of deposits, withdrawals, and other transactions. Its value is continuous. Future transactions may depend on the customer's past behaviour, so the Markov property does not generally hold.                                      |
-| **(c) Health status of a patient**                           | Stochastic | **Continuous**          | Discrete    | **Not necessarily** | A patient's health status can change at any time, while the possible states are discrete. The future health status may depend on the patient's history, duration in the current state, and other factors, so the Markov property does not generally hold.             |
-| **(d) Temperature in a city**                                | Stochastic | Continuous              | Continuous  | **Not necessarily** | Temperature varies randomly over continuous time and takes continuous values. Its future depends not only on the current temperature but potentially also on previous temperatures and other environmental factors.                                                   |
+**(b) Stock price**
 
-* For (b), **continuous time** is arguably more natural if the actual transaction times are modelled. If the balance is observed only at the end of each day, then a discrete time domain is appropriate. This is actually a useful example for students because it demonstrates that the time domain depends partly on **what aspect of the phenomenon is being modelled**.
+- **$X_t$:** Closing stock price on day $t$
+- **Time domain:** $T=\{1,2,3,\ldots\}$
+- **State space:** $\mathbb{R}_+$
+- **Time:** Discrete
+- **State:** Continuous
 
+**(c) NCD**
 
+- **$X_t$:** NCD level after policy year $n$
+- **Time domain:** $T=\{0,1,2,\ldots\}$
+- **State space:** $\{0,1,2,3,4\}$
+- **Time:** Discrete
+- **State:** Discrete
 
----
+**(d) Rainfall**
 
-### 3. NCD process
-
-**Solution**
-
-1. A **stochastic process** ${X_n:n\in T}$ describes the collection of random variables representing the NCD level at each policy year. A **sample path** is one particular realization of the process for a particular policyholder.
-
-2. For example, two possible sample paths over six years could be
-   $$
-   (0,1,2,3,4,4,4)
-   $$
-   and
-   $$
-   (0,1,2,1,2,3,4).
-   $$
-   The first path represents a policyholder with no claims, while the second includes a claim that causes the NCD level to decrease.
-
-3. Both paths belong to the same stochastic process because they are possible realizations governed by the **same NCD rules and transition probabilities**.
-
-4. The paths may differ because of random events such as **whether a claim occurs during a policy year** and, depending on the NCD rules, the number or type of claims.
-
----
-
-### 4. Other real-world stochastic processes
-
-| Process                                     | Time domain        | State space      | Time     | State      | Possible topic              |
-| ------------------------------------------- | ------------------ | ---------------- | -------- | ---------- | --------------------------- |
-| **Queue length at a service counter**       | $T={0,1,2,\ldots}$ | ${0,1,2,\ldots}$ | Discrete | Discrete   | Discrete-time Markov chains |
-| **Daily exchange rate**                     | $T={1,2,3,\ldots}$ | $\mathbb{R}_+$   | Discrete | Continuous | Time series                 |
-| **Number of claims reported by an insurer** | $T={0,1,2,\ldots}$ | ${0,1,2,\ldots}$ | Discrete | Discrete   | Counting processes          |
-| **Daily temperature**                       | $T={1,2,3,\ldots}$ | $\mathbb{R}$     | Discrete | Continuous | Time series                 |
-
-**Brief justification:** The queue length and number of claims are counts, so their state spaces are discrete. Exchange rates and temperatures can take values on a continuous numerical scale, so their state spaces are continuous. The examples use daily or event-based observations, making a discrete time domain appropriate.
+- **$X_t$:** Rainfall amount recorded at hour $t$
+- **Time domain:** $T=\{0,1,2,\ldots\}$
+- **State space:** $\mathbb{R}_+$
+- **Time:** Discrete
+- **State:** Continuous
 
 
+
+::: {.callout-note}
+**Discrete in Practice, Continuous in Theory**
+
+Bank balances and stock prices are technically **discrete** because money is recorded in indivisible units, such as cents or satang. For example, a bank balance cannot normally be recorded as exactly \$1,000.1234.
+
+However, in financial theory and mathematical models, these quantities are **almost always treated as continuous**. The possible increments are so small relative to the size of typical balances and prices that treating them as continuous provides a convenient and accurate approximation.
+
+Thus, in this course, we will generally treat **bank balances and stock prices as continuous-state variables**, unless the discrete nature of the currency is specifically relevant to the problem.
+:::
+
+
+
+2. Modelling Decisions
+
+    **(a) Number of insurance claims reported to a call centre**
+    
+    - **Model:** Stochastic
+    - **Time domain:** Continuous
+    - **State space:** Discrete
+    - **Markov assumption:** Likely, under suitable assumptions
+    - **Justification:** Claims arrive randomly at arbitrary times, so continuous time is natural. The number of claims is integer-valued. A Markov model can be reasonable when claim arrivals are modelled appropriately, such as through a Poisson process.
+    
+    **(b) Balance of a customer's bank account**
+    
+    - **Model:** Stochastic
+    - **Time domain:** Discrete or continuous
+    - **State space:** Continuous
+    - **Markov assumption:** Not necessarily
+    - **Justification:** The balance changes randomly because of deposits, withdrawals, and other transactions. Its value is continuous. Future transactions may depend on the customer's past behaviour, so the Markov property does not generally hold.
+    
+    For this application, **continuous time** is arguably more natural if the actual transaction times are modelled. If the balance is observed only at the end of each day, however, a **discrete time domain** is appropriate. This illustrates that the time domain depends partly on **what aspect of the phenomenon is being modelled**.
+    
+    **(c) Health status of a patient**
+    
+    - **Model:** Stochastic
+    - **Time domain:** Continuous
+    - **State space:** Discrete
+    - **Markov assumption:** Possibly, but requires justification
+    - **Justification:** A patient's health status can change at any time, while the possible states are discrete. The current health status may provide useful information about the future, but medical history and the duration of the current state may also be relevant.
+    
+    **(d) Temperature in a city**
+    
+    - **Model:** Stochastic
+    - **Time domain:** Continuous
+    - **State space:** Continuous
+    - **Markov assumption:** Not necessarily
+    - **Justification:** Temperature varies randomly over continuous time and takes continuous values. Future temperature may depend on recent temperature history and other environmental factors, so the current temperature alone may not be sufficient.
+    
+
+
+::: {.callout-note}
+**The Markov Assumption in Practice**
+
+In real-world applications, the Markov property does not necessarily hold. However, assuming the Markov property can provide a useful and tractable representation of the underlying process.
+
+If the assumption is reasonable, the resulting model may capture important features of the real-world system and provide useful predictions or decisions. Therefore, the Markov assumption should be **carefully justified and validated** before the model is used in practice.
+
+> A Markov model is therefore a **modelling assumption**, not a property that automatically holds for every stochastic process.
+:::
+
+
+3. NCD process
+
+    
+    (a) A **stochastic process** $\{X_n:n\in T\}$ describes the collection of random variables representing the NCD level at each policy year. A **sample path** is one particular realization of the process for a particular policyholder.
+    
+    (b) For example, two possible sample paths over six years could be
+       $$
+       (0,1,2,3,4,4,4)
+       $$
+       and
+       $$
+       (0,1,2,1,2,3,4).
+       $$
+       The first path represents a policyholder with no claims, while the second includes a claim that causes the NCD level to decrease.
+    
+    (c) Both paths belong to the same stochastic process because they are possible realizations governed by the **same NCD rules and transition probabilities**.
+    
+    (d) The paths may differ because of random events such as **whether a claim occurs during a policy year** and, depending on the NCD rules, the number or type of claims.
+
+
+
+4. Other real-world stochastic processes
+
+
+| Process                                  | Time domain        | State space                       | Time       | State      | Possible stochastic-process class           |
+| ---------------------------------------- | ------------------ | --------------------------------- | ---------- | ---------- | ------------------------------------------- |
+| **Blood-pressure status**                | $T={0,1,2,\ldots}$ | Normal, Elevated, High, Very High | Discrete   | Discrete   | Discrete-time, discrete-state process       |
+| **Consumer Price Index (CPI)**           | $T={1,2,3,\ldots}$ | $\mathbb{R}_+$                    | Discrete   | Continuous | Discrete-time, continuous-state process     |
+| **Moody's credit rating**                | $T={0,1,2,\ldots}$ | Credit-rating categories          | Discrete   | Discrete   | Discrete-time, discrete-state process       |
+| **Annual insurance claim reserves**      | $T={1,2,3,\ldots}$ | $\mathbb{R}_+$                    | Discrete   | Continuous | Discrete-time, continuous-state process     |
+| **Number of available service counters** | $T=[0,\infty)$     | ${0,1,\ldots,K}$                  | Continuous | Discrete   | **Continuous-time, discrete-state process** |
+
+
+These examples illustrate how real-world quantities can be classified according to their **time domain** and **state space**. The choice depends on how the quantity evolves and how it is measured.
+
+* **Blood-pressure status:** The status is recorded at successive medical check-ups, so a discrete time domain is appropriate. The possible categories are discrete.
+* **CPI:** The index is typically observed at regular time points, such as monthly, and takes numerical values on a continuous scale.
+* **Moody's credit rating:** If we record the rating at regular intervals, such as annually, the time domain is discrete. The possible ratings form a discrete state space.
+* **Annual insurance claim reserves:** Reserves are measured at the end of each fiscal year and are monetary amounts, giving a discrete time domain and a continuous state space.
+* **Number of available service counters:** The number of counters can change at any time during the day, giving a continuous time domain, while the number of counters is integer-valued and therefore has a discrete state space.
 
 
 

@@ -555,7 +555,7 @@ The current state contains all the information from the past that is relevant fo
 
 ## The Markov Property
 
-A discrete-time stochastic process ${X_n:n=0,1,2,\ldots}$ has the **Markov property** if
+A discrete-time stochastic process $\{X_n:n=0,1,2,\ldots\}$ has the **Markov property** if
 
 $$
 \boxed{
@@ -614,7 +614,7 @@ A **discrete-time Markov chain (DTMC)** is a discrete-time stochastic process th
 Let
 
 $$
-{X_n:n=0,1,2,\ldots}
+\{X_n:n=0,1,2,\ldots\}
 $$
 
 have state space $S$.
@@ -1204,18 +1204,21 @@ This is the **Chapman–Kolmogorov equation**.
 
 Partition according to the state $X_l$:
 
+
+::: {.small}
 $$
 \begin{aligned}
 p_{ij}^{(n)}
 &=
 \sum_{k\in S}
 \Pr(X_n=j,X_l=k\mid X_0=i)\
-&=
+=
 \sum_{k\in S}
 \Pr(X_n=j\mid X_l=k,X_0=i)
 \Pr(X_l=k\mid X_0=i).
 \end{aligned}
 $$
+:::
 
 The Markov property gives
 
@@ -1687,12 +1690,12 @@ Then
 $$
 \boxed{
 \begin{aligned}
-&\Pr(X_{n_1}=i_1,\ldots,X_{n_k}=i_k)\
+\Pr(X_{n_1}=i_1,\ldots,X_{n_k}=i_k)
 &=
-(\boldsymbol{\mu}P^{n_1})*{i_1}
-(P^{n_2-n_1})*{i_1i_2}
+(\boldsymbol{\mu}P^{n_1})_{i_1}
+(P^{n_2-n_1})_{i_1i_2}
 \cdots
-(P^{n_k-n_{k-1}})*{i*{k-1}i_k}.
+(P^{n_k-n_{k-1}})_{i_{k-1}i_k}.
 \end{aligned}
 }
 $$
