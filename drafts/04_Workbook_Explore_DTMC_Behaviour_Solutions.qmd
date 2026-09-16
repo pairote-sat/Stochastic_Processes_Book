@@ -1,0 +1,565 @@
+---
+title: "Activity: Explore DTMC Behaviour"
+format:
+  pdf:
+    toc: false
+number-sections: false
+---
+
+### Activity: Explore DTMC Behaviour
+
+Run the Shiny app and experiment with different transition probabilities and initial distributions. Record your observations and submit your answers through the Google Form.
+
+1. **Initial distribution:** Change $\boldsymbol{\pi}^{(0)}$. How does it affect the probabilities over time?
+
+2. **Long-run behaviour:** Do the state probabilities settle down? What do they approach?
+
+3. **Transition matrix:** Change $P$. How does this affect the long-run probabilities?
+
+4. **Convergence:** Can you find a transition matrix for which the probabilities do not settle down? Why?
+
+**Instruction:** Use the app to explore each question. Give a short answer based on your observations. Where possible, include the transition matrix or initial distribution you used.
+
+
+
+
+
+### Solutions
+
+## Main Findings
+
+1. **Initial distribution:** Different initial distributions affect the short-run probabilities, but for the NCD chain they eventually lead to the same long-run distribution.
+
+2. **Long-run behaviour:** The state probabilities settle down to the stationary distribution
+
+$$
+\boldsymbol{\pi}
+=
+(0.0476,\ 0.1905,\ 0.7619)
+$$
+
+when $p=0.8$.
+
+3. **Transition matrix:** Changing the transition probabilities changes the long-run distribution. For example, when $p$ increases from $0.6$ to $0.8$, the long-run probability of State 3 increases from approximately $0.474$ to $0.762$.
+
+4. **Convergence:** The probabilities do not always settle down. A periodic chain can cause the probabilities to oscillate instead of converging.
+
+---
+
+#### 1. Initial distribution
+
+**Question:** Change $\boldsymbol{\pi}^{(0)}$. How does it affect the probabilities over time?
+
+**Answer:** The initial distribution affects the probabilities in the short run. However, for the NCD chain, the effect disappears as $n$ increases. Since the chain is finite, irreducible, and aperiodic,
+
+$$
+\boldsymbol{\pi}^{(n)}\longrightarrow\boldsymbol{\pi}
+$$
+
+for every initial distribution $\boldsymbol{\pi}^{(0)}$.
+
+For $p=0.8$,
+
+$$
+\boldsymbol{\pi}
+=
+(0.04761905,\ 0.1904762,\ 0.7619048).
+$$
+
+Thus, different initial distributions eventually lead to the same long-run distribution.
+
+---
+
+#### 2. Long-run behaviour
+
+**Question:** Do the state probabilities settle down? What do they approach?
+
+**Answer:** Yes. The state probabilities settle down to
+
+$$
+\boldsymbol{\pi}
+=
+(0.04761905,\ 0.1904762,\ 0.7619048).
+$$
+
+Thus, in the long run, the probabilities of being in States 1, 2, and 3 are approximately
+
+$$
+4.76\%,\qquad 19.05\%,\qquad 76.19\%.
+$$
+
+These are the components of the unique stationary distribution.
+
+---
+
+#### 3. Transition matrix
+
+**Question:** Change $P$. How does this affect the long-run probabilities?
+
+**Answer:** Changing the transition probabilities changes the long-run distribution. For example, changing $p$ in the NCD model changes
+
+$$
+\boldsymbol{\pi}
+=
+\left(
+\frac{(p-1)^2}{p^2-p+1},
+\frac{p-p^2}{p^2-p+1},
+\frac{p^2}{p^2-p+1}
+\right).
+$$
+
+For example:
+
+* If $p=0.6$,
+
+$$
+\boldsymbol{\pi}
+\approx
+(0.211,\ 0.316,\ 0.474).
+$$
+
+* If $p=0.8$,
+
+$$
+\boldsymbol{\pi}
+\approx
+(0.0476,\ 0.1905,\ 0.7619).
+$$
+
+Thus, changing the transition probabilities can substantially change the long-run probabilities.
+
+---
+
+#### 4. Convergence
+
+**Question:** Can you find a transition matrix for which the probabilities do not settle down? Why?
+
+**Answer:** Yes. For example, consider
+
+$$
+P=
+\begin{bmatrix}
+0&1&0\\
+1&0&0\\
+0&0&1
+\end{bmatrix}.
+$$
+
+If the chain starts in State 1, it alternates between States 1 and 2:
+
+$$
+(1,0,0)
+\rightarrow
+(0,1,0)
+\rightarrow
+(1,0,0)
+\rightarrow\cdots
+$$
+
+The probabilities do not settle down. This happens because the chain is **periodic**.
+
+This contrasts with the NCD chain, which is aperiodic, so its state probabilities converge to the unique stationary distribution.
+
+
+
+
+
+## R code: Results for the four questions
+
+The following code uses the same calculation as the app:
+
+$$
+\boldsymbol{\pi}^{(n+1)}=\boldsymbol{\pi}^{(n)}P.
+$$
+
+It does not calculate the stationary distribution directly. The long-run values are obtained from the simulated probability evolution, as students would see in the app.
+
+
+```{r}
+library(ggplot2)
+library(reshape2)
+#library(knitr)
+library(kableExtra)
+
+# ------------------------------------------------------------
+# Function used by the Shiny app to calculate probability evolution
+# ------------------------------------------------------------
+
+prob_evolution <- function(P, init, steps = 20) {
+  
+  init <- init / sum(init)
+  
+  dist <- matrix(
+    0,
+    nrow = steps + 1,
+    ncol = 3
+  )
+  
+  dist[1, ] <- init
+  
+  for (i in 2:(steps + 1)) {
+    dist[i, ] <- dist[i - 1, ] %*% P
+  }
+  
+  df <- data.frame(
+    Step = 0:steps,
+    dist
+  )
+  
+  colnames(df)[2:4] <- c(
+    "State 1",
+    "State 2",
+    "State 3"
+  )
+  
+  df
+}
+
+
+# ------------------------------------------------------------
+# Plot function using the same style as the Shiny app
+# ------------------------------------------------------------
+
+plot_evolution <- function(df, title) {
+  
+  df_long <- melt(
+    df,
+    id.vars = "Step",
+    variable.name = "State",
+    value.name = "Probability"
+  )
+  
+  ggplot(
+    df_long,
+    aes(
+      x = Step,
+      y = Probability,
+      color = State
+    )
+  ) +
+    geom_line(linewidth = 1.2) +
+    geom_point(size = 2) +
+    ylim(0, 1) +
+    ggtitle(title) +
+    theme_minimal()
+}
+```
+
+## 1. Effect of the initial distribution
+
+Use the NCD transition matrix for $p=0.8$:
+
+```{r}
+p <- 0.8
+
+P <- matrix(
+  c(
+    1 - p, p,     0,
+    1 - p, 0,     p,
+    0,     1 - p, p
+  ),
+  nrow = 3,
+  byrow = TRUE,
+  dimnames = list(
+    c("1", "2", "3"),
+    c("1", "2", "3")
+  )
+)
+
+P
+```
+
+The three initial distributions can then be entered in the app as:
+
+```{r}
+init1 <- c(1, 0, 0)
+init2 <- c(0, 1, 0)
+init3 <- c(0, 0, 1)
+```
+
+Calculate the probability evolution for each initial state:
+
+```{r}
+dist1 <- prob_evolution(P, init1, steps = 20)
+dist2 <- prob_evolution(P, init2, steps = 20)
+dist3 <- prob_evolution(P, init3, steps = 20)
+```
+
+For example, the last 10 distributions for an initial state of 1 are:
+
+```{r}
+kable(
+  tail(dist1, 10),
+  digits = 3,
+  align = "c"
+) %>%
+  kable_styling(
+    full_width = FALSE,
+    position = "center",
+    bootstrap_options = c("striped", "hover")
+  )
+```
+
+Plot the three cases separately, as students would see by changing the initial distribution in the app:
+
+```{r}
+plot_evolution(
+  dist1,
+  "Initial Distribution: State 1"
+)
+
+plot_evolution(
+  dist2,
+  "Initial Distribution: State 2"
+)
+
+plot_evolution(
+  dist3,
+  "Initial Distribution: State 3"
+)
+```
+
+For a direct comparison of the three initial distributions, we can also plot the probability of each state across the three runs:
+
+```{r}
+df1 <- dist1
+df1$Initial <- "State 1"
+
+df2 <- dist2
+df2$Initial <- "State 2"
+
+df3 <- dist3
+df3$Initial <- "State 3"
+
+comparison <- rbind(df1, df2, df3)
+
+comparison_long <- melt(
+  comparison,
+  id.vars = c("Step", "Initial"),
+  variable.name = "State",
+  value.name = "Probability"
+)
+
+ggplot(
+  comparison_long,
+  aes(
+    x = Step,
+    y = Probability,
+    color = State
+  )
+) +
+  geom_line(linewidth = 1.2) +
+  geom_point(size = 1.5) +
+  ylim(0, 1) +
+  facet_wrap(~ Initial) +
+  ggtitle("Effect of the Initial Distribution") +
+  theme_minimal()
+```
+
+The three graphs show that the paths are different initially, but they approach the same values.
+
+---
+
+## 2. Long-run behaviour
+
+Starting from State 1, as in the original NCD example:
+
+```{r}
+dist <- prob_evolution(
+  P,
+  init = c(1, 0, 0),
+  steps = 20
+)
+
+tail(dist, 10)
+```
+
+The corresponding graph is:
+
+```{r}
+plot_evolution(
+  dist,
+  "Long-run Evolution of NCD Probabilities"
+)
+```
+
+To see the approximate limiting values more clearly, increase the number of steps:
+
+```{r}
+dist_50 <- prob_evolution(
+  P,
+  init = c(1, 0, 0),
+  steps = 50
+)
+
+tail(dist_50, 10)
+```
+
+The final row gives approximately
+
+```{r}
+tail(dist_50, 1)
+```
+
+which is close to
+
+$$
+(0.0476,\ 0.1905,\ 0.7619).
+$$
+
+This is the same long-run distribution shown in the lecture slides.
+
+---
+
+## 3. Effect of changing the transition matrix
+
+Students can change the transition probabilities in the app. To reproduce the NCD examples, compare $p=0.6$ and $p=0.8$.
+
+```{r}
+P_06 <- matrix(
+  c(
+    0.4, 0.6, 0,
+    0.4, 0,   0.6,
+    0,   0.4, 0.6
+  ),
+  nrow = 3,
+  byrow = TRUE,
+  dimnames = list(
+    c("1", "2", "3"),
+    c("1", "2", "3")
+  )
+)
+
+P_08 <- matrix(
+  c(
+    0.2, 0.8, 0,
+    0.2, 0,   0.8,
+    0,   0.2, 0.8
+  ),
+  nrow = 3,
+  byrow = TRUE,
+  dimnames = list(
+    c("1", "2", "3"),
+    c("1", "2", "3")
+  )
+)
+
+P_06
+P_08
+```
+
+Starting from State 1:
+
+```{r}
+dist_06 <- prob_evolution(
+  P_06,
+  c(1, 0, 0),
+  steps = 20
+)
+
+dist_08 <- prob_evolution(
+  P_08,
+  c(1, 0, 0),
+  steps = 20
+)
+```
+
+Show the final 10 rows for each:
+
+```{r}
+kable(
+  tail(dist_06, 10),
+  digits = 3,
+  align = "c"
+) %>%
+  kable_styling(
+    full_width = FALSE,
+    position = "center"
+  )
+
+kable(
+  tail(dist_08, 10),
+  digits = 3,
+  align = "c"
+) %>%
+  kable_styling(
+    full_width = FALSE,
+    position = "center"
+  )
+```
+
+And plot the two cases:
+
+```{r}
+plot_evolution(
+  dist_06,
+  "NCD Evolution: p = 0.6"
+)
+
+plot_evolution(
+  dist_08,
+  "NCD Evolution: p = 0.8"
+)
+```
+
+The graphs show that changing the transition probabilities changes the long-run probabilities. In particular, increasing $p$ makes State 3 much more likely in the long run.
+
+---
+
+## 4. An example where probabilities do not settle down
+
+Use the following transition matrix:
+
+```{r}
+P_periodic <- matrix(
+  c(
+    0, 1, 0,
+    1, 0, 0,
+    0, 0, 1
+  ),
+  nrow = 3,
+  byrow = TRUE,
+  dimnames = list(
+    c("1", "2", "3"),
+    c("1", "2", "3")
+  )
+)
+
+P_periodic
+```
+
+Start from State 1:
+
+```{r}
+dist_periodic <- prob_evolution(
+  P_periodic,
+  c(1, 0, 0),
+  steps = 20
+)
+
+dist_periodic
+```
+
+The graph is:
+
+```{r}
+plot_evolution(
+  dist_periodic,
+  "Periodic Chain: Probabilities Do Not Settle Down"
+)
+```
+
+The output alternates between
+
+$$
+(1,0,0)
+\quad\text{and}\quad
+(0,1,0).
+$$
+
+Hence, the probabilities do not converge.
+
+The important observation from the graph is that the probability of State 1 alternates between $1$ and $0$, while the probability of State 2 alternates between $0$ and $1$.
+
+
+

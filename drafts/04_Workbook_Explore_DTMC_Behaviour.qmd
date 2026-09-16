@@ -1,0 +1,19 @@
+---
+title: "Activity: Explore DTMC Behaviour"
+format: pdf
+---
+
+### Activity: Explore DTMC Behaviour
+
+Run the Shiny app and experiment with different transition probabilities and initial distributions. Record your observations and submit your answers through the Google Form.
+
+1. **Initial distribution:** Change $\boldsymbol{\pi}^{(0)}$. How does it affect the probabilities over time?
+
+2. **Long-run behaviour:** Do the state probabilities settle down? What do they approach?
+
+3. **Transition matrix:** Change $P$. How does this affect the long-run probabilities?
+
+4. **Convergence:** Can you find a transition matrix for which the probabilities do not settle down? Why?
+
+**Instruction:** Use the app to explore each question. Give a short answer based on your observations. Where possible, include the transition matrix or initial distribution you used.
+

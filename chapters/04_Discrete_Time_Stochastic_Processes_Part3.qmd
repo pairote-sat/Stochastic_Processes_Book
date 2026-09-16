@@ -1099,6 +1099,110 @@ Thus, if the chain starts with distribution $\boldsymbol{\pi}=(2/3,1/3)$, its di
 
 
 
+
+::: {#exm-ncd-stationary .callout-example}
+
+## Example: Stationary Distribution of the NCD Chain
+
+Consider the NCD Markov chain with transition matrix
+
+$$
+P=
+\begin{bmatrix}
+1-p&p&0\\
+1-p&0&p\\
+0&1-p&p
+\end{bmatrix}.
+$$
+
+Find the stationary probability distribution of this chain.
+:::
+
+**Solution.**
+
+Let the stationary distribution be
+
+$$
+\boldsymbol{\pi}=(\pi_1,\pi_2,\pi_3).
+$$
+
+A stationary distribution satisfies
+
+$$
+\boldsymbol{\pi}P=\boldsymbol{\pi},
+\qquad
+\pi_1+\pi_2+\pi_3=1.
+$$
+
+Thus,
+
+$$
+(\pi_1,\pi_2,\pi_3)
+\begin{bmatrix}
+1-p&p&0\\
+1-p&0&p\\
+0&1-p&p
+\end{bmatrix}
+=
+(\pi_1,\pi_2,\pi_3),
+$$
+
+which gives
+
+$$
+\begin{aligned}
+(1-p)\pi_1+(1-p)\pi_2&=\pi_1,\\
+p\pi_1+(1-p)\pi_3&=\pi_2,\\
+p\pi_2+p\pi_3&=\pi_3.
+\end{aligned}
+$$
+
+Only two of these three equations are independent. Using two equations together with
+
+$$
+\pi_1+\pi_2+\pi_3=1,
+$$
+
+we obtain
+
+$$
+\boxed{
+\begin{aligned}
+\pi_1&=\frac{(1-p)^2}{p^2-p+1},\\
+\pi_2&=\frac{p(1-p)}{p^2-p+1},\\
+\pi_3&=\frac{p^2}{p^2-p+1}.
+\end{aligned}
+}
+$$
+
+Hence,
+
+$$
+\boxed{
+\boldsymbol{\pi}
+=
+\left(
+\frac{(1-p)^2}{p^2-p+1},
+\frac{p(1-p)}{p^2-p+1},
+\frac{p^2}{p^2-p+1}
+\right).
+}
+$$
+
+### Why this example is useful
+
+This example shows how to find a stationary distribution for an actuarial Markov chain. We have found a distribution that remains unchanged after each transition.
+
+However, a stationary distribution does not by itself tell us whether the chain will approach this distribution when it starts from another initial distribution.
+
+This leads to the next question:
+
+> **Under what conditions does the distribution of a Markov chain converge to its stationary distribution?**
+
+The theorem on the long-run behaviour of a finite, irreducible, and aperiodic Markov chain answers this question.
+
+
+
 ### Limiting distributions
 
 A stationary distribution describes a probability distribution that remains unchanged under the transition mechanism. We now consider a different question:
@@ -1296,7 +1400,7 @@ $$
 
 A stationary distribution can exist even when the probabilities do not converge.
 
-For example, consider
+For example, consider the Markov chain with state space $\mathcal{S}={0,1}$ and transition matrix
 
 $$
 P=
@@ -1314,13 +1418,13 @@ $$
 \left(\frac12,\frac12\right).
 $$
 
-However, if $X_0=0$, then
+However, suppose the chain starts in state $0$. Then
 
 $$
-\boldsymbol{\pi}^{(0)}=(1,0),
+\boldsymbol{\pi}^{(0)}=(1,0).
 $$
 
-and the distributions alternate:
+After each transition, the chain moves to the other state, so the distributions alternate:
 
 $$
 (1,0),
@@ -1333,7 +1437,7 @@ $$
 \quad\ldots
 $$
 
-Thus, $\boldsymbol{\pi}^{(n)}$ does not converge.
+Therefore, $\boldsymbol{\pi}^{(n)}$ does not converge to the stationary distribution. This occurs because the Markov chain is **periodic**.
 
 The reason is that this chain is periodic. We will study this condition in the next section.
 
@@ -2068,6 +2172,162 @@ P^n
 $$
 
 Thus, after a sufficiently large number of transitions, the initial state has no effect on the distribution of the chain.
+
+It is useful to see how its conditions and conclusion apply to specific Markov chains. The following examples illustrate two cases. The first gives a simple two-state chain for which the limiting distribution can be obtained explicitly. The second applies the theorem to the NCD system and shows how the limiting probabilities describe its long-run behaviour.
+
+::: {#exm-two-state-aperiodic .callout-example}
+
+## Example: A Two-State Markov Chain
+
+Consider the Markov chain with state space $\mathcal{S}={1,2}$ and transition matrix
+
+$$
+P=
+\begin{bmatrix}
+1-a & a\\
+b & 1-b
+\end{bmatrix},
+\qquad 0<a,b<1.
+$$
+
+Since the chain is finite, irreducible, and aperiodic, the theorem applies. Therefore, the limiting distribution exists and is the unique stationary distribution.
+
+Solving $\boldsymbol{\pi}P=\boldsymbol{\pi}$ with $\pi_1+\pi_2=1$ gives
+
+$$
+\boldsymbol{\pi}
+=
+\left(
+\frac{b}{a+b},
+\frac{a}{a+b}
+\right).
+$$
+
+Hence,
+
+$$
+\lim_{n\to\infty}p_{ij}^{(n)}
+=
+\pi_j,
+\qquad j\in\{1,2\},
+$$
+
+independently of the initial state $i$. Thus, the limiting distribution is also the unique stationary distribution of the chain.
+
+Indeed,
+
+$$
+\left(
+\frac{b}{a+b},
+\frac{a}{a+b}
+\right)
+\begin{bmatrix}
+1-a & a\\
+b & 1-b
+\end{bmatrix}
+=
+\left(
+\frac{b}{a+b},
+\frac{a}{a+b}
+\right).
+$$
+
+:::
+
+::: {#exm-ncd-aperiodic .callout-example}
+
+## Example: Long-run Behaviour of the NCD System
+
+Consider the NCD Markov chain introduced earlier. Its state space is finite, and the chain is irreducible and aperiodic. Therefore, the theorem applies, and there is a unique limiting distribution, which is also the unique stationary distribution.
+
+The stationary distribution is
+
+$$
+\boldsymbol{\pi}
+=
+\left(
+\frac{(p-1)^2}{p^2-p+1},
+\frac{p-p^2}{p^2-p+1},
+\frac{p^2}{p^2-p+1}
+\right).
+$$
+
+Thus, for every initial state $i$,
+
+$$
+\lim_{n\to\infty}p_{ij}^{(n)}
+=
+\pi_j,
+\qquad j\in\{1,2,3\}.
+$$
+
+In particular, the long-run probability of being in state $j$ is $\pi_j$, independently of the initial state.
+
+For example, let $p=0.8$. Then
+
+$$
+P=
+\begin{bmatrix}
+0.2&0.8&0\\
+0.2&0&0.8\\
+0&0.2&0.8
+\end{bmatrix}.
+$$
+
+Several powers of $P$ are
+
+$$
+P^2=
+\begin{bmatrix}
+0.2&0.16&0.64\\
+0.04&0.32&0.64\\
+0.04&0.16&0.8
+\end{bmatrix},
+$$
+
+$$
+P^4=
+\begin{bmatrix}
+0.072&0.1856&0.7424\\
+0.0464&0.2112&0.7424\\
+0.0464&0.1856&0.768
+\end{bmatrix},
+$$
+
+and
+
+$$
+P^8=
+\begin{bmatrix}
+0.0482432&0.1903514&0.7614054\\
+0.04758784&0.1910067&0.7614054\\
+0.04758784&0.1903514&0.7620608
+\end{bmatrix}.
+$$
+
+As $n$ increases, the rows of $P^n$ become increasingly similar. In the limit,
+
+$$
+\lim_{n\to\infty}P^n
+=
+\begin{bmatrix}
+0.04761905&0.1904762&0.7619048\\
+0.04761905&0.1904762&0.7619048\\
+0.04761905&0.1904762&0.7619048
+\end{bmatrix}.
+$$
+
+Each row is the limiting distribution
+
+$$
+\boldsymbol{\pi}
+=
+(0.04761905,\ 0.1904762,\ 0.7619048).
+$$
+
+This illustrates the theorem: regardless of the initial state, the distribution of the NCD level converges to the same limiting distribution.
+:::
+
 
 #### What if the conditions are not satisfied?
 

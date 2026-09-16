@@ -1485,11 +1485,7 @@ d(2)=1.
 
 Since the chain is irreducible, all states are aperiodic.
 
-Thus, the NCD system is
-
-\[
-\boxed{\text{irreducible and aperiodic}.}
-\]
+Thus, the NCD system is \(\boxed{\text{irreducible and aperiodic}.}\)
 \end{frame}
 
 \begin{frame}{Checking Aperiodicity}
@@ -1620,32 +1616,40 @@ The chain is periodic.
 
 \begin{frame}{Why Aperiodicity Matters}
 \protect\phantomsection\label{why-aperiodicity-matters}
-A periodic chain can continue to visit every state indefinitely while
-its probabilities oscillate.
+A periodic chain can visit every state indefinitely, but its state
+probabilities may oscillate rather than converge.
 
-For example,
+For example, consider the Markov chain with state space
+\(\mathcal{S}={0,1}\) and transition matrix
 
 \[
 P=
 \begin{bmatrix}
 0&1\\
 1&0
-\end{bmatrix}
+\end{bmatrix}.
 \]
 
-has stationary distribution
+Its stationary distribution is
+\(\boldsymbol{\pi}=\left(\frac12,\frac12\right),\)
 
-\[
-\left(\frac12,\frac12\right),
-\]
+but if \(X_0=0\), the distribution alternates between
+\((1,0) \quad\text{and}\quad (0,1).\)
 
-but its distribution alternates between
+Thus, \(\boldsymbol{\pi}^{(n)}\) does not converge.
+\end{frame}
 
-\[
-(1,0)
-\quad\text{and}\quad
-(0,1).
-\]
+\begin{frame}{Understanding Periodic Markov Chains}
+\protect\phantomsection\label{understanding-periodic-markov-chains}
+\begin{figure}[H]
+
+{\centering \includegraphics[width=0.75\linewidth,height=\textheight,keepaspectratio]{../figures/Understanding_Periodic_Markov_Chains.png}
+
+}
+
+\caption{Understanding Periodic Markov Chains}
+
+\end{figure}%
 \end{frame}
 
 \begin{frame}{Why Aperiodicity Matters}
@@ -1901,6 +1905,274 @@ Thus,
 \]
 
 determine the long-run behaviour of a reducible finite Markov chain.
+\end{frame}
+
+\begin{frame}{Example: A Two-State Markov Chain}
+\protect\phantomsection\label{example-a-two-state-markov-chain}
+Consider the Markov chain with state space \(\mathcal{S}={1,2}\) and
+transition matrix
+
+\[
+P=
+\begin{bmatrix}
+1-a&a\\
+b&1-b
+\end{bmatrix},
+\qquad 0<a,b<1.
+\]
+
+The chain is \textbf{finite, irreducible, and aperiodic}.
+
+Therefore, the theorem applies:
+
+\[
+\lim_{n\to\infty}p_{ij}^{(n)}=\pi_j.
+\]
+
+The limiting distribution exists and is independent of the initial
+state.
+\end{frame}
+
+\begin{frame}{Example: A Two-State Markov Chain}
+\protect\phantomsection\label{example-a-two-state-markov-chain-1}
+The stationary distribution satisfies
+
+\[
+\boldsymbol{\pi}P=\boldsymbol{\pi},
+\qquad
+\pi_1+\pi_2=1.
+\]
+
+Solving these equations gives
+
+\[
+\boxed{
+\boldsymbol{\pi}
+=
+\left(
+\frac{b}{a+b},
+\frac{a}{a+b}
+\right)
+}.
+\]
+
+Hence,
+
+\[
+\lim_{n\to\infty}p_{ij}^{(n)}
+=
+\pi_j,
+\qquad j\in\{1,2\},
+\]
+
+for every initial state \(i\).
+\end{frame}
+
+\begin{frame}{Example: A Two-State Markov Chain}
+\protect\phantomsection\label{example-a-two-state-markov-chain-2}
+The limiting distribution is also the unique stationary distribution.
+
+Indeed,
+
+\[
+\begin{aligned}
+\boldsymbol{\pi}P
+&=
+\left(
+\frac{b}{a+b},
+\frac{a}{a+b}
+\right)
+\begin{bmatrix}
+1-a&a\\
+b&1-b
+\end{bmatrix}\\
+&=
+\left(
+\frac{b}{a+b},
+\frac{a}{a+b}
+\right)
+=\boldsymbol{\pi}.
+\end{aligned}
+\]
+
+Thus, for any initial distribution \(\boldsymbol{\pi}^{(0)}\),
+
+\[
+\boldsymbol{\pi}^{(n)}
+\longrightarrow
+\boldsymbol{\pi}.
+\]
+\end{frame}
+
+\begin{frame}{Example: A Two-State Markov Chain}
+\protect\phantomsection\label{example-a-two-state-markov-chain-3}
+This example illustrates the theorem in a simple setting:
+
+\begin{itemize}
+\tightlist
+\item
+  The chain is \textbf{finite}.
+\item
+  The chain is \textbf{irreducible}.
+\item
+  The chain is \textbf{aperiodic}.
+\item
+  Therefore, a unique stationary distribution exists.
+\item
+  The distribution at time \(n\) converges to this stationary
+  distribution.
+\end{itemize}
+
+\[
+\boxed{
+\boldsymbol{\pi}
+=
+\left(
+\frac{b}{a+b},
+\frac{a}{a+b}
+\right)
+}
+\]
+
+The result does not depend on the initial state.
+\end{frame}
+
+\begin{frame}{Example: Long-run Behaviour of the NCD System}
+\protect\phantomsection\label{example-long-run-behaviour-of-the-ncd-system}
+Consider the NCD Markov chain introduced earlier.
+
+Its state space is finite, and the chain is \textbf{irreducible and
+aperiodic}.
+
+Therefore, the theorem applies, and the limiting distribution exists and
+is the unique stationary distribution.
+
+\[
+\boldsymbol{\pi}
+=
+\left(
+\frac{(p-1)^2}{p^2-p+1},
+\frac{p-p^2}{p^2-p+1},
+\frac{p^2}{p^2-p+1}
+\right).
+\]
+\end{frame}
+
+\begin{frame}{Example: Long-run Behaviour of the NCD System}
+\protect\phantomsection\label{example-long-run-behaviour-of-the-ncd-system-1}
+For every initial state \(i\),
+
+\[
+\lim_{n\to\infty}p_{ij}^{(n)}
+=
+\pi_j,
+\qquad j\in\{1,2,3\}.
+\]
+
+Thus, the long-run probability of being in state \(j\) is \(\pi_j\),
+independently of the initial state.
+
+For example, let \(p=0.8\). Then
+
+\[
+P=
+\begin{bmatrix}
+0.2&0.8&0\\
+0.2&0&0.8\\
+0&0.2&0.8
+\end{bmatrix}.
+\]
+\end{frame}
+
+\begin{frame}{Example: Long-run Behaviour of the NCD System}
+\protect\phantomsection\label{example-long-run-behaviour-of-the-ncd-system-2}
+For \(p=0.8\),
+
+\[
+P^2=
+\begin{bmatrix}
+0.2&0.16&0.64\\
+0.04&0.32&0.64\\
+0.04&0.16&0.8
+\end{bmatrix},
+\]
+
+and
+
+\[
+P^4=
+\begin{bmatrix}
+0.072&0.1856&0.7424\\
+0.0464&0.2112&0.7424\\
+0.0464&0.1856&0.768
+\end{bmatrix}.
+\]
+
+The rows of \(P^n\) begin to become similar as \(n\) increases.
+\end{frame}
+
+\begin{frame}{Example: Long-run Behaviour of the NCD System}
+\protect\phantomsection\label{example-long-run-behaviour-of-the-ncd-system-3}
+For \(n=8\),
+
+\[
+P^8=
+\begin{bmatrix}
+0.0482432&0.1903514&0.7614054\\
+0.04758784&0.1910067&0.7614054\\
+0.04758784&0.1903514&0.7620608
+\end{bmatrix}.
+\]
+
+The rows are already close to one another.
+
+As \(n\) increases, each row converges to the same limiting
+distribution.
+\end{frame}
+
+\begin{frame}{Example: Long-run Behaviour of the NCD System}
+\protect\phantomsection\label{example-long-run-behaviour-of-the-ncd-system-4}
+The limiting matrix is
+
+\[
+\lim_{n\to\infty}P^n
+=
+\begin{bmatrix}
+0.04761905&0.1904762&0.7619048\\
+0.04761905&0.1904762&0.7619048\\
+0.04761905&0.1904762&0.7619048
+\end{bmatrix}.
+\]
+
+Each row is the limiting distribution
+
+\[
+\boxed{
+\boldsymbol{\pi}
+=
+(0.04761905,\ 0.1904762,\ 0.7619048)
+}.
+\]
+\end{frame}
+
+\begin{frame}{Example: Long-run Behaviour of the NCD System}
+\protect\phantomsection\label{example-long-run-behaviour-of-the-ncd-system-5}
+This example illustrates the theorem for an actuarial model.
+
+Since the NCD chain is \textbf{finite, irreducible, and aperiodic},
+
+\[
+\boxed{
+\boldsymbol{\pi}^{(n)}
+\longrightarrow
+\boldsymbol{\pi}
+}
+\]
+
+for every initial distribution \(\boldsymbol{\pi}^{(0)}\).
+
+Thus, in the long run, the probability of each NCD level is determined
+by \(\boldsymbol{\pi}\), not by the initial NCD level.
 \end{frame}
 
 
