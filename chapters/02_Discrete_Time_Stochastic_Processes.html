@@ -3597,6 +3597,48 @@ u_i^{(k)}
 <p>This extends the idea of absorption probabilities from a random walk with absorbing states to a general Markov chain with several closed classes.</p>
 </div>
 </div>
+<div id="nte-expected-absorption-time" class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note&nbsp;2.1: Expected Time to Absorption
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Let</p>
+<p><span class="math display">\[
+T=\inf\{n\geq 0:X_n\text{ belongs to a closed class}\}.
+\]</span></p>
+<p>Thus, <span class="math inline">\(T\)</span> is the number of transitions until the process enters some closed class.</p>
+<p>For a transient state <span class="math inline">\(i\)</span>, define</p>
+<p><span class="math display">\[
+v_i=\mathbb{E}_i[T]
+=\mathbb{E}[T\mid X_0=i].
+\]</span></p>
+<p>In words, <span class="math inline">\(v_i\)</span> is the expected number of transitions until absorption when the process starts from state <span class="math inline">\(i\)</span>.</p>
+<p>Conditioning on the state after the first transition gives</p>
+<p><span class="math display">\[
+\boxed{
+v_i=1+\sum_{j\in S}p_{ij}v_j
+}.
+\]</span></p>
+<p>The <span class="math inline">\(1\)</span> accounts for the first transition, while the summation gives the expected remaining time after reaching state <span class="math inline">\(j\)</span>.</p>
+<p>In matrix form,</p>
+<p><span class="math display">\[
+\boxed{
+\mathbf{v}=\mathbf{1}+P\mathbf{v}
+},
+\]</span></p>
+<p>where <span class="math inline">\(\mathbf{v}=(v_1,\ldots,v_m)^\mathsf{T}\)</span> and <span class="math inline">\(\mathbf{1}\)</span> is an <span class="math inline">\(m\)</span>-dimensional column vector of ones.</p>
+<p>For states belonging to a closed class,</p>
+<p><span class="math display">\[
+v_i=0,
+\]</span></p>
+<p>since the process is already absorbed.</p>
+</div>
+</div>
 </section>
 <section id="from-absorption-to-long-run-behaviour" class="level3" data-number="2.14.3">
 <h3 data-number="2.14.3" class="anchored" data-anchor-id="from-absorption-to-long-run-behaviour"><span class="header-section-number">2.14.3</span> From absorption to long-run behaviour</h3>
@@ -4755,7 +4797,64 @@ P^n
 }
 \]</span></p>
 <p>Thus, after a sufficiently large number of transitions, the initial state has no effect on the distribution of the chain.</p>
-<p>It is useful to see how its conditions and conclusion apply to specific Markov chains. The following examples illustrate two cases. The first gives a simple two-state chain for which the limiting distribution can be obtained explicitly. The second applies the theorem to the NCD system and shows how the limiting probabilities describe its long-run behaviour.</p>
+<div id="nte-long-run-classification" class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note&nbsp;2.2: Classification of Long-Run Behaviour
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>For a finite DTMC, the long-run behaviour is determined by its communicating classes, closed classes, and their periods.</p>
+<p><strong>1. Irreducible chains</strong></p>
+<p>An irreducible chain has only one communicating class: all states communicate with each other.</p>
+<ul>
+<li><strong>Aperiodic:</strong> The common period is <span class="math inline">\(1\)</span>. The <span class="math inline">\(n\)</span>-step distribution converges to the unique stationary distribution.</li>
+<li><strong>Periodic:</strong> The common period is <span class="math inline">\(d&gt;1\)</span>. The distribution generally oscillates between states and does not converge to a single limiting distribution.</li>
+</ul>
+<p>Thus, an irreducible chain is either <strong>aperiodic</strong> or <strong>periodic</strong>.</p>
+<p><strong>2. Reducible chains</strong></p>
+<p>A reducible chain has more than one communicating class. Some classes may be transient, while closed classes determine the long-run behaviour.</p>
+<ul>
+<li><strong>One closed class:</strong> All transient states eventually enter the closed class. The long-run behaviour is then determined by this closed class.</li>
+<li><strong>Multiple closed classes:</strong> The process eventually enters one of the closed classes. The long-run behaviour depends on which closed class is reached, with the absorption probabilities determining the probabilities of reaching the different classes.</li>
+</ul>
+<p>Each closed communicating class is itself irreducible and can be either <strong>aperiodic</strong> or <strong>periodic</strong>.</p>
+<p><strong>Summary</strong></p>
+<p>The classification can be viewed as</p>
+<p><span class="math display">\[
+\boxed{
+\text{Finite DTMC}
+\longrightarrow
+\begin{cases}
+\text{Irreducible}
+&amp;
+\begin{cases}
+\text{Aperiodic}\\
+\text{Periodic}
+\end{cases}
+\\[12pt]
+\text{Reducible}
+&amp;
+\begin{cases}
+\text{One closed class}\\
+\text{Multiple closed classes}
+\end{cases}
+\end{cases}
+}
+\]</span></p>
+<p>For a reducible chain, the period should be considered separately for each closed communicating class.</p>
+</div>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../figures/Finite_Markov_Chain_Behavior_Guide.png" class="img-fluid figure-img" style="width:75.0%"></p>
+<figcaption>Markov Chain State Classification Guide</figcaption>
+</figure>
+</div>
+<p>It is useful to see how its conditions and conclusion from the main result apply to specific Markov chains. The following examples illustrate two cases. The first gives a simple two-state chain for which the limiting distribution can be obtained explicitly. The second applies the theorem to the NCD system and shows how the limiting probabilities describe its long-run behaviour.</p>
 <div id="exm-two-state-aperiodic" class="callout-example theorem example">
 <p><span class="theorem-title"><strong>Example 2.24 (Example: A Two-State Markov Chain)</strong></span> Consider the Markov chain with state space <span class="math inline">\(\mathcal{S}={1,2}\)</span> and transition matrix</p>
 <p><span class="math display">\[
