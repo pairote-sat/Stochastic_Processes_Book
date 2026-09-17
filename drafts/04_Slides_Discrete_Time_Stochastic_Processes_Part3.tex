@@ -462,7 +462,7 @@ For a \textbf{finite} Markov chain:
 
 \begin{frame}{Example: Five-State Classification}
 \protect\phantomsection\label{example-five-state-classification}
-Consider a Markov chain with state space \(S={1,2,3,4,5}\) and
+Consider a Markov chain with state space \(S=\{1,2,3,4,5\}\) and
 transition matrix
 
 \[
@@ -621,8 +621,11 @@ Therefore, \[
 
 Hence, the chain is \[
 \boxed{\text{reducible}.}
-\] \#\# Random Walk with Absorbing Boundaries
+\]
+\end{frame}
 
+\begin{frame}{Random Walk with Absorbing Boundaries}
+\protect\phantomsection\label{random-walk-with-absorbing-boundaries}
 For a simple random walk on \(\{0,1,\ldots,N\}\) with absorbing
 boundaries, the communication classes are \[
 \boxed{\{1,2,\ldots,N-1\},\qquad \{0\},\qquad \{N\}.}
@@ -633,7 +636,7 @@ boundary.
 \end{frame}
 
 \begin{frame}{Random Walk with Absorbing Boundaries}
-\protect\phantomsection\label{random-walk-with-absorbing-boundaries}
+\protect\phantomsection\label{random-walk-with-absorbing-boundaries-1}
 The classes \(\{0\}\) and \(\{N\}\) are closed because \(0\) and \(N\)
 are absorbing states.
 
@@ -895,6 +898,117 @@ Thus,
 \text{first-step analysis calculates their probabilities.}
 }
 \]
+\end{frame}
+
+\begin{frame}{Expected Time to Absorption}
+\protect\phantomsection\label{expected-time-to-absorption}
+Define the absorption time
+
+\[
+T=\inf\{n\geq0:X_n\text{ belongs to a closed class}\}.
+\]
+
+\begin{itemize}
+\tightlist
+\item
+  \(T\) is the number of transitions until the process enters some
+  closed class.
+\item
+  For a transient state \(i\),
+\end{itemize}
+
+\[
+v_i=\mathbb{E}_i[T]=\mathbb{E}[T\mid X_0=i].
+\]
+
+\begin{itemize}
+\tightlist
+\item
+  Thus, \(v_i\) is the expected number of transitions until absorption,
+  starting from state \(i\).
+\end{itemize}
+\end{frame}
+
+\begin{frame}{First-Step Analysis}
+\protect\phantomsection\label{first-step-analysis}
+Starting from transient state \(i\), consider the first transition.
+
+\begin{itemize}
+\tightlist
+\item
+  One transition occurs immediately.
+\item
+  After this transition, suppose \(X_1=j\).
+\item
+  The expected remaining time is \(v_j\).
+\end{itemize}
+
+Therefore,
+
+\[
+\boxed{
+v_i=1+\sum_{j\in S}p_{ij}v_j
+}
+\]
+
+The \(1\) accounts for the first transition.
+
+The summation gives the expected remaining time after the first
+transition.
+\end{frame}
+
+\begin{frame}{Matrix Formulation}
+\protect\phantomsection\label{matrix-formulation-1}
+Let
+
+\[
+\mathbf{v}=(v_1,\ldots,v_m)^\mathsf{T},
+\qquad
+\mathbf{1}=(1,\ldots,1)^\mathsf{T}.
+\]
+
+The first-step equations can be written as
+
+\[
+\boxed{
+\mathbf{v}=\mathbf{1}+P\mathbf{v}
+}
+\]
+
+or equivalently,
+
+\[
+\boxed{
+(I-P)\mathbf{v}=\mathbf{1}.
+}
+\]
+
+Here, \(\mathbf{v}\) is treated as a column vector.
+\end{frame}
+
+\begin{frame}{Boundary Conditions}
+\protect\phantomsection\label{boundary-conditions-1}
+For a state already belonging to a closed class,
+
+\[
+\boxed{v_i=0.}
+\]
+
+The process is already absorbed, so no further transitions are required.
+
+Thus:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Closed-class states:} \(v_i=0\).
+\item
+  \textbf{Transient states:} \(v_i\) is determined by the first-step
+  equations.
+\end{itemize}
+
+The resulting system gives the expected time to absorption from each
+transient state.
 \end{frame}
 
 \begin{frame}{From Absorption to Long-Run Behaviour}
@@ -1769,115 +1883,142 @@ Thus, the stationary distribution describes \textbf{equilibrium}, while
 the limiting distribution describes \textbf{convergence to equilibrium}.
 \end{frame}
 
-\begin{frame}{Application: Long-Run Behaviour of an NCD System}
-\protect\phantomsection\label{application-long-run-behaviour-of-an-ncd-system}
-Consider an NCD system with three levels:
+\begin{frame}{State Classification Roadmap}
+\protect\phantomsection\label{state-classification-roadmap-1}
+\begin{figure}[H]
 
-{\def\LTcaptype{none} % do not increment counter
-\begin{longtable}[]{@{}lrrr@{}}
-\toprule\noalign{}
-Level & 1 & 2 & 3 \\
-\midrule\noalign{}
-\endhead
-Discount & \(0%
-\) & \(30%
-\) & \(50%
-\) \\
-\bottomrule\noalign{}
-\end{longtable}
+{\centering \includegraphics[width=0.75\linewidth,height=\textheight,keepaspectratio]{../figures/Finite_Markov_Chain_Behavior_Guide.png}
+
 }
 
-Suppose:
+\caption{Markov Chain State Classification Guide}
+
+\end{figure}%
+\end{frame}
+
+\begin{frame}{Classification of Long-Run Behaviour}
+\protect\phantomsection\label{classification-of-long-run-behaviour}
+For a finite DTMC, identify the communicating classes and closed classes
+first.
+
+\[
+\boxed{
+\text{Finite DTMC}
+\longrightarrow
+\begin{cases}
+\text{Irreducible}\\
+\text{Reducible}
+\end{cases}
+}
+\]
 
 \begin{itemize}
 \tightlist
 \item
-  no claim \(\rightarrow\) move one level higher, or remain at level 3;
+  \textbf{Irreducible:} all states communicate.
 \item
-  one claim \(\rightarrow\) move one level lower, or remain at level 1;
+  \textbf{Reducible:} there is more than one communicating class.
 \item
-  two or more claims \(\rightarrow\) move to level 1.
+  A closed communicating class is irreducible.
 \end{itemize}
-\end{frame}
 
-\begin{frame}{Application: Long-Run Behaviour of an NCD System}
-\protect\phantomsection\label{application-long-run-behaviour-of-an-ncd-system-1}
-For \(N\sim\operatorname{Poisson}(\lambda)\), define
-
-\[
-q_0=\Pr(N=0),\qquad
-q_1=\Pr(N=1),\qquad
-q_2=\Pr(N\geq2).
-\]
-
-Then
-
-\[
-q_0=e^{-\lambda},
-\qquad
-q_1=\lambda e^{-\lambda},
-\qquad
-q_2=1-q_0-q_1.
-\]
-
-The transition matrix is
+For an irreducible chain, we then check its period:
 
 \[
 \boxed{
-P=
-\begin{bmatrix}
-q_1+q_2&q_0&0\\
-1-q_0&0&q_0\\
-q_2&q_1&q_0
-\end{bmatrix}.
+\text{Irreducible}
+\longrightarrow
+\begin{cases}
+\text{Aperiodic}\\
+\text{Periodic}
+\end{cases}
 }
 \]
 \end{frame}
 
-\begin{frame}{Application: Long-Run NCD Distribution}
-\protect\phantomsection\label{application-long-run-ncd-distribution}
-Let
+\begin{frame}{Irreducible Chains}
+\protect\phantomsection\label{irreducible-chains}
+An irreducible chain has one communicating class.
+
+\textbf{Aperiodic}
 
 \[
-\boldsymbol{\pi}
-=
-(\pi_1,\pi_2,\pi_3)
+d=1
 \]
 
-be the stationary distribution.
-
-It satisfies
+The \(n\)-step distribution converges to the unique stationary
+distribution:
 
 \[
-\boldsymbol{\pi}P=\boldsymbol{\pi},
-\qquad
-\pi_1+\pi_2+\pi_3=1.
+\boldsymbol{\pi}^{(n)}\longrightarrow\boldsymbol{\pi}.
 \]
 
-For a portfolio of 5,000 policyholders, the long-run expected numbers at
-the three levels are
+\textbf{Periodic}
 
 \[
-\boxed{
-(5000\pi_1,\;5000\pi_2,\;5000\pi_3).
-}
+d>1
 \]
+
+The distribution generally oscillates between states:
+
+\[
+\boldsymbol{\pi}^{(n)}
+\not\longrightarrow
+\boldsymbol{\pi}.
+\]
+
+The chain still has a unique stationary distribution, but the \(n\)-step
+distribution does not converge to it.
 \end{frame}
 
-\begin{frame}{Application: Long-Run NCD Distribution}
-\protect\phantomsection\label{application-long-run-ncd-distribution-1}
-If the full premium is \(B\), the long-run expected premium per driver
-is
+\begin{frame}{Reducible Chains}
+\protect\phantomsection\label{reducible-chains}
+A reducible chain has more than one communicating class.
+
+\textbf{One closed class}
+
+Transient states eventually enter the closed class.
 
 \[
-\boxed{
-B(\pi_1+0.70\pi_2+0.50\pi_3).
-}
+\text{Transient states}
+\longrightarrow
+\boxed{\text{Closed class}}
 \]
 
-Thus, the stationary distribution connects the Markov-chain model
-directly to the long-run composition and premium income of the insurance
-portfolio.
+The long-run behaviour is determined by the closed class.
+
+If the closed class is aperiodic, the distribution converges to its
+stationary distribution.
+\end{frame}
+
+\begin{frame}{Reducible Chains: Multiple Closed Classes}
+\protect\phantomsection\label{reducible-chains-multiple-closed-classes}
+A reducible chain may have several closed communicating classes.
+
+\[
+\text{Transient states}
+\longrightarrow
+\begin{cases}
+\boxed{C_1}\\
+\boxed{C_2}\\
+\vdots
+\end{cases}
+\]
+
+The process eventually enters one of the closed classes.
+
+\begin{itemize}
+\tightlist
+\item
+  The absorption probabilities determine which closed class is reached.
+\item
+  Each closed class has its own stationary distribution.
+\item
+  The period of each closed class determines its long-run behaviour.
+\end{itemize}
+
+Thus, for a reducible chain, \textbf{analyse each closed communicating
+class separately}.
 \end{frame}
 
 \begin{frame}{Long-Run Behaviour with Several Closed Classes}
@@ -1909,8 +2050,8 @@ determine the long-run behaviour of a reducible finite Markov chain.
 
 \begin{frame}{Example: A Two-State Markov Chain}
 \protect\phantomsection\label{example-a-two-state-markov-chain}
-Consider the Markov chain with state space \(\mathcal{S}={1,2}\) and
-transition matrix
+Consider the Markov chain with state space \(S=\{1,2\}\) and transition
+matrix
 
 \[
 P=
@@ -2173,6 +2314,117 @@ for every initial distribution \(\boldsymbol{\pi}^{(0)}\).
 
 Thus, in the long run, the probability of each NCD level is determined
 by \(\boldsymbol{\pi}\), not by the initial NCD level.
+\end{frame}
+
+\begin{frame}{Application: Long-Run Behaviour of an NCD System}
+\protect\phantomsection\label{application-long-run-behaviour-of-an-ncd-system}
+Consider an NCD system with three levels:
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}lrrr@{}}
+\toprule\noalign{}
+Level & 1 & 2 & 3 \\
+\midrule\noalign{}
+\endhead
+Discount & \(0%
+\) & \(30%
+\) & \(50%
+\) \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+
+Suppose:
+
+\begin{itemize}
+\tightlist
+\item
+  no claim \(\rightarrow\) move one level higher, or remain at level 3;
+\item
+  one claim \(\rightarrow\) move one level lower, or remain at level 1;
+\item
+  two or more claims \(\rightarrow\) move to level 1.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Application: Long-Run Behaviour of an NCD System}
+\protect\phantomsection\label{application-long-run-behaviour-of-an-ncd-system-1}
+For \(N\sim\operatorname{Poisson}(\lambda)\), define
+
+\[
+q_0=\Pr(N=0),\qquad
+q_1=\Pr(N=1),\qquad
+q_2=\Pr(N\geq2).
+\]
+
+Then
+
+\[
+q_0=e^{-\lambda},
+\qquad
+q_1=\lambda e^{-\lambda},
+\qquad
+q_2=1-q_0-q_1.
+\]
+
+The transition matrix is
+
+\[
+\boxed{
+P=
+\begin{bmatrix}
+q_1+q_2&q_0&0\\
+1-q_0&0&q_0\\
+q_2&q_1&q_0
+\end{bmatrix}.
+}
+\]
+\end{frame}
+
+\begin{frame}{Application: Long-Run NCD Distribution}
+\protect\phantomsection\label{application-long-run-ncd-distribution}
+Let
+
+\[
+\boldsymbol{\pi}
+=
+(\pi_1,\pi_2,\pi_3)
+\]
+
+be the stationary distribution.
+
+It satisfies
+
+\[
+\boldsymbol{\pi}P=\boldsymbol{\pi},
+\qquad
+\pi_1+\pi_2+\pi_3=1.
+\]
+
+For a portfolio of 5,000 policyholders, the long-run expected numbers at
+the three levels are
+
+\[
+\boxed{
+(5000\pi_1,\;5000\pi_2,\;5000\pi_3).
+}
+\]
+\end{frame}
+
+\begin{frame}{Application: Long-Run NCD Distribution}
+\protect\phantomsection\label{application-long-run-ncd-distribution-1}
+If the full premium is \(B\), the long-run expected premium per driver
+is
+
+\[
+\boxed{
+B(\pi_1+0.70\pi_2+0.50\pi_3).
+}
+\]
+
+Thus, the stationary distribution connects the Markov-chain model
+directly to the long-run composition and premium income of the insurance
+portfolio.
 \end{frame}
 
 

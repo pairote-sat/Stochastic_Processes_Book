@@ -242,7 +242,7 @@ $$
 
 ## Example: Five-State Classification
 
-Consider a Markov chain with state space $S={1,2,3,4,5}$ and transition matrix
+Consider a Markov chain with state space $S=\{1,2,3,4,5\}$ and transition matrix
 
 $$
 P=
@@ -369,6 +369,7 @@ $$
 \boxed{O=\{H,S\}\text{ is a communication class}.}
 $$
 
+
 ## Health Insurance System
 
 The class $O$ is non-closed because $p_{HD}>0$.
@@ -386,6 +387,9 @@ Hence, the chain is
 $$
 \boxed{\text{reducible}.}
 $$
+
+
+
 ## Random Walk with Absorbing Boundaries
 
 For a simple random walk on $\{0,1,\ldots,N\}$ with absorbing boundaries, the communication classes are
@@ -652,6 +656,92 @@ $$
 \text{first-step analysis calculates their probabilities.}
 }
 $$
+
+
+## Expected Time to Absorption
+
+Define the absorption time
+
+$$
+T=\inf\{n\geq0:X_n\text{ belongs to a closed class}\}.
+$$
+
+* $T$ is the number of transitions until the process enters some closed class.
+* For a transient state $i$,
+
+$$
+v_i=\mathbb{E}_i[T]=\mathbb{E}[T\mid X_0=i].
+$$
+
+* Thus, $v_i$ is the expected number of transitions until absorption, starting from state $i$.
+
+## First-Step Analysis
+
+Starting from transient state $i$, consider the first transition.
+
+* One transition occurs immediately.
+* After this transition, suppose $X_1=j$.
+* The expected remaining time is $v_j$.
+
+Therefore,
+
+$$
+\boxed{
+v_i=1+\sum_{j\in S}p_{ij}v_j
+}
+$$
+
+The $1$ accounts for the first transition.
+
+The summation gives the expected remaining time after the first transition.
+
+## Matrix Formulation
+
+Let
+
+$$
+\mathbf{v}=(v_1,\ldots,v_m)^\mathsf{T},
+\qquad
+\mathbf{1}=(1,\ldots,1)^\mathsf{T}.
+$$
+
+The first-step equations can be written as
+
+$$
+\boxed{
+\mathbf{v}=\mathbf{1}+P\mathbf{v}
+}
+$$
+
+or equivalently,
+
+$$
+\boxed{
+(I-P)\mathbf{v}=\mathbf{1}.
+}
+$$
+
+Here, $\mathbf{v}$ is treated as a column vector.
+
+## Boundary Conditions
+
+For a state already belonging to a closed class,
+
+$$
+\boxed{v_i=0.}
+$$
+
+The process is already absorbed, so no further transitions are required.
+
+Thus:
+
+* **Closed-class states:** $v_i=0$.
+* **Transient states:** $v_i$ is determined by the first-step equations.
+
+The resulting system gives the expected time to absorption from each transient state.
+
+
+
 
 ## From Absorption to Long-Run Behaviour
 
@@ -1406,92 +1496,120 @@ The roles of the conditions are:
 
 Thus, the stationary distribution describes **equilibrium**, while the limiting distribution describes **convergence to equilibrium**.
 
-## Application: Long-Run Behaviour of an NCD System
 
-Consider an NCD system with three levels:
 
-| Level    |    1 |     2 |     3 |
-| -------- | ---: | ----: | ----: |
-| Discount | $0%$ | $30%$ | $50%$ |
+## State Classification Roadmap
 
-Suppose:
+![Markov Chain State Classification Guide](../figures/Finite_Markov_Chain_Behavior_Guide.png){width=75% fig-align="center"}
 
-* no claim $\rightarrow$ move one level higher, or remain at level 3;
-* one claim $\rightarrow$ move one level lower, or remain at level 1;
-* two or more claims $\rightarrow$ move to level 1.
 
-## Application: Long-Run Behaviour of an NCD System
+## Classification of Long-Run Behaviour
 
-For $N\sim\operatorname{Poisson}(\lambda)$, define
-
-$$
-q_0=\Pr(N=0),\qquad
-q_1=\Pr(N=1),\qquad
-q_2=\Pr(N\geq2).
-$$
-
-Then
-
-$$
-q_0=e^{-\lambda},
-\qquad
-q_1=\lambda e^{-\lambda},
-\qquad
-q_2=1-q_0-q_1.
-$$
-
-The transition matrix is
+For a finite DTMC, identify the communicating classes and closed classes first.
 
 $$
 \boxed{
-P=
-\begin{bmatrix}
-q_1+q_2&q_0&0\\
-1-q_0&0&q_0\\
-q_2&q_1&q_0
-\end{bmatrix}.
+\text{Finite DTMC}
+\longrightarrow
+\begin{cases}
+\text{Irreducible}\\
+\text{Reducible}
+\end{cases}
 }
 $$
 
-## Application: Long-Run NCD Distribution
+* **Irreducible:** all states communicate.
+* **Reducible:** there is more than one communicating class.
+* A closed communicating class is irreducible.
 
-Let
-
-$$
-\boldsymbol{\pi}
-=
-(\pi_1,\pi_2,\pi_3)
-$$
-
-be the stationary distribution.
-
-It satisfies
-
-$$
-\boldsymbol{\pi}P=\boldsymbol{\pi},
-\qquad
-\pi_1+\pi_2+\pi_3=1.
-$$
-
-For a portfolio of 5,000 policyholders, the long-run expected numbers at the three levels are
+For an irreducible chain, we then check its period:
 
 $$
 \boxed{
-(5000\pi_1,\;5000\pi_2,\;5000\pi_3).
+\text{Irreducible}
+\longrightarrow
+\begin{cases}
+\text{Aperiodic}\\
+\text{Periodic}
+\end{cases}
 }
 $$
 
-## Application: Long-Run NCD Distribution
+## Irreducible Chains
 
-If the full premium is $B$, the long-run expected premium per driver is
+An irreducible chain has one communicating class.
+
+**Aperiodic**
 
 $$
-\boxed{
-B(\pi_1+0.70\pi_2+0.50\pi_3).
-}
+d=1
 $$
 
-Thus, the stationary distribution connects the Markov-chain model directly to the long-run composition and premium income of the insurance portfolio.
+The $n$-step distribution converges to the unique stationary distribution:
+
+$$
+\boldsymbol{\pi}^{(n)}\longrightarrow\boldsymbol{\pi}.
+$$
+
+**Periodic**
+
+$$
+d>1
+$$
+
+The distribution generally oscillates between states:
+
+$$
+\boldsymbol{\pi}^{(n)}
+\not\longrightarrow
+\boldsymbol{\pi}.
+$$
+
+The chain still has a unique stationary distribution, but the $n$-step distribution does not converge to it.
+
+## Reducible Chains
+
+A reducible chain has more than one communicating class.
+
+**One closed class**
+
+Transient states eventually enter the closed class.
+
+$$
+\text{Transient states}
+\longrightarrow
+\boxed{\text{Closed class}}
+$$
+
+The long-run behaviour is determined by the closed class.
+
+If the closed class is aperiodic, the distribution converges to its stationary distribution.
+
+## Reducible Chains: Multiple Closed Classes
+
+A reducible chain may have several closed communicating classes.
+
+$$
+\text{Transient states}
+\longrightarrow
+\begin{cases}
+\boxed{C_1}\\
+\boxed{C_2}\\
+\vdots
+\end{cases}
+$$
+
+The process eventually enters one of the closed classes.
+
+* The absorption probabilities determine which closed class is reached.
+* Each closed class has its own stationary distribution.
+* The period of each closed class determines its long-run behaviour.
+
+Thus, for a reducible chain, **analyse each closed communicating class separately**.
+
+
+
+
 
 ## Long-Run Behaviour with Several Closed Classes
 
@@ -1519,7 +1637,7 @@ determine the long-run behaviour of a reducible finite Markov chain.
 
 ## Example: A Two-State Markov Chain
 
-Consider the Markov chain with state space $\mathcal{S}={1,2}$ and transition matrix
+Consider the Markov chain with state space $S=\{1,2\}$ and transition matrix
 
 $$
 P=
@@ -1774,3 +1892,94 @@ $$
 for every initial distribution $\boldsymbol{\pi}^{(0)}$.
 
 Thus, in the long run, the probability of each NCD level is determined by $\boldsymbol{\pi}$, not by the initial NCD level.
+
+
+
+
+
+## Application: Long-Run Behaviour of an NCD System
+
+Consider an NCD system with three levels:
+
+| Level    |    1 |     2 |     3 |
+| -------- | ---: | ----: | ----: |
+| Discount | $0%$ | $30%$ | $50%$ |
+
+Suppose:
+
+* no claim $\rightarrow$ move one level higher, or remain at level 3;
+* one claim $\rightarrow$ move one level lower, or remain at level 1;
+* two or more claims $\rightarrow$ move to level 1.
+
+## Application: Long-Run Behaviour of an NCD System
+
+For $N\sim\operatorname{Poisson}(\lambda)$, define
+
+$$
+q_0=\Pr(N=0),\qquad
+q_1=\Pr(N=1),\qquad
+q_2=\Pr(N\geq2).
+$$
+
+Then
+
+$$
+q_0=e^{-\lambda},
+\qquad
+q_1=\lambda e^{-\lambda},
+\qquad
+q_2=1-q_0-q_1.
+$$
+
+The transition matrix is
+
+$$
+\boxed{
+P=
+\begin{bmatrix}
+q_1+q_2&q_0&0\\
+1-q_0&0&q_0\\
+q_2&q_1&q_0
+\end{bmatrix}.
+}
+$$
+
+## Application: Long-Run NCD Distribution
+
+Let
+
+$$
+\boldsymbol{\pi}
+=
+(\pi_1,\pi_2,\pi_3)
+$$
+
+be the stationary distribution.
+
+It satisfies
+
+$$
+\boldsymbol{\pi}P=\boldsymbol{\pi},
+\qquad
+\pi_1+\pi_2+\pi_3=1.
+$$
+
+For a portfolio of 5,000 policyholders, the long-run expected numbers at the three levels are
+
+$$
+\boxed{
+(5000\pi_1,\;5000\pi_2,\;5000\pi_3).
+}
+$$
+
+## Application: Long-Run NCD Distribution
+
+If the full premium is $B$, the long-run expected premium per driver is
+
+$$
+\boxed{
+B(\pi_1+0.70\pi_2+0.50\pi_3).
+}
+$$
+
+Thus, the stationary distribution connects the Markov-chain model directly to the long-run composition and premium income of the insurance portfolio.
