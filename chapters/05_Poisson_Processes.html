@@ -1,0 +1,2408 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>3&nbsp; Chapter 3: Poisson Processes – Stochastic Processes</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../chapters/02_Discrete_Time_Stochastic_Processes.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-87aed0b8589e23e45aa8556edf37a91b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/05_Poisson_Processes.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Chapter 3: Poisson Processes</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Stochastic Processes</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Welcome to My Book</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/01_Introduction_to_Stochastic_Processes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Chapter 1: Introduction to Stochastic Processes</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/02_Discrete_Time_Stochastic_Processes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Chapter 2: Discrete-Time Markov Chains</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/05_Poisson_Processes.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Chapter 3: Poisson Processes</span></span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#chapter-3-poisson-processes" id="toc-chapter-3-poisson-processes" class="nav-link active" data-scroll-target="#chapter-3-poisson-processes"><span class="header-section-number">3.1</span> Chapter 3: Poisson Processes</a>
+  <ul class="collapse">
+  <li><a href="#learning-outcomes" id="toc-learning-outcomes" class="nav-link" data-scroll-target="#learning-outcomes">Learning Outcomes</a></li>
+  </ul></li>
+  <li><a href="#introduction-to-poisson-processes" id="toc-introduction-to-poisson-processes" class="nav-link" data-scroll-target="#introduction-to-poisson-processes"><span class="header-section-number">3.2</span> Introduction to Poisson Processes</a>
+  <ul class="collapse">
+  <li><a href="#motivation" id="toc-motivation" class="nav-link" data-scroll-target="#motivation"><span class="header-section-number">3.2.1</span> Motivation</a></li>
+  <li><a href="#from-markov-chains-to-poisson-processes" id="toc-from-markov-chains-to-poisson-processes" class="nav-link" data-scroll-target="#from-markov-chains-to-poisson-processes"><span class="header-section-number">3.2.2</span> From Markov Chains to Poisson Processes</a></li>
+  <li><a href="#counting-events-over-time" id="toc-counting-events-over-time" class="nav-link" data-scroll-target="#counting-events-over-time"><span class="header-section-number">3.2.3</span> Counting Events over Time</a></li>
+  <li><a href="#applications" id="toc-applications" class="nav-link" data-scroll-target="#applications"><span class="header-section-number">3.2.4</span> Applications</a></li>
+  <li><a href="#questions-of-interest" id="toc-questions-of-interest" class="nav-link" data-scroll-target="#questions-of-interest"><span class="header-section-number">3.2.5</span> Questions of Interest</a></li>
+  </ul></li>
+  <li><a href="#definition-and-properties-of-the-poisson-process" id="toc-definition-and-properties-of-the-poisson-process" class="nav-link" data-scroll-target="#definition-and-properties-of-the-poisson-process"><span class="header-section-number">3.3</span> Definition and Properties of the Poisson Process</a>
+  <ul class="collapse">
+  <li><a href="#two-approaches-to-defining-a-poisson-process" id="toc-two-approaches-to-defining-a-poisson-process" class="nav-link" data-scroll-target="#two-approaches-to-defining-a-poisson-process"><span class="header-section-number">3.3.1</span> Two Approaches to Defining a Poisson Process</a></li>
+  <li><a href="#local-behaviour-of-a-poisson-process" id="toc-local-behaviour-of-a-poisson-process" class="nav-link" data-scroll-target="#local-behaviour-of-a-poisson-process"><span class="header-section-number">3.3.2</span> Local Behaviour of a Poisson Process</a></li>
+  <li><a href="#distributional-definition-of-a-poisson-process" id="toc-distributional-definition-of-a-poisson-process" class="nav-link" data-scroll-target="#distributional-definition-of-a-poisson-process"><span class="header-section-number">3.3.3</span> Distributional Definition of a Poisson Process</a></li>
+  <li><a href="#relationship-between-the-two-definitions" id="toc-relationship-between-the-two-definitions" class="nav-link" data-scroll-target="#relationship-between-the-two-definitions"><span class="header-section-number">3.3.4</span> Relationship Between the Two Definitions</a></li>
+  <li><a href="#which-definition-should-we-use" id="toc-which-definition-should-we-use" class="nav-link" data-scroll-target="#which-definition-should-we-use"><span class="header-section-number">3.3.5</span> Which Definition Should We Use?</a></li>
+  </ul></li>
+  <li><a href="#inter-arrival-times" id="toc-inter-arrival-times" class="nav-link" data-scroll-target="#inter-arrival-times"><span class="header-section-number">3.4</span> Inter-Arrival Times and Arrival Times</a>
+  <ul class="collapse">
+  <li><a href="#why-study-inter-arrival-times" id="toc-why-study-inter-arrival-times" class="nav-link" data-scroll-target="#why-study-inter-arrival-times"><span class="header-section-number">3.4.1</span> Why Study Inter-Arrival Times?</a></li>
+  <li><a href="#definition-of-inter-arrival-times-and-arrival-times" id="toc-definition-of-inter-arrival-times-and-arrival-times" class="nav-link" data-scroll-target="#definition-of-inter-arrival-times-and-arrival-times"><span class="header-section-number">3.4.2</span> Definition of Inter-Arrival Times and Arrival Times</a></li>
+  <li><a href="#poisson-process-sample-path" id="toc-poisson-process-sample-path" class="nav-link" data-scroll-target="#poisson-process-sample-path"><span class="header-section-number">3.4.3</span> Poisson Process Sample Path</a></li>
+  <li><a href="#simulating-a-sample-path-of-a-poisson-process" id="toc-simulating-a-sample-path-of-a-poisson-process" class="nav-link" data-scroll-target="#simulating-a-sample-path-of-a-poisson-process"><span class="header-section-number">3.4.4</span> Simulating a Sample Path of a Poisson Process</a></li>
+  <li><a href="#exponential-distribution-of-inter-arrival-times" id="toc-exponential-distribution-of-inter-arrival-times" class="nav-link" data-scroll-target="#exponential-distribution-of-inter-arrival-times"><span class="header-section-number">3.4.5</span> Exponential Distribution of Inter-Arrival Times</a></li>
+  <li><a href="#independence-of-inter-arrival-times" id="toc-independence-of-inter-arrival-times" class="nav-link" data-scroll-target="#independence-of-inter-arrival-times"><span class="header-section-number">3.4.6</span> Independence of Inter-Arrival Times</a></li>
+  <li><a href="#arrival-times-and-the-gamma-distribution" id="toc-arrival-times-and-the-gamma-distribution" class="nav-link" data-scroll-target="#arrival-times-and-the-gamma-distribution"><span class="header-section-number">3.4.7</span> Arrival Times and the Gamma Distribution</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">3.4.8</span> Summary</a></li>
+  </ul></li>
+  <li><a href="#properties-of-the-poisson-process" id="toc-properties-of-the-poisson-process" class="nav-link" data-scroll-target="#properties-of-the-poisson-process"><span class="header-section-number">3.5</span> Properties of the Poisson Process</a>
+  <ul class="collapse">
+  <li><a href="#why-study-the-properties" id="toc-why-study-the-properties" class="nav-link" data-scroll-target="#why-study-the-properties"><span class="header-section-number">3.5.1</span> Why Study the Properties?</a></li>
+  <li><a href="#independent-increments" id="toc-independent-increments" class="nav-link" data-scroll-target="#independent-increments"><span class="header-section-number">3.5.2</span> Independent Increments</a></li>
+  <li><a href="#stationary-increments" id="toc-stationary-increments" class="nav-link" data-scroll-target="#stationary-increments"><span class="header-section-number">3.5.3</span> Stationary Increments</a></li>
+  <li><a href="#the-memoryless-property" id="toc-the-memoryless-property" class="nav-link" data-scroll-target="#the-memoryless-property"><span class="header-section-number">3.5.4</span> The Memoryless Property</a></li>
+  <li><a href="#superposition-of-independent-poisson-processes" id="toc-superposition-of-independent-poisson-processes" class="nav-link" data-scroll-target="#superposition-of-independent-poisson-processes"><span class="header-section-number">3.5.5</span> Superposition of Independent Poisson Processes</a></li>
+  <li><a href="#identifying-the-source-of-an-arrival" id="toc-identifying-the-source-of-an-arrival" class="nav-link" data-scroll-target="#identifying-the-source-of-an-arrival"><span class="header-section-number">3.5.6</span> Identifying the Source of an Arrival</a></li>
+  <li><a href="#splitting-and-thinning-of-a-poisson-process" id="toc-splitting-and-thinning-of-a-poisson-process" class="nav-link" data-scroll-target="#splitting-and-thinning-of-a-poisson-process"><span class="header-section-number">3.5.7</span> Splitting and Thinning of a Poisson Process</a></li>
+  <li><a href="#summary-1" id="toc-summary-1" class="nav-link" data-scroll-target="#summary-1"><span class="header-section-number">3.5.8</span> Summary</a></li>
+  <li><a href="#from-poisson-processes-to-markov-jump-processes" id="toc-from-poisson-processes-to-markov-jump-processes" class="nav-link" data-scroll-target="#from-poisson-processes-to-markov-jump-processes"><span class="header-section-number">3.5.9</span> From Poisson Processes to Markov Jump Processes</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Chapter 3: Poisson Processes</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="chapter-3-poisson-processes" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="chapter-3-poisson-processes"><span class="header-section-number">3.1</span> Chapter 3: Poisson Processes</h2>
+<section id="learning-outcomes" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="learning-outcomes">Learning Outcomes</h3>
+<p>After studying this chapter, students should be able to:</p>
+<ol type="1">
+<li><strong>Define and describe</strong> a homogeneous Poisson process and explain its main assumptions and properties.</li>
+<li><strong>Calculate</strong> probabilities, expected values, and variances associated with the number of events occurring during a given time interval.</li>
+<li><strong>Describe and apply</strong> the exponential distribution of inter-arrival times and the gamma distribution of arrival times.</li>
+<li><strong>Explain and apply</strong> the independent-increments, stationary-increments, and memoryless properties of a Poisson process.</li>
+<li><strong>Apply</strong> the superposition and thinning properties to model arrivals from multiple sources and different categories of events.</li>
+<li><strong>Determine</strong> the conditional distributions of event times and event counts, given the total number of events during a specified period.</li>
+<li><strong>Explain</strong> the relationship between a Poisson process and a continuous-time Markov chain, including the two-state Alive–Dead model.</li>
+</ol>
+</section>
+</section>
+<section id="introduction-to-poisson-processes" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="introduction-to-poisson-processes"><span class="header-section-number">3.2</span> Introduction to Poisson Processes</h2>
+<section id="motivation" class="level3" data-number="3.2.1">
+<h3 data-number="3.2.1" class="anchored" data-anchor-id="motivation"><span class="header-section-number">3.2.1</span> Motivation</h3>
+<p>Many real-world systems involve events occurring randomly over time. Examples include insurance claims, customer arrivals, telephone calls, and equipment failures.</p>
+<p>In previous chapters, we studied Markov chains, which describe how a system evolves through a sequence of discrete time steps. We now consider stochastic processes in which events can occur at any time within a continuous time interval.</p>
+<p>A <strong>Poisson process</strong> provides a mathematical model for counting the number of events that occur over time and studying the times at which they occur. It is widely used in actuarial science, finance, telecommunications, and other fields where random arrivals or occurrences need to be modelled.</p>
+</section>
+<section id="from-markov-chains-to-poisson-processes" class="level3" data-number="3.2.2">
+<h3 data-number="3.2.2" class="anchored" data-anchor-id="from-markov-chains-to-poisson-processes"><span class="header-section-number">3.2.2</span> From Markov Chains to Poisson Processes</h3>
+<p>A discrete-time Markov chain describes the evolution of a system at times <span class="math inline">\(n=0,1,2,\ldots\)</span>. The system changes state at discrete time steps, and its future behaviour depends on its current state, given the past.</p>
+<p>A Poisson process takes a different approach. Rather than tracking changes in the state of a system at discrete time steps, it counts the number of events that have occurred by time <span class="math inline">\(t\)</span>, where <span class="math inline">\(t\geq 0\)</span> is continuous.</p>
+<p>For example, an insurer may be interested in the number of claims received during a day. Claims can arrive at any time, rather than only at the beginning or end of each hour.</p>
+<p>The main distinction is therefore the time parameter: a discrete-time Markov chain evolves in discrete time, whereas a Poisson process describes event occurrences in continuous time. A Poisson process is also a continuous-time Markov process, a connection that will become clearer when we study its properties.</p>
+</section>
+<section id="counting-events-over-time" class="level3" data-number="3.2.3">
+<h3 data-number="3.2.3" class="anchored" data-anchor-id="counting-events-over-time"><span class="header-section-number">3.2.3</span> Counting Events over Time</h3>
+<p>Let <span class="math inline">\(N(t)\)</span> denote the number of events that have occurred during the time interval <span class="math inline">\((0,t]\)</span>, where <span class="math inline">\(t\geq 0\)</span>.</p>
+<p>The process <span class="math inline">\(\{N(t):t\geq 0\}\)</span> tracks the cumulative number of events over time. For example, consider the arrival of insurance claims:</p>
+<ul>
+<li>Initially, no claims have occurred, so <span class="math inline">\(N(0)=0\)</span>.</li>
+<li>If three claims have occurred by time <span class="math inline">\(t=5\)</span>, then <span class="math inline">\(N(5)=3\)</span>.</li>
+<li>If two more claims occur between times <span class="math inline">\(5\)</span> and <span class="math inline">\(8\)</span>, then <span class="math inline">\(N(8)=5\)</span>.</li>
+</ul>
+<p>Thus, <span class="math inline">\(N(t)\)</span> is a non-negative integer-valued quantity that does not decrease as time increases. It increases by one whenever a new event occurs.</p>
+<p>The number of events occurring between times <span class="math inline">\(s\)</span> and <span class="math inline">\(t\)</span>, where <span class="math inline">\(0\leq s&lt;t\)</span>, is given by</p>
+<p><span class="math display">\[
+N(t)-N(s).
+\]</span></p>
+<p>This notation allows us to study both the total number of events over a period and the number of events occurring within a particular time interval.</p>
+<!-- ### Applications -->
+<!-- Poisson processes are used to model event arrivals in many fields. Examples include: -->
+<!-- - **Insurance:** The number of claims reported to an insurer over a specified period. -->
+<!-- - **Finance:** The arrival of credit defaults or certain types of financial events. -->
+<!-- - **Telecommunications:** The number of calls received by a call centre over time. -->
+<!-- - **Transportation:** The number of accidents occurring on a highway. -->
+<!-- - **Healthcare:** The number of patients arriving at an emergency department. -->
+<!-- In each case, the Poisson process provides a framework for modelling the frequency and timing of events. However, the suitability of the model depends on whether its assumptions reasonably describe the underlying event-generating mechanism. -->
+</section>
+<section id="applications" class="level3" data-number="3.2.4">
+<h3 data-number="3.2.4" class="anchored" data-anchor-id="applications"><span class="header-section-number">3.2.4</span> Applications</h3>
+<p>Poisson processes are used to model the occurrence of events over time. They are particularly useful when events occur individually, at irregular times, and at an approximately constant average rate. The rate parameter, <span class="math inline">\(\lambda\)</span>, describes the average number of events occurring per unit of time.</p>
+<p>The following examples illustrate how Poisson processes can be applied in different fields.</p>
+<ul>
+<li><p><strong>Insurance:</strong> An insurer may use a Poisson process to model the arrival of claims from a portfolio of policyholders. For example, if claims arrive at an average rate of 20 per day, the model assumes that the number of claims reported during an interval of length <span class="math inline">\(t\)</span> follows a Poisson distribution with mean <span class="math inline">\(20t\)</span>. This provides a basis for estimating the probability of receiving a particular number of claims over a specified period.</p></li>
+<li><p><strong>Finance:</strong> A Poisson process can be used to model the arrival of certain financial events, such as credit defaults within a portfolio or the occurrence of operational losses. For example, if defaults occur at an average rate of 3 per year, the model can be used to estimate the probability of observing a given number of defaults over the next five years. In practice, the assumption of a constant rate may need to be adjusted to account for changes in economic conditions.</p></li>
+<li><p><strong>Telecommunications:</strong> The number of telephone calls received by a call centre can be modelled using a Poisson process. If calls arrive at an average rate of 30 per hour, the model can be used to estimate the probability of receiving more than 35 calls during the next hour. Such estimates can help determine staffing requirements and assess the capacity needed to handle incoming calls.</p></li>
+<li><p><strong>Transportation:</strong> A Poisson process may be used to model the number of traffic accidents occurring along a particular stretch of highway. If accidents occur at an average rate of 2 per month, the model can be used to estimate the probability of observing no accidents or several accidents during a specified period. The model may be less appropriate when accident rates vary substantially with traffic volume, weather conditions, or seasonal patterns.</p></li>
+<li><p><strong>Healthcare:</strong> The arrival of patients at an emergency department can be modelled using a Poisson process. If patients arrive at an average rate of 8 per hour, the model can be used to estimate the probability of receiving a particular number of patients during the next hour. These estimates can support decisions about staffing levels and resource allocation.</p></li>
+</ul>
+<p>In each application, the Poisson process provides a framework for studying both the number of events and their timing. For a homogeneous Poisson process, the model assumes that:</p>
+<ol type="1">
+<li>Events occur independently, so the number of events in one time interval does not affect the number in a disjoint time interval.</li>
+<li>The average rate of occurrence, <span class="math inline">\(\lambda\)</span>, remains constant over time.</li>
+<li>The probability of two or more events occurring in a sufficiently short time interval is negligible compared with the probability of a single event.</li>
+</ol>
+<p>These assumptions determine whether a homogeneous Poisson process is a suitable model. For example, patient arrivals may be more frequent during certain hours, while insurance claims may be affected by seasonal weather conditions. In such situations, a constant-rate model may be inadequate, and a more general model, such as a non-homogeneous Poisson process, may be required.</p>
+</section>
+<section id="questions-of-interest" class="level3" data-number="3.2.5">
+<h3 data-number="3.2.5" class="anchored" data-anchor-id="questions-of-interest"><span class="header-section-number">3.2.5</span> Questions of Interest</h3>
+<p>Suppose insurance claims arrive according to a Poisson process with an average rate of <span class="math inline">\(\lambda=20\)</span> claims per day.</p>
+<p>Several questions may arise:</p>
+<ol type="1">
+<li>What is the probability that more than 100 claims arrive during a seven-day period?</li>
+<li>What is the expected waiting time until the next claim?</li>
+<li>What is the probability that no claims occur during the next two hours?</li>
+<li>Given that exactly 10 claims occur during a particular day, what is the probability that three of them occur during the first six hours?</li>
+</ol>
+<p>These questions concern different aspects of the same process:</p>
+<ul>
+<li>The first and third questions concern the number of events occurring within a specified time interval.</li>
+<li>The second question concerns the waiting time until an event occurs.</li>
+<li>The fourth question concerns the distribution of event counts conditional on the total number of events.</li>
+</ul>
+<p>A Poisson process provides a unified mathematical framework for answering these questions. The following sections develop the relevant probability distributions and properties.</p>
+</section>
+</section>
+<section id="definition-and-properties-of-the-poisson-process" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="definition-and-properties-of-the-poisson-process"><span class="header-section-number">3.3</span> Definition and Properties of the Poisson Process</h2>
+<section id="two-approaches-to-defining-a-poisson-process" class="level3" data-number="3.3.1">
+<h3 data-number="3.3.1" class="anchored" data-anchor-id="two-approaches-to-defining-a-poisson-process"><span class="header-section-number">3.3.1</span> Two Approaches to Defining a Poisson Process</h3>
+<p>A Poisson process models the occurrence of events over time, such as insurance claims, customer arrivals, and equipment failures. The parameter <span class="math inline">\(\lambda&gt;0\)</span> is the constant average number of events per unit time.</p>
+<p>There are two complementary approaches to defining a homogeneous Poisson process:</p>
+<ol type="1">
+<li><strong>Local approach:</strong> Describe the probabilities of events occurring over a very short time interval.</li>
+<li><strong>Distributional approach:</strong> Specify the probability distribution of the number of events occurring over an interval of any given length.</li>
+</ol>
+<p>The local approach describes the behaviour of the process over short intervals, whereas the distributional approach gives the probability distribution of event counts over finite intervals.</p>
+<p>Both approaches lead to the same homogeneous Poisson process under the usual assumptions on a counting process.</p>
+</section>
+<section id="local-behaviour-of-a-poisson-process" class="level3" data-number="3.3.2">
+<h3 data-number="3.3.2" class="anchored" data-anchor-id="local-behaviour-of-a-poisson-process"><span class="header-section-number">3.3.2</span> Local Behaviour of a Poisson Process</h3>
+<p>The local approach focuses on what happens during a very short time interval of length <span class="math inline">\(h\)</span>. Suppose the process is observed at time <span class="math inline">\(t\)</span>. During the interval <span class="math inline">\((t,t+h]\)</span>, three possibilities arise:</p>
+<ul>
+<li>No event occurs.</li>
+<li>Exactly one event occurs.</li>
+<li>Two or more events occur.</li>
+</ul>
+<p>For a homogeneous Poisson process with rate <span class="math inline">\(\lambda\)</span>, the probability of exactly one event is approximately <span class="math inline">\(\lambda h\)</span> when <span class="math inline">\(h\)</span> is sufficiently small. The probability of two or more events is negligible relative to <span class="math inline">\(h\)</span>.</p>
+<p>These ideas lead to the following definition.</p>
+<div id="def-poisson-local" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 3.1</strong></span> <strong>Definition: Local Characterisation of a Poisson Process</strong></p>
+<p>A counting process <span class="math inline">\(\{N(t):t\geq 0\}\)</span> is a Poisson process with rate <span class="math inline">\(\lambda&gt;0\)</span> if it satisfies the following conditions:</p>
+<ol type="1">
+<li><p><span class="math inline">\(N(0)=0\)</span>.</p></li>
+<li><p>It has independent increments.</p></li>
+<li><p>For any <span class="math inline">\(t\geq 0\)</span>, as <span class="math inline">\(h \rightarrow  0\)</span>,</p>
+<p><span class="math display">\[
+\begin{aligned}
+\Pr(N(t+h)-N(t)=1)
+&amp;=\lambda h+o(h),\\
+\Pr(N(t+h)-N(t)=0)
+&amp;=1-\lambda h+o(h),\\
+\Pr(N(t+h)-N(t)\geq 2)
+&amp;=o(h).
+\end{aligned}
+\]</span></p></li>
+</ol>
+<p>Here, <span class="math inline">\(\lambda\)</span> is the constant event rate, and <span class="math inline">\(o(h)\)</span> denotes a quantity satisfying</p>
+<p><span class="math display">\[
+\lim_{h\rightarrow 0}\frac{o(h)}{h}=0.
+\]</span></p>
+</div>
+<p>The three probability conditions have the following interpretations:</p>
+<ul>
+<li><strong>Exactly one event:</strong> The probability of one event during a short interval of length <span class="math inline">\(h\)</span> is approximately <span class="math inline">\(\lambda h\)</span>.</li>
+<li><strong>No event:</strong> The probability of no event is approximately <span class="math inline">\(1-\lambda h\)</span>.</li>
+<li><strong>Two or more events:</strong> The probability of two or more events is negligible compared with <span class="math inline">\(h\)</span>.</li>
+</ul>
+<p>The notation <span class="math inline">\(o(h)\)</span> is used to describe terms that approach zero faster than <span class="math inline">\(h\)</span>. For example, <span class="math inline">\(h^2=o(h)\)</span> because</p>
+<p><span class="math display">\[
+\lim_{h \rightarrow  0}\frac{h^2}{h}=0.
+\]</span></p>
+<p>The independent increments condition means that the numbers of events occurring in disjoint time intervals are independent. In other words, knowing how many events occurred in one interval does not affect the probability distribution of the number of events in another disjoint interval.</p>
+<section id="interpretation-of-the-rate-parameter" class="level4">
+<h4 class="anchored" data-anchor-id="interpretation-of-the-rate-parameter">Interpretation of the Rate Parameter</h4>
+<p>The parameter <span class="math inline">\(\lambda\)</span> is the average number of events per unit time. For example, suppose an insurer receives claims at an average rate of 20 claims per day. Then</p>
+<p><span class="math display">\[
+\lambda=20 \text{ claims per day}.
+\]</span></p>
+<p>For a short interval of length <span class="math inline">\(h\)</span> days, the probability of exactly one claim is approximately</p>
+<p><span class="math display">\[
+\Pr(N(t+h)-N(t)=1)\approx 20h.
+\]</span></p>
+<p>For example, if <span class="math inline">\(h=0.01\)</span> days, this probability is approximately <span class="math inline">\(0.20\)</span>.</p>
+<p>This is a short-interval approximation. It becomes increasingly accurate as <span class="math inline">\(h\)</span> approaches zero. The local conditions describe the behaviour of the process over short intervals, but do not directly provide the probability distribution of the total number of events over a longer interval.</p>
+</section>
+</section>
+<section id="distributional-definition-of-a-poisson-process" class="level3" data-number="3.3.3">
+<h3 data-number="3.3.3" class="anchored" data-anchor-id="distributional-definition-of-a-poisson-process"><span class="header-section-number">3.3.3</span> Distributional Definition of a Poisson Process</h3>
+<p>The second approach defines a Poisson process directly through the probability distribution of its increments.</p>
+<div id="def-poisson-distributional" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 3.2</strong></span> <strong>Definition: Distributional Characterisation of a Poisson Process</strong></p>
+<p>A counting process <span class="math inline">\(\{N(t):t\geq 0\}\)</span> is a homogeneous Poisson process with rate <span class="math inline">\(\lambda&gt;0\)</span> if:</p>
+<ol type="1">
+<li><p><span class="math inline">\(N(0)=0\)</span>.</p></li>
+<li><p>It has independent increments: For any <span class="math inline">\(0\leq t_0&lt;t_1&lt;\cdots&lt;t_n\)</span>, the increments <span class="math display">\[
+N(t_1)-N(t_0),
+N(t_2)-N(t_1),
+\ldots,
+N(t_n)-N(t_{n-1})
+\]</span> are mutually independent.</p></li>
+<li><p>For every <span class="math inline">\(0\leq s&lt;t\)</span>,</p>
+<p><span class="math display">\[
+N(t)-N(s)\sim
+\operatorname{Poisson}(\lambda(t-s)).
+\]</span></p></li>
+</ol>
+<p>Equivalently, for <span class="math inline">\(n=0,1,2,\ldots\)</span>,</p>
+<p><span class="math display">\[
+\Pr(N(t)-N(s)=n)
+=
+\frac{e^{-\lambda(t-s)}
+[\lambda(t-s)]^n}{n!}.
+\]</span></p>
+</div>
+<p>This definition specifies the distribution of the number of events occurring in any interval <span class="math inline">\((s,t]\)</span>.</p>
+<p>The Poisson distribution has parameter <span class="math inline">\(\lambda(t-s)\)</span>, which depends on the length of the interval rather than its starting time. Consequently, the process has stationary increments.</p>
+<p>For example, the numbers of claims occurring during the intervals <span class="math inline">\((0,1]\)</span> and <span class="math inline">\((5,6]\)</span> have the same probability distribution because both intervals have length one day.</p>
+<p>However, the numbers of claims in these two intervals are also independent because the intervals are disjoint.</p>
+<section id="consequences-of-the-distributional-definition" class="level4">
+<h4 class="anchored" data-anchor-id="consequences-of-the-distributional-definition">Consequences of the Distributional Definition</h4>
+<p>Taking <span class="math inline">\(s=0\)</span> in the distributional definition gives</p>
+<p><span class="math display">\[
+N(t)\sim\operatorname{Poisson}(\lambda t).
+\]</span></p>
+<p>Thus, the probability of observing exactly <span class="math inline">\(n\)</span> events during the interval <span class="math inline">\((0,t]\)</span> is</p>
+<p><span class="math display">\[
+\Pr(N(t)=n)
+=
+\frac{e^{-\lambda t}(\lambda t)^n}{n!},
+\quad n=0,1,2,\ldots.
+\]</span></p>
+<p>Since the mean and variance of a Poisson random variable are both equal to its parameter,</p>
+<p><span class="math display">\[
+\operatorname{E}[N(t)]
+=
+\operatorname{Var}(N(t))
+=
+\lambda t.
+\]</span></p>
+<p>Therefore, <span class="math inline">\(\lambda t\)</span> is the expected number of events during an interval of length <span class="math inline">\(t\)</span>.</p>
+<p>Two useful probabilities follow directly from the Poisson distribution.</p>
+<p><strong>Probability of no events</strong></p>
+<p>Setting <span class="math inline">\(n=0\)</span> gives</p>
+<p><span class="math display">\[
+\Pr(N(t)=0)=e^{-\lambda t}.
+\]</span></p>
+<p>More generally, by stationary increments,</p>
+<p><span class="math display">\[
+\Pr(N(s+t)-N(s)=0)=e^{-\lambda t}.
+\]</span></p>
+<p><strong>Probability of at least one event</strong></p>
+<p>Taking the complement of the event that no events occur gives</p>
+<p><span class="math display">\[
+\Pr(N(t)\geq 1)=1-e^{-\lambda t}.
+\]</span></p>
+<p>More generally,</p>
+<p><span class="math display">\[
+\Pr(N(s+t)-N(s)\geq 1)=1-e^{-\lambda t}.
+\]</span></p>
+<p>These results are useful when calculating the probability of observing no events or at least one event during a specified time interval.</p>
+<div id="exm-machinery-failures" class="theorem example">
+<p><span class="theorem-title"><strong>Example 3.1</strong></span> Machinery failures at a factory occur according to a Poisson process with a rate of one failure every eight hours. Calculate the probability of one or more failures during a given hour.</p>
+</div>
+<p><strong>Solution:</strong></p>
+<p>Let <span class="math inline">\(N(t)\)</span> denote the number of machinery failures in <span class="math inline">\(t\)</span> hours. The failure rate is <span class="math inline">\(\lambda = 1/8\)</span> per hour. Hence,</p>
+<p><span class="math display">\[
+N(1) \sim \operatorname{Poisson}\left(\frac{1}{8}\right).
+\]</span></p>
+<p>The probability of one or more failures during a given hour is</p>
+<p><span class="math display">\[
+\begin{aligned}
+P(N(1)\geq 1)
+&amp;= 1-P(N(1)=0)\\
+&amp;= 1-e^{-1/8}\\
+&amp;\approx 0.1175.
+\end{aligned}
+\]</span></p>
+<div id="exm-customer-arrivals" class="theorem example">
+<p><span class="theorem-title"><strong>Example 3.2</strong></span> Customers arrive at a coffee shop according to a Poisson process with a rate of 10 customers per hour, starting at 9 a.m.</p>
+<ol type="1">
+<li>Calculate the probability that more than 30 customers arrive between 11 a.m. and 1 p.m.</li>
+<li>Calculate the probability that exactly 30 customers have arrived by noon and exactly 50 by 2 p.m.</li>
+</ol>
+</div>
+<p><strong>Solution:</strong></p>
+<p>Let <span class="math inline">\(N(t)\)</span> denote the number of customers arriving by <span class="math inline">\(t\)</span> hours after 9 a.m. The arrival rate is <span class="math inline">\(\lambda=10\)</span> customers per hour.</p>
+<ol type="1">
+<li><p><strong>More than 30 customers between 11 a.m. and 1 p.m.</strong></p>
+<p>By the independent and stationary increments properties,</p>
+<p><span class="math display">\[
+N(4)-N(2)\sim\operatorname{Poisson}(20).
+\]</span></p>
+<p>Therefore,</p>
+<p><span class="math display">\[
+\begin{aligned}
+P(N(4)-N(2)&gt;30)
+&amp;=P(\operatorname{Poisson}(20)&gt;30)\\
+&amp;\approx 0.0135.
+\end{aligned}
+\]</span></p></li>
+<li><p><strong>Exactly 30 customers by noon and exactly 50 by 2 p.m.</strong></p>
+<p>The event requires <span class="math inline">\(N(3)=30\)</span> and <span class="math inline">\(N(5)=50\)</span>. Equivalently, <span class="math inline">\(N(3)=30\)</span> and <span class="math inline">\(N(5)-N(3)=20\)</span>. By independent increments,</p>
+<p><span class="math display">\[
+\begin{aligned}
+&amp;P(N(3)=30,N(5)=50)\\
+&amp;\quad=P(N(3)=30)P(N(5)-N(3)=20)\\
+&amp;\quad=\frac{e^{-30}30^{30}}{30!}
+\frac{e^{-20}20^{20}}{20!}\\
+&amp;\quad\approx 0.006453.
+\end{aligned}
+\]</span></p></li>
+</ol>
+<div id="exm-independent-increments" class="theorem example">
+<p><span class="theorem-title"><strong>Example 3.3</strong></span> Let <span class="math inline">\(N(t)\)</span> be a Poisson process with rate <span class="math inline">\(\lambda=5\)</span> events per hour.</p>
+<ol type="1">
+<li>Find the probability that exactly 3 events occur between 10 a.m. and 11 a.m.</li>
+<li>Find the probability that exactly 3 events occur between 10 a.m. and 11 a.m. and exactly 4 events occur between 11 a.m. and noon.</li>
+</ol>
+</div>
+<p><strong>Solution:</strong></p>
+<ol type="1">
+<li><p><strong>Exactly 3 events between 10 a.m. and 11 a.m.</strong></p>
+<p>The number of events during this one-hour interval follows a <span class="math inline">\(\operatorname{Poisson}(5)\)</span> distribution. Hence,</p>
+<p><span class="math display">\[
+\begin{aligned}
+P(N(1)-N(0)=3)
+&amp;=\frac{e^{-5}5^3}{3!}\\
+&amp;\approx 0.1404.
+\end{aligned}
+\]</span></p></li>
+<li><p><strong>Exactly 3 events in the first hour and 4 in the second hour.</strong></p>
+<p>By independent increments, the numbers of events in the two consecutive one-hour intervals are independent. Therefore,</p>
+<p><span class="math display">\[
+\begin{aligned}
+&amp;P(N(1)-N(0)=3,N(2)-N(1)=4)\\
+&amp;\quad=P(N(1)-N(0)=3)\\
+&amp;\qquad\quad\times P(N(2)-N(1)=4)\\
+&amp;\quad=\frac{e^{-5}5^3}{3!}
+\frac{e^{-5}5^4}{4!}\\
+&amp;\quad\approx 0.024631.
+\end{aligned}
+\]</span></p></li>
+</ol>
+<div id="exm-independent-increments-variance" class="theorem example">
+<p><span class="theorem-title"><strong>Example 3.4</strong></span> Customers arrive at a service counter according to a Poisson process with a rate of 5 customers per hour.</p>
+<p>Let <span class="math inline">\(X\)</span> denote the number of customers arriving between 10 a.m. and 11 a.m., and let <span class="math inline">\(Y\)</span> denote the number of customers arriving between 11 a.m. and noon.</p>
+<ol type="1">
+<li>Calculate the probability that exactly 3 customers arrive in the first hour and exactly 4 customers arrive in the second hour.</li>
+<li>Let <span class="math inline">\(S=X+Y\)</span> denote the total number of customers arriving over the two-hour period. Find the mean and variance of <span class="math inline">\(S\)</span>.</li>
+<li>Find the conditional mean and variance of <span class="math inline">\(S\)</span>, given that exactly 3 customers arrive in the first hour.</li>
+</ol>
+</div>
+<p><strong>Solution:</strong></p>
+<p>By the independent and stationary increments properties of a Poisson process,</p>
+<p><span class="math display">\[
+X,Y\overset{\text{ind}}{\sim}\operatorname{Poisson}(5).
+\]</span></p>
+<ol type="1">
+<li><p><strong>Joint probability</strong></p>
+<p>Since the increments are independent,</p>
+<p><span class="math display">\[
+\begin{aligned}
+\Pr(X=3, Y=4)
+&amp;=\Pr(X=3)\Pr(Y=4)\\
+&amp;=\frac{e^{-5}5^3}{3!} \times \frac{e^{-5}5^4}{4!}\\
+&amp;\approx 0.0246.
+\end{aligned}
+\]</span></p></li>
+<li><p><strong>Mean and variance of the total number of arrivals</strong></p>
+<p>Since <span class="math inline">\(S=X+Y\)</span>,</p>
+<p><span class="math display">\[
+\begin{aligned}
+E(S)
+&amp;=E(X)+E(Y)\\
+&amp;=5+5\\
+&amp;=10.
+\end{aligned}
+\]</span></p>
+<p>Using the independence of <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span>,</p>
+<p><span class="math display">\[
+\begin{aligned}
+\operatorname{Var}(S)
+&amp;=\operatorname{Var}(X)+\operatorname{Var}(Y)\\
+&amp;=5+5\\
+&amp;=10.
+\end{aligned}
+\]</span></p></li>
+<li><p><strong>Conditional mean and variance</strong></p>
+<p>Given that exactly 3 customers arrive in the first hour, <span class="math inline">\(X=3\)</span>. Therefore,</p>
+<p><span class="math display">\[
+S=3+Y.
+\]</span></p>
+<p>Since <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> are independent, the conditional distribution of <span class="math inline">\(Y\)</span> is unchanged. Hence,</p>
+<p><span class="math display">\[
+Y\mid X=3\sim\operatorname{Poisson}(5).
+\]</span></p>
+<p>Consequently,</p>
+<p><span class="math display">\[
+\begin{aligned}
+E(S\mid X=3)
+&amp;=3+E(Y\mid X=3)\\
+&amp;=3+5\\
+&amp;=8,
+\end{aligned}
+\]</span></p>
+<p>and</p>
+<p><span class="math display">\[
+\begin{aligned}
+\operatorname{Var}(S\mid X=3)
+&amp;=\operatorname{Var}(Y\mid X=3)\\
+&amp;=5\\
+&amp;=5.
+\end{aligned}
+\]</span></p></li>
+</ol>
+</section>
+</section>
+<section id="relationship-between-the-two-definitions" class="level3" data-number="3.3.4">
+<h3 data-number="3.3.4" class="anchored" data-anchor-id="relationship-between-the-two-definitions"><span class="header-section-number">3.3.4</span> Relationship Between the Two Definitions</h3>
+<p>The local and distributional approaches describe the same homogeneous Poisson process. We now show how the two characterisations are related.</p>
+<section id="from-the-local-approach-to-the-poisson-distribution" class="level4">
+<h4 class="anchored" data-anchor-id="from-the-local-approach-to-the-poisson-distribution">From the Local Approach to the Poisson Distribution</h4>
+<p>Suppose that <span class="math inline">\(\{N(t):t\geq 0\}\)</span> satisfies the local conditions and has independent increments.</p>
+<p>Define</p>
+<p><span class="math display">\[
+p_n(t)=\Pr(N(t)=n),
+\quad n=0,1,2,\ldots.
+\]</span></p>
+<p>We derive the probability distribution of <span class="math inline">\(N(t)\)</span> by considering a small additional time interval of length <span class="math inline">\(h\)</span>.</p>
+<p>For <span class="math inline">\(n=0\)</span>, the process must have no events during both <span class="math inline">\((0,t]\)</span> and <span class="math inline">\((t,t+h]\)</span>. By independent increments,</p>
+<p><span class="math display">\[
+\begin{aligned}
+p_0(t+h)
+&amp;=p_0(t)\Pr(N(t+h)-N(t)=0)\\
+&amp;=p_0(t)[1-\lambda h+o(h)].
+\end{aligned}
+\]</span></p>
+<p>Rearranging and taking the limit as <span class="math inline">\(h \rightarrow  0\)</span> gives</p>
+<p><span class="math display">\[
+p_0'(t)=-\lambda p_0(t).
+\]</span></p>
+<p>Since <span class="math inline">\(p_0(0)=1\)</span>, solving this differential equation gives</p>
+<p><span class="math display">\[
+p_0(t)=e^{-\lambda t}.
+\]</span></p>
+<p>For <span class="math inline">\(n\geq 1\)</span>, exactly <span class="math inline">\(n\)</span> events have occurred by time <span class="math inline">\(t+h\)</span> in either of the following cases:</p>
+<ul>
+<li>Exactly <span class="math inline">\(n\)</span> events have occurred by time <span class="math inline">\(t\)</span>, followed by no events during <span class="math inline">\((t,t+h]\)</span>.</li>
+<li>Exactly <span class="math inline">\(n-1\)</span> events have occurred by time <span class="math inline">\(t\)</span>, followed by one event during <span class="math inline">\((t,t+h]\)</span>.</li>
+</ul>
+<p>The probability of two or more events during <span class="math inline">\((t,t+h]\)</span> is <span class="math inline">\(o(h)\)</span>. Therefore, using independent increments,</p>
+<p><span class="math display">\[
+\begin{aligned}
+p_n(t+h)
+={}&amp;p_n(t)[1-\lambda h+o(h)]\\
+&amp;+p_{n-1}(t)[\lambda h+o(h)]\\
+&amp;+o(h).
+\end{aligned}
+\]</span></p>
+<p>Rearranging and taking the limit as <span class="math inline">\(h \rightarrow  0\)</span> gives</p>
+<p><span class="math display">\[
+p_n'(t)=\lambda p_{n-1}(t)-\lambda p_n(t).
+\]</span></p>
+<p>Together with <span class="math inline">\(p_0(t)=e^{-\lambda t}\)</span> and the initial conditions <span class="math inline">\(p_n(0)=0\)</span> for <span class="math inline">\(n\geq 1\)</span>, these differential equations can be solved recursively to obtain</p>
+<p><span class="math display">\[
+\boxed{
+p_n(t)=\frac{e^{-\lambda t}(\lambda t)^n}{n!},
+\quad n=0,1,2,\ldots.
+}
+\]</span></p>
+<p>Hence,</p>
+<p><span class="math display">\[
+N(t)\sim\operatorname{Poisson}(\lambda t).
+\]</span></p>
+<p>The same argument can be applied to the increments of the process. By independent increments, the distribution of <span class="math inline">\(N(t)-N(s)\)</span> depends only on the interval length <span class="math inline">\(t-s\)</span>. Thus,</p>
+<p><span class="math display">\[
+N(t)-N(s)\sim
+\operatorname{Poisson}(\lambda(t-s)).
+\]</span></p>
+<p>This establishes the distributional characterisation.</p>
+</section>
+<section id="from-the-distributional-approach-to-the-local-conditions" class="level4">
+<h4 class="anchored" data-anchor-id="from-the-distributional-approach-to-the-local-conditions">From the Distributional Approach to the Local Conditions</h4>
+<p>Conversely, suppose that <span class="math inline">\(\{N(t):t\geq 0\}\)</span> is a homogeneous Poisson process with rate <span class="math inline">\(\lambda\)</span> under the distributional definition.</p>
+<p>By definition,</p>
+<p><span class="math display">\[
+N(t+h)-N(t)\sim\operatorname{Poisson}(\lambda h).
+\]</span></p>
+<p>Therefore,</p>
+<p><span class="math display">\[
+\Pr(N(t+h)-N(t)=0)=e^{-\lambda h},
+\]</span></p>
+<p>and</p>
+<p><span class="math display">\[
+\Pr(N(t+h)-N(t)=1)=\lambda h e^{-\lambda h}.
+\]</span></p>
+<p>Using the Taylor expansion</p>
+<p><span class="math display">\[
+e^{-\lambda h}=1-\lambda h+O(h^2),
+\]</span></p>
+<p>we obtain</p>
+<p><span class="math display">\[
+\begin{aligned}
+\Pr(N(t+h)-N(t)=0)
+&amp;=1-\lambda h+o(h),\\
+\Pr(N(t+h)-N(t)=1)
+&amp;=\lambda h+o(h).
+\end{aligned}
+\]</span></p>
+<p>Furthermore,</p>
+<p><span class="math display">\[
+\begin{aligned}
+&amp;\Pr(N(t+h)-N(t)\geq 2)\\
+&amp;\quad=1-e^{-\lambda h}(1+\lambda h)\\
+&amp;\quad=O(h^2)\\
+&amp;\quad=o(h).
+\end{aligned}
+\]</span></p>
+<p>Thus, the local probability conditions are satisfied. The distributional definition also specifies independent increments and <span class="math inline">\(N(0)=0\)</span>.</p>
+<p>Consequently, the two definitions are equivalent under the stated counting-process assumptions.</p>
+</section>
+</section>
+<section id="which-definition-should-we-use" class="level3" data-number="3.3.5">
+<h3 data-number="3.3.5" class="anchored" data-anchor-id="which-definition-should-we-use"><span class="header-section-number">3.3.5</span> Which Definition Should We Use?</h3>
+<p>The two definitions emphasise different aspects of the same process.</p>
+<ul>
+<li>The <strong>local approach</strong> describes the behaviour of events over very short time intervals. It provides an intuitive foundation for the Poisson process and is useful for deriving its probability distribution.</li>
+<li>The <strong>distributional approach</strong> specifies the distribution of event counts over finite intervals. It is more convenient for calculating probabilities, deriving moments, and studying further properties.</li>
+</ul>
+<p>In the following sections, we will mainly use the distributional characterisation because it provides a direct way to work with the number of events occurring over a specified time interval.</p>
+</section>
+</section>
+<section id="inter-arrival-times" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="inter-arrival-times"><span class="header-section-number">3.4</span> Inter-Arrival Times and Arrival Times</h2>
+<section id="why-study-inter-arrival-times" class="level3" data-number="3.4.1">
+<h3 data-number="3.4.1" class="anchored" data-anchor-id="why-study-inter-arrival-times"><span class="header-section-number">3.4.1</span> Why Study Inter-Arrival Times?</h3>
+<p>A Poisson process describes the number of events occurring over time. Another way to study the process is through the waiting times between successive events.</p>
+<p>Instead of generating the number of arrivals directly, we can generate the waiting time until each successive arrival. This provides an alternative way to describe and simulate a Poisson process.</p>
+<p>Studying inter-arrival times is useful for several reasons:</p>
+<ul>
+<li>They provide a simple method for simulating a sample path of a Poisson process.</li>
+<li>Their probability distributions allow us to calculate the waiting time until the next event.</li>
+<li>They help us determine the distribution of the time until the <span class="math inline">\(n\)</span>th event.</li>
+<li>They establish a connection between the Poisson, exponential, and gamma distributions.</li>
+</ul>
+<p>For a homogeneous Poisson process with rate <span class="math inline">\(\lambda\)</span>, the successive inter-arrival times are independent and exponentially distributed with rate <span class="math inline">\(\lambda\)</span>.</p>
+</section>
+<section id="definition-of-inter-arrival-times-and-arrival-times" class="level3" data-number="3.4.2">
+<h3 data-number="3.4.2" class="anchored" data-anchor-id="definition-of-inter-arrival-times-and-arrival-times"><span class="header-section-number">3.4.2</span> Definition of Inter-Arrival Times and Arrival Times</h3>
+<p>Let <span class="math inline">\(T_0\)</span> denote the waiting time from time <span class="math inline">\(0\)</span> until the first arrival. For <span class="math inline">\(i\geq 1\)</span>, let <span class="math inline">\(T_i\)</span> denote the time between the <span class="math inline">\(i\)</span>th and <span class="math inline">\((i+1)\)</span>th arrivals.</p>
+<p>Thus, the successive inter-arrival times are</p>
+<p><span class="math display">\[
+T_0,T_1,T_2,\ldots.
+\]</span></p>
+<p>Let <span class="math inline">\(S_n\)</span> denote the time of the <span class="math inline">\(n\)</span>th arrival, with <span class="math inline">\(S_0=0\)</span>. The arrival times are obtained by adding the successive inter-arrival times:</p>
+<p><span class="math display">\[
+S_0=0,\qquad
+S_n=\sum_{i=0}^{n-1}T_i,
+\quad n\geq 1.
+\]</span></p>
+<p>In particular,</p>
+<p><span class="math display">\[
+\begin{aligned}
+S_1 &amp;= T_0,\\
+S_2 &amp;= T_0+T_1,\\
+S_3 &amp;= T_0+T_1+T_2.
+\end{aligned}
+\]</span></p>
+<p>The relationship between the arrival times and the counting process is</p>
+<p><span class="math display">\[
+\boxed{
+N(t)=\max\{n\geq 0:S_n\leq t\}.
+}
+\]</span></p>
+<p>In other words, <span class="math inline">\(N(t)\)</span> counts the number of arrival times that have occurred by time <span class="math inline">\(t\)</span>.</p>
+<p>The arrival times satisfy</p>
+<p><span class="math display">\[
+0=S_0&lt;S_1&lt;S_2&lt;\cdots.
+\]</span></p>
+<p>The counting process starts at zero and increases by one at each arrival time. Between successive arrivals, it remains constant. Its sample path is therefore a non-decreasing, right-continuous step function.</p>
+</section>
+<section id="poisson-process-sample-path" class="level3" data-number="3.4.3">
+<h3 data-number="3.4.3" class="anchored" data-anchor-id="poisson-process-sample-path"><span class="header-section-number">3.4.3</span> Poisson Process Sample Path</h3>
+<p>The following diagram illustrates the relationship between the inter-arrival times, arrival times, and counting process.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../figures/Poisson_Process_Sample_Path_Diagram.png" class="img-fluid figure-img" style="width:75.0%"></p>
+<figcaption><strong>Poisson Process Sample Path Diagram</strong></figcaption>
+</figure>
+</div>
+<p>Each horizontal segment represents a period during which no new event occurs. At an arrival time <span class="math inline">\(S_n\)</span>, the counting process jumps from <span class="math inline">\(n-1\)</span> to <span class="math inline">\(n\)</span>.</p>
+<p>The length of each horizontal segment is the corresponding inter-arrival time <span class="math inline">\(T_{n-1}\)</span>.</p>
+</section>
+<section id="simulating-a-sample-path-of-a-poisson-process" class="level3" data-number="3.4.4">
+<h3 data-number="3.4.4" class="anchored" data-anchor-id="simulating-a-sample-path-of-a-poisson-process"><span class="header-section-number">3.4.4</span> Simulating a Sample Path of a Poisson Process</h3>
+<p>A Poisson process can be simulated by generating successive inter-arrival times and adding them to obtain the arrival times.</p>
+<p>For a homogeneous Poisson process with rate <span class="math inline">\(\lambda\)</span>, the inter-arrival times are independent and follow an exponential distribution with rate <span class="math inline">\(\lambda\)</span>:</p>
+<p><span class="math display">\[
+T_i\overset{\text{i.i.d.}}{\sim}
+\operatorname{Exp}(\lambda),
+\quad i=0,1,2,\ldots.
+\]</span></p>
+<p>Once the inter-arrival times have been generated, the arrival times are obtained by taking cumulative sums:</p>
+<p><span class="math display">\[
+S_n=\sum_{i=0}^{n-1}T_i.
+\]</span></p>
+<p>The counting process can then be constructed by counting the number of arrival times that do not exceed <span class="math inline">\(t\)</span>.</p>
+<section id="setting-up-the-simulation" class="level4">
+<h4 class="anchored" data-anchor-id="setting-up-the-simulation">Setting Up the Simulation</h4>
+<p>We simulate a Poisson process with rate <span class="math inline">\(\lambda=12\)</span> events per unit time over an observation interval of length <span class="math inline">\(T=1\)</span>.</p>
+<p>We first specify the simulation parameters and initialise the vector that will store the arrival times.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">888</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>lambda <span class="ot">&lt;-</span> <span class="dv">12</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>T_length <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="do">## Initialise the arrival times</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>arrival_time <span class="ot">&lt;-</span> <span class="fu">numeric</span>()</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>last_arrival <span class="ot">&lt;-</span> <span class="dv">0</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<p>The variables are interpreted as follows:</p>
+<ul>
+<li><code>lambda</code> is the average number of events per unit time.</li>
+<li><code>T_length</code> is the length of the observation interval.</li>
+<li><code>arrival_time</code> stores the arrival times that occur before the end of the observation interval.</li>
+<li><code>last_arrival</code> records the most recent arrival time.</li>
+</ul>
+<p>The random seed ensures that the simulation can be reproduced.</p>
+</section>
+<section id="generating-the-arrival-times" class="level4">
+<h4 class="anchored" data-anchor-id="generating-the-arrival-times">Generating the Arrival Times</h4>
+<p>We generate independent exponential inter-arrival times using <code>rexp()</code>. Each new inter-arrival time is added to the previous arrival time to obtain the next arrival time.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="cf">while</span> (last_arrival <span class="sc">&lt;</span> T_length) {</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  inter_arrival <span class="ot">&lt;-</span> <span class="fu">rexp</span>(<span class="dv">1</span>, <span class="at">rate =</span> lambda)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  last_arrival <span class="ot">&lt;-</span> last_arrival <span class="sc">+</span> inter_arrival</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (last_arrival <span class="sc">&lt;</span> T_length) {</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    arrival_time <span class="ot">&lt;-</span> <span class="fu">c</span>(arrival_time, last_arrival)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<p>The loop continues until the next arrival occurs at or beyond the end of the observation interval.</p>
+<p>Only arrival times strictly less than <code>T_length</code> are recorded because we are interested in the events occurring during <span class="math inline">\((0,T]\)</span>.</p>
+</section>
+<section id="examining-the-simulation-results" class="level4">
+<h4 class="anchored" data-anchor-id="examining-the-simulation-results">Examining the Simulation Results</h4>
+<p>We can examine the simulated arrival times and the total number of events during the observation interval.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">length</span>(arrival_time)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Number of arrivals:"</span>, n, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Number of arrivals: 5 </code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Arrival times:</span><span class="sc">\n</span><span class="st">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Arrival times:</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(arrival_time, <span class="dv">4</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.3415 0.4315 0.6686 0.7732 0.8374</code></pre>
+</div>
+</div>
+<p>With the specified random seed, the simulation produces 5 arrivals during the observation interval <span class="math inline">\((0,1]\)</span>.</p>
+<p>The corresponding arrival times are</p>
+<p><span class="math display">\[
+\begin{aligned}
+S_1,\ldots,S_n
+&amp;= \texttt{round(arrival\_time, 4)}.
+\end{aligned}
+\]</span></p>
+<p>The simulated number of arrivals is one realisation of the random variable <span class="math inline">\(N(1)\)</span>.</p>
+<p>The theoretical distribution is</p>
+<p><span class="math display">\[
+N(1)\sim\operatorname{Poisson}(12),
+\]</span></p>
+<p>so that</p>
+<p><span class="math display">\[
+\operatorname{E}[N(1)]=12.
+\]</span></p>
+<p>The simulated count need not equal 12 because the rate is an average, not a fixed number of arrivals.</p>
+</section>
+<section id="plotting-the-sample-path" class="level4">
+<h4 class="anchored" data-anchor-id="plotting-the-sample-path">Plotting the Sample Path</h4>
+<p>We now construct the counting process from the simulated arrival times.</p>
+<p>The horizontal segments show that the number of events remains constant between arrivals. At each arrival time, the process jumps upward by one.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Set up the plot</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="cn">NA</span>,</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">0</span>, T_length),</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fu">max</span>(<span class="dv">1</span>, n <span class="sc">+</span> <span class="dv">1</span>)),</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">"Time t"</span>,</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylab =</span> <span class="st">"N(t)"</span>,</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">yaxt =</span> <span class="st">"n"</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="fu">axis</span>(<span class="dv">2</span>, <span class="at">at =</span> <span class="dv">0</span><span class="sc">:</span><span class="fu">max</span>(<span class="dv">1</span>, n <span class="sc">+</span> <span class="dv">1</span>))</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="do">## Initialise the process</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>previous_time <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>count <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a><span class="do">## Draw the horizontal and vertical segments</span></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (t <span class="cf">in</span> arrival_time) {</span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>  <span class="do">## Horizontal segment before the next arrival</span></span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">segments</span>(previous_time, count, t, count)</span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>  <span class="do">## Open circle at the previous level</span></span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">points</span>(t, count, <span class="at">pch =</span> <span class="dv">1</span>)</span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>  <span class="do">## Vertical jump at the arrival time</span></span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">segments</span>(t, count, t, count <span class="sc">+</span> <span class="dv">1</span>)</span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a>  <span class="do">## Filled circle at the new level</span></span>
+<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">points</span>(t, count <span class="sc">+</span> <span class="dv">1</span>, <span class="at">pch =</span> <span class="dv">16</span>)</span>
+<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a>  <span class="do">## Update the process</span></span>
+<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a>  previous_time <span class="ot">&lt;-</span> t</span>
+<span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a>  count <span class="ot">&lt;-</span> count <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb9-35"><a href="#cb9-35" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb9-36"><a href="#cb9-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-37"><a href="#cb9-37" aria-hidden="true" tabindex="-1"></a><span class="do">## Draw the final horizontal segment</span></span>
+<span id="cb9-38"><a href="#cb9-38" aria-hidden="true" tabindex="-1"></a><span class="fu">segments</span>(previous_time, count, T_length, count)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="05_Poisson_Processes_files/figure-html/sim-poisson-path-1.png" class="img-fluid figure-img" width="576"></p>
+<figcaption>A simulated sample path of a Poisson process with rate 12.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>The resulting graph illustrates the sample path of the Poisson process:</p>
+<ul>
+<li>The process starts at <span class="math inline">\(N(0)=0\)</span>.</li>
+<li>It remains constant between successive arrival times.</li>
+<li>At each arrival time, it increases by one.</li>
+<li>The process is right-continuous because its value at an arrival time is the new, higher count.</li>
+</ul>
+<p>The simulation demonstrates how a Poisson process can be constructed from its inter-arrival times.</p>
+</section>
+</section>
+<section id="exponential-distribution-of-inter-arrival-times" class="level3" data-number="3.4.5">
+<h3 data-number="3.4.5" class="anchored" data-anchor-id="exponential-distribution-of-inter-arrival-times"><span class="header-section-number">3.4.5</span> Exponential Distribution of Inter-Arrival Times</h3>
+<p>We now derive the distribution of the waiting time until the first arrival.</p>
+<p>Let <span class="math inline">\(T_0\)</span> denote the time from time <span class="math inline">\(0\)</span> until the first arrival. The event <span class="math inline">\(T_0&gt;t\)</span> means that no events occur during the interval <span class="math inline">\((0,t]\)</span>.</p>
+<p>Therefore,</p>
+<p><span class="math display">\[
+\begin{aligned}
+\Pr(T_0&gt;t)
+&amp;=\Pr(N(t)=0)\\
+&amp;=e^{-\lambda t},
+\qquad t\geq 0.
+\end{aligned}
+\]</span></p>
+<p>Hence, the cumulative distribution function of <span class="math inline">\(T_0\)</span> is</p>
+<p><span class="math display">\[
+F_{T_0}(t)
+=
+\begin{cases}
+0, &amp; t&lt;0,\\
+1-e^{-\lambda t}, &amp; t\geq 0.
+\end{cases}
+\]</span></p>
+<p>Differentiating the cumulative distribution function gives the probability density function:</p>
+<p><span class="math display">\[
+f_{T_0}(t)=
+\begin{cases}
+\lambda e^{-\lambda t}, &amp; t\geq 0,\\
+0, &amp; t&lt;0.
+\end{cases}
+\]</span></p>
+<p>Thus,</p>
+<p><span class="math display">\[
+\boxed{
+T_0\sim\operatorname{Exp}(\lambda).
+}
+\]</span></p>
+<p>The expected waiting time until the first arrival is</p>
+<p><span class="math display">\[
+\operatorname{E}[T_0]=\frac{1}{\lambda},
+\]</span></p>
+<p>and its variance is</p>
+<p><span class="math display">\[
+\operatorname{Var}(T_0)=\frac{1}{\lambda^2}.
+\]</span></p>
+<p>The parameter <span class="math inline">\(\lambda\)</span> is the average number of arrivals per unit time, whereas <span class="math inline">\(1/\lambda\)</span> is the expected waiting time between arrivals.</p>
+<p>For example, if an insurer receives an average of 12 claims per day, then the expected waiting time until the first claim is</p>
+<p><span class="math display">\[
+\operatorname{E}[T_0]=\frac{1}{12}\text{ day}
+=2\text{ hours}.
+\]</span></p>
+</section>
+<section id="independence-of-inter-arrival-times" class="level3" data-number="3.4.6">
+<h3 data-number="3.4.6" class="anchored" data-anchor-id="independence-of-inter-arrival-times"><span class="header-section-number">3.4.6</span> Independence of Inter-Arrival Times</h3>
+<p>The first inter-arrival time <span class="math inline">\(T_0\)</span> and the subsequent inter-arrival times <span class="math inline">\(T_1,T_2,\ldots\)</span> describe waiting times over successive periods.</p>
+<p>The independent-increments property means that the numbers of events occurring in disjoint time intervals are independent. Together with the stationary-increments property, this implies that the waiting time after an arrival has the same exponential distribution as the waiting time until the first arrival.</p>
+<p>In particular, the future evolution of a Poisson process after an arrival time is independent of its past and has the same distribution as a new Poisson process starting at zero. This is a consequence of the strong Markov property of the Poisson process.</p>
+<p>Therefore, all successive inter-arrival times are independent and identically distributed:</p>
+<p><span class="math display">\[
+\boxed{
+T_0,T_1,T_2,\ldots
+\overset{\text{i.i.d.}}{\sim}
+\operatorname{Exp}(\lambda).
+}
+\]</span></p>
+<p>This result is important because it provides an alternative characterisation of a homogeneous Poisson process: it can be constructed by generating independent exponential inter-arrival times with a common rate <span class="math inline">\(\lambda\)</span>.</p>
+<div id="exm-inter-arrival-times" class="theorem example">
+<p><span class="theorem-title"><strong>Example 3.5</strong></span> For a Poisson process with rate <span class="math inline">\(\lambda\)</span>, the inter-arrival times <span class="math inline">\(\{T_i\}_{i\geq 1}\)</span> are independent and identically distributed exponential random variables with rate <span class="math inline">\(\lambda\)</span>.</p>
+<p>Suppose events occur according to a Poisson process with rate <span class="math inline">\(\lambda=3\)</span> per hour.</p>
+<ol type="1">
+<li>State the distribution of the inter-arrival times.</li>
+<li>Calculate the expected time between successive events.</li>
+<li>Calculate the probability that the time between two successive events exceeds 30 minutes.</li>
+</ol>
+</div>
+<p><strong>Solution:</strong></p>
+<ol type="1">
+<li><p>The inter-arrival times are independent and identically distributed exponential random variables with rate <span class="math inline">\(3\)</span> per hour. Thus,</p>
+<p><span class="math display">\[
+T_i\sim\operatorname{Exponential}(3).
+\]</span></p></li>
+<li><p>The expected time between successive events is</p>
+<p><span class="math display">\[
+E[T_i]=\frac{1}{\lambda}=\frac{1}{3}\text{ hours}.
+\]</span></p>
+<p>Therefore, the expected time is</p>
+<p><span class="math display">\[
+\frac{60}{3}=20\text{ minutes}.
+\]</span></p></li>
+<li><p>Since 30 minutes is equivalent to <span class="math inline">\(0.5\)</span> hours, the required probability is</p>
+<p><span class="math display">\[
+\begin{aligned}
+P(T_i&gt;0.5)
+&amp;=e^{-3(0.5)}\\
+&amp;=e^{-1.5}\\
+&amp;\approx 0.2231.
+\end{aligned}
+\]</span></p></li>
+</ol>
+<div id="exm-equipment-failures" class="theorem example">
+<p><span class="theorem-title"><strong>Example 3.6</strong></span> In Worked Example 2, equipment malfunctions are modelled by a Poisson process with rate <span class="math inline">\(1/8\)</span> failures per hour.</p>
+<p>Calculate the probability that the second failure occurs within one hour of the first failure.</p>
+</div>
+<p><strong>Solution:</strong></p>
+<p>Let <span class="math inline">\(T\)</span> denote the time between the first and second failures. By the independent and identically distributed inter-arrival time property,</p>
+<p><span class="math display">\[
+T\sim\operatorname{Exponential}\left(\frac{1}{8}\right).
+\]</span></p>
+<p>Hence, the required probability is</p>
+<p><span class="math display">\[
+\begin{aligned}
+P(T\leq 1)
+&amp;=1-e^{-\lambda 1}\\
+&amp;=1-e^{-1/8}\\
+&amp;\approx 0.1175.
+\end{aligned}
+\]</span></p>
+<div id="exm-insurance-claims" class="theorem example">
+<p><span class="theorem-title"><strong>Example 3.7</strong></span> Insurance claims arrive according to a Poisson process with rate 5 claims per day.</p>
+<ol type="1">
+<li>Calculate the probability that at least two claims are reported on a given day.</li>
+<li>Calculate the probability that another claim is reported within the next hour after a claim has just been reported.</li>
+<li>Calculate the expected time until the next claim, given that no claims have been reported during the previous two days.</li>
+</ol>
+</div>
+<p><strong>Solution:</strong></p>
+<ol type="1">
+<li><p><strong>Probability of at least two claims in one day</strong></p>
+<p>Let <span class="math inline">\(N(1)\)</span> denote the number of claims reported during one day. Then,</p>
+<p><span class="math display">\[
+N(1)\sim\operatorname{Poisson}(5).
+\]</span></p>
+<p>Therefore,</p>
+<p><span class="math display">\[
+\begin{aligned}
+P(N(1)\geq 2)
+&amp;=1-P(N(1)\leq 1)\\
+&amp;=1-e^{-5}(1+5)\\
+&amp;\approx 0.9596.
+\end{aligned}
+\]</span></p></li>
+<li><p><strong>Probability of another claim within the next hour</strong></p>
+<p>Let <span class="math inline">\(T\)</span> denote the time until the next claim. Since the inter-arrival times follow an exponential distribution,</p>
+<p><span class="math display">\[
+T\sim\operatorname{Exponential}(5).
+\]</span></p>
+<p>One hour is equivalent to <span class="math inline">\(1/24\)</span> day. Hence,</p>
+<p><span class="math display">\[
+\begin{aligned}
+P(T\leq 1/24)
+&amp;=1-e^{-5/24}\\
+&amp;\approx 0.1881.
+\end{aligned}
+\]</span></p></li>
+<li><p><strong>Expected waiting time given no claims during the previous two days</strong></p>
+<p>Let <span class="math inline">\(T\)</span> denote the waiting time from the beginning of observation until the next claim. We are interested in the conditional expectation <span class="math inline">\(E[T-2\mid T&gt;2]\)</span>.</p>
+<p>By the memoryless property of the exponential distribution,</p>
+<p><span class="math display">\[
+\begin{aligned}
+E[T-2\mid T&gt;2]
+&amp;=E[T]\\
+&amp;=\frac{1}{\lambda}\\
+&amp;=\frac{1}{5}\text{ day}.
+\end{aligned}
+\]</span></p>
+<p>Therefore, the expected waiting time until the next claim is</p>
+<p><span class="math display">\[
+\frac{24}{5}=4.8\text{ hours}.
+\]</span></p></li>
+</ol>
+</section>
+<section id="arrival-times-and-the-gamma-distribution" class="level3" data-number="3.4.7">
+<h3 data-number="3.4.7" class="anchored" data-anchor-id="arrival-times-and-the-gamma-distribution"><span class="header-section-number">3.4.7</span> Arrival Times and the Gamma Distribution</h3>
+<p>Recall that the time of the <span class="math inline">\(n\)</span>th arrival is</p>
+<p><span class="math display">\[
+S_n=T_0+T_1+\cdots+T_{n-1}.
+\]</span></p>
+<p>Since the inter-arrival times are independent exponential random variables with rate <span class="math inline">\(\lambda\)</span>, their sum follows a gamma distribution.</p>
+<p>Specifically,</p>
+<p><span class="math display">\[
+\boxed{
+S_n\sim\operatorname{Gamma}(n,\text{ rate }\lambda),
+\quad n\geq 1.
+}
+\]</span></p>
+<p>The probability density function of <span class="math inline">\(S_n\)</span> is</p>
+<p><span class="math display">\[
+f_{S_n}(t)=
+\begin{cases}
+\displaystyle
+\frac{\lambda^n t^{n-1}e^{-\lambda t}}{(n-1)!},
+&amp; t\geq 0,\\[8pt]
+0, &amp; t&lt;0.
+\end{cases}
+\]</span></p>
+<p>The expected time until the <span class="math inline">\(n\)</span>th arrival is</p>
+<p><span class="math display">\[
+\operatorname{E}[S_n]
+=
+\frac{n}{\lambda},
+\]</span></p>
+<p>and its variance is</p>
+<p><span class="math display">\[
+\operatorname{Var}(S_n)
+=
+\frac{n}{\lambda^2}.
+\]</span></p>
+<p>Thus, the expected time until the <span class="math inline">\(n\)</span>th arrival increases linearly with <span class="math inline">\(n\)</span>.</p>
+<p>For example, if claims arrive at an average rate of 12 per day, the expected time until the fifth claim is</p>
+<p><span class="math display">\[
+\operatorname{E}[S_5]
+=
+\frac{5}{12}\text{ day}
+=
+10\text{ hours}.
+\]</span></p>
+<section id="relationship-between-arrival-times-and-the-poisson-distribution" class="level4">
+<h4 class="anchored" data-anchor-id="relationship-between-arrival-times-and-the-poisson-distribution">Relationship Between Arrival Times and the Poisson Distribution</h4>
+<p>The arrival time <span class="math inline">\(S_n\)</span> and the counting process <span class="math inline">\(N(t)\)</span> are closely related.</p>
+<p>The event that the <span class="math inline">\(n\)</span>th arrival occurs by time <span class="math inline">\(t\)</span> is equivalent to the event that at least <span class="math inline">\(n\)</span> arrivals have occurred by time <span class="math inline">\(t\)</span>.</p>
+<p>Therefore,</p>
+<p><span class="math display">\[
+\{S_n\leq t\}=\{N(t)\geq n\}.
+\]</span></p>
+<p>It follows that</p>
+<p><span class="math display">\[
+\begin{aligned}
+\Pr(S_n\leq t)
+&amp;=\Pr(N(t)\geq n)\\
+&amp;=1-\Pr(N(t)\leq n-1)\\
+&amp;=1-\sum_{k=0}^{n-1}
+\Pr(N(t)=k).
+\end{aligned}
+\]</span></p>
+<p>Using the Poisson distribution of <span class="math inline">\(N(t)\)</span>, we obtain</p>
+<p><span class="math display">\[
+\boxed{
+\Pr(S_n\leq t)
+=
+1-\sum_{k=0}^{n-1}
+\frac{(\lambda t)^k e^{-\lambda t}}{k!},
+\quad t\geq 0.
+}
+\]</span></p>
+<p>This provides another way to calculate probabilities involving arrival times without directly using the gamma distribution.</p>
+<div id="exm-time-until-second-arrival" class="theorem example">
+<p><span class="theorem-title"><strong>Example 3.8</strong></span> Customers arrive at a service centre according to a Poisson process with rate 4 customers per hour.</p>
+<ol type="1">
+<li>State the distribution of the time until the second customer arrives.</li>
+<li>Calculate the probability that the second customer arrives within 30 minutes of the start of observation.</li>
+<li>Calculate the expected time until the second customer arrives.</li>
+</ol>
+</div>
+<p><strong>Solution:</strong></p>
+<ol type="1">
+<li><p>Let <span class="math inline">\(S_2\)</span> denote the time until the second customer arrives. Since the inter-arrival times are independent exponential random variables with rate <span class="math inline">\(\lambda=4\)</span> per hour, <span class="math inline">\(S_2\)</span> follows a gamma distribution with shape parameter 2 and rate parameter 4. Thus,</p>
+<p><span class="math display">\[
+S_2\sim\operatorname{Gamma}(2,4).
+\]</span></p></li>
+<li><p>The second customer arrives within 30 minutes if at least two customers arrive within <span class="math inline">\(0.5\)</span> hours. Therefore,</p>
+<p><span class="math display">\[
+\begin{aligned}
+P(S_2\leq 0.5)
+&amp;=P(N(0.5)\geq 2)\\
+&amp;=1-P(N(0.5)\leq 1)\\
+&amp;=1-e^{-4(0.5)}[1+4(0.5)]\\
+&amp;\approx 0.594.
+\end{aligned}
+\]</span></p></li>
+<li><p>The expected time until the second arrival is</p>
+<p><span class="math display">\[
+\begin{aligned}
+E[S_2]
+&amp;=\frac{2}{\lambda}\\
+&amp;=\frac{2}{4}\\
+&amp;=0.5\text{ hours}.
+\end{aligned}
+\]</span></p>
+<p>Therefore, the expected time is</p>
+<p><span class="math display">\[
+0.5\times 60=30\text{ minutes}.
+\]</span></p></li>
+</ol>
+<div id="exm-inter-arrival-and-arrival-times" class="theorem example">
+<p><span class="theorem-title"><strong>Example 3.9</strong></span> Claims arrive according to a Poisson process with rate 2 claims per day.</p>
+<ol type="1">
+<li>Calculate the probability that the time between successive claims exceeds half a day.</li>
+<li>Calculate the probability that the third claim arrives within two days of the start of observation.</li>
+<li>Calculate the expected time until the third claim arrives.</li>
+</ol>
+</div>
+<p><strong>Solution:</strong></p>
+<ol type="1">
+<li><p><strong>Probability that the inter-arrival time exceeds half a day</strong></p>
+<p>Let <span class="math inline">\(T\)</span> denote the time between successive claims. Since the inter-arrival times follow an exponential distribution with rate <span class="math inline">\(\lambda=2\)</span> per day,</p>
+<p><span class="math display">\[
+T\sim\operatorname{Exponential}(2).
+\]</span></p>
+<p>Hence,</p>
+<p><span class="math display">\[
+\begin{aligned}
+P(T&gt;0.5)
+&amp;=e^{-2(0.5)}\\
+&amp;=e^{-1}\\
+&amp;\approx 0.3679.
+\end{aligned}
+\]</span></p></li>
+<li><p><strong>Probability that the third claim arrives within two days</strong></p>
+<p>Let <span class="math inline">\(S_3\)</span> denote the time until the third claim arrives. The third claim arrives within two days if at least three claims occur during that period. Therefore,</p>
+<p><span class="math display">\[
+\begin{aligned}
+P(S_3\leq 2)
+&amp;=P(N(2)\geq 3)\\
+&amp;=1-P(N(2)\leq 2),
+\end{aligned}
+\]</span></p>
+<p>where <span class="math inline">\(N(2)\sim\operatorname{Poisson}(4)\)</span>. Hence,</p>
+<p><span class="math display">\[
+\begin{aligned}
+P(S_3\leq 2)
+&amp;=1-e^{-4}\left(1+4+\frac{4^2}{2!}\right)\\
+&amp;\approx 0.7619.
+\end{aligned}
+\]</span></p></li>
+<li><p><strong>Expected time until the third claim arrives</strong></p>
+<p>The time until the third claim is the sum of three independent exponential inter-arrival times. Thus,</p>
+<p><span class="math display">\[
+S_3\sim\operatorname{Gamma}(3,2).
+\]</span></p>
+<p>Therefore,</p>
+<p><span class="math display">\[
+\begin{aligned}
+E[S_3]
+&amp;=\frac{3}{\lambda}\\
+&amp;=\frac{3}{2}\\
+&amp;=1.5\text{ days}.
+\end{aligned}
+\]</span></p></li>
+</ol>
+</section>
+</section>
+<section id="summary" class="level3" data-number="3.4.8">
+<h3 data-number="3.4.8" class="anchored" data-anchor-id="summary"><span class="header-section-number">3.4.8</span> Summary</h3>
+<p>The inter-arrival times provide an alternative description of a homogeneous Poisson process.</p>
+<p>The main results are:</p>
+<ul>
+<li>The inter-arrival times are independent and identically distributed exponential random variables with rate <span class="math inline">\(\lambda\)</span>.</li>
+<li>The expected inter-arrival time is <span class="math inline">\(1/\lambda\)</span>.</li>
+<li>The time of the <span class="math inline">\(n\)</span>th arrival is the sum of the first <span class="math inline">\(n\)</span> inter-arrival times.</li>
+<li>The <span class="math inline">\(n\)</span>th arrival time follows a gamma distribution with shape <span class="math inline">\(n\)</span> and rate <span class="math inline">\(\lambda\)</span>.</li>
+<li>The event <span class="math inline">\(S_n\leq t\)</span> is equivalent to <span class="math inline">\(N(t)\geq n\)</span>.</li>
+</ul>
+<p>These results provide the theoretical basis for simulating Poisson processes and calculating probabilities involving waiting times and arrival times.</p>
+</section>
+</section>
+<section id="properties-of-the-poisson-process" class="level2" data-number="3.5">
+<h2 data-number="3.5" class="anchored" data-anchor-id="properties-of-the-poisson-process"><span class="header-section-number">3.5</span> Properties of the Poisson Process</h2>
+<section id="why-study-the-properties" class="level3" data-number="3.5.1">
+<h3 data-number="3.5.1" class="anchored" data-anchor-id="why-study-the-properties"><span class="header-section-number">3.5.1</span> Why Study the Properties?</h3>
+<p>A Poisson process provides a model for events occurring randomly over time. Its properties allow us to answer questions about event counts and arrival patterns without having to model every arrival time individually.</p>
+<p>The main properties developed in this section are:</p>
+<ul>
+<li><strong>Independent increments:</strong> Event counts in disjoint time intervals are independent.</li>
+<li><strong>Stationary increments:</strong> The distribution of the number of events depends on the length of the interval, not its starting time.</li>
+<li><strong>Memorylessness:</strong> The remaining waiting time has the same distribution as a new waiting time, regardless of how long we have already waited.</li>
+<li><strong>Superposition:</strong> Independent Poisson processes can be combined into a single Poisson process.</li>
+<li><strong>Thinning:</strong> A Poisson process can be divided into independent Poisson processes according to the types of its events.</li>
+</ul>
+<p>The first three properties describe the behaviour of a single Poisson process. Superposition and thinning extend the model to situations involving multiple arrival streams or different types of events.</p>
+</section>
+<section id="independent-increments" class="level3" data-number="3.5.2">
+<h3 data-number="3.5.2" class="anchored" data-anchor-id="independent-increments"><span class="header-section-number">3.5.2</span> Independent Increments</h3>
+<p>The independent-increments property means that the numbers of events occurring in disjoint time intervals are independent.</p>
+<p>Suppose insurance claims arrive according to a Poisson process with rate <span class="math inline">\(\lambda\)</span> claims per day.</p>
+<p>For <span class="math inline">\(0\leq s&lt;t\leq u&lt;v\)</span>, the numbers of claims occurring during the intervals <span class="math inline">\((s,t]\)</span> and <span class="math inline">\((u,v]\)</span> are</p>
+<p><span class="math display">\[
+N(t)-N(s)
+\quad\text{and}\quad
+N(v)-N(u),
+\]</span></p>
+<p>respectively.</p>
+<p>Since the intervals are disjoint, these two random variables are independent.</p>
+<p>For example, the number of claims received on Monday is independent of the number of claims received on Tuesday, under the Poisson process assumptions.</p>
+<p>More generally, the numbers of events occurring in any finite collection of disjoint time intervals are mutually independent.</p>
+<p>This property allows us to calculate probabilities involving different periods separately. For example, if <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span> are disjoint time intervals, then</p>
+<p><span class="math display">\[
+\Pr(N(A)=m,N(B)=n)
+=
+\Pr(N(A)=m)\Pr(N(B)=n),
+\]</span></p>
+<p>where <span class="math inline">\(N(A)\)</span> and <span class="math inline">\(N(B)\)</span> denote the numbers of events occurring in the respective intervals.</p>
+</section>
+<section id="stationary-increments" class="level3" data-number="3.5.3">
+<h3 data-number="3.5.3" class="anchored" data-anchor-id="stationary-increments"><span class="header-section-number">3.5.3</span> Stationary Increments</h3>
+<p>The stationary-increments property means that the probability distribution of the number of events in an interval depends only on its length, not on its starting time.</p>
+<p>For a homogeneous Poisson process with rate <span class="math inline">\(\lambda\)</span>, the number of events during an interval <span class="math inline">\((t,t+h]\)</span> has distribution</p>
+<p><span class="math display">\[
+N(t+h)-N(t)
+\sim\operatorname{Poisson}(\lambda h).
+\]</span></p>
+<p>Consequently, for <span class="math inline">\(n=0,1,2,\ldots\)</span>,</p>
+<p><span class="math display">\[
+\Pr(N(t+h)-N(t)=n)
+=
+\frac{e^{-\lambda h}(\lambda h)^n}{n!}.
+\]</span></p>
+<p>The expected number of events in this interval is</p>
+<p><span class="math display">\[
+\operatorname{E}[N(t+h)-N(t)]=\lambda h.
+\]</span></p>
+<p>Both the distribution and the expected number of events are independent of the starting time <span class="math inline">\(t\)</span>.</p>
+<p>For example, suppose insurance claims arrive at a constant rate of four claims per day. The number of claims during any one-day interval has distribution</p>
+<p><span class="math display">\[
+\operatorname{Poisson}(4),
+\]</span></p>
+<p>regardless of when the interval begins.</p>
+<p>Thus, the number of claims during today, yesterday, or any other one-day period has the same probability distribution, provided that the homogeneous Poisson process model remains appropriate.</p>
+</section>
+<section id="the-memoryless-property" class="level3" data-number="3.5.4">
+<h3 data-number="3.5.4" class="anchored" data-anchor-id="the-memoryless-property"><span class="header-section-number">3.5.4</span> The Memoryless Property</h3>
+<!-- The memoryless property describes an important feature of exponential waiting times. -->
+<!-- Recall from the previous section that the inter-arrival time $X$ of a homogeneous Poisson process with rate $\lambda$ follows an exponential distribution: -->
+<!-- $$ -->
+<!-- X\sim\operatorname{Exp}(\lambda). -->
+<!-- $$ -->
+<!-- Its survival function is -->
+<!-- $$ -->
+<!-- \Pr(X>t)=e^{-\lambda t}, -->
+<!-- \qquad t\geq 0. -->
+<!-- $$ -->
+<!-- The memoryless property states that, for $s,t\geq 0$, -->
+<!-- $$ -->
+<!-- \boxed{ -->
+<!-- \Pr(X>s+t\mid X>s)=\Pr(X>t). -->
+<!-- } -->
+<!-- $$ -->
+<!-- To see why this holds, we use the definition of conditional probability: -->
+<!-- $$ -->
+<!-- \begin{aligned} -->
+<!-- \Pr(X>s+t\mid X>s) -->
+<!-- &=\frac{\Pr(X>s+t,\ X>s)}{\Pr(X>s)}\\ -->
+<!-- &=\frac{\Pr(X>s+t)}{\Pr(X>s)}\\ -->
+<!-- &=\frac{e^{-\lambda(s+t)}}{e^{-\lambda s}}\\ -->
+<!-- &=e^{-\lambda t}\\ -->
+<!-- &=\Pr(X>t). -->
+<!-- \end{aligned} -->
+<!-- $$ -->
+<!-- Therefore, conditional on having waited $s$ time units without an arrival, the probability of waiting at least another $t$ time units is the same as the probability that a new waiting time exceeds $t$. -->
+<!-- In other words, the remaining waiting time has the same exponential distribution as the original waiting time. -->
+<p>The memoryless property states that, for <span class="math inline">\(s,t\geq 0\)</span>,</p>
+<p><span class="math display">\[
+\boxed{
+\Pr(X-s&gt;t\mid X&gt;s)=\Pr(X&gt;t).
+}
+\]</span></p>
+<p>To understand this property, suppose that <span class="math inline">\(X\)</span> is the waiting time until the next event. We are interested in the remaining waiting time after time <span class="math inline">\(s\)</span>, given that the event has not yet occurred by time <span class="math inline">\(s\)</span>.</p>
+<p>The condition <span class="math inline">\(X&gt;s\)</span> tells us that the waiting time exceeds <span class="math inline">\(s\)</span>. Therefore, the remaining waiting time is <span class="math inline">\(X-s\)</span>. We can write the probability that this remaining waiting time exceeds another <span class="math inline">\(t\)</span> units of time as</p>
+<p><span class="math display">\[
+\begin{aligned}
+\Pr(X-s&gt;t\mid X&gt;s)
+&amp;=\Pr(X&gt;s+t\mid X&gt;s)\\
+&amp;=\frac{\Pr(X&gt;s+t)}{\Pr(X&gt;s)}.
+\end{aligned}
+\]</span></p>
+<p>If <span class="math inline">\(X\sim\operatorname{Exp}(\lambda)\)</span>, its survival function is</p>
+<p><span class="math display">\[
+\Pr(X&gt;x)=e^{-\lambda x},\qquad x\geq 0.
+\]</span></p>
+<p>Hence,</p>
+<p><span class="math display">\[
+\begin{aligned}
+\Pr(X-s&gt;t\mid X&gt;s)
+&amp;=\frac{e^{-\lambda(s+t)}}{e^{-\lambda s}}\\
+&amp;=e^{-\lambda t}\\
+&amp;=\Pr(X&gt;t).
+\end{aligned}
+\]</span></p>
+<p>Thus, the distribution of the remaining waiting time, given that no event has occurred by time <span class="math inline">\(s\)</span>, is the same as the distribution of the original waiting time.</p>
+<p>In other words, <strong>the amount of time already spent waiting does not affect the distribution of the remaining waiting time</strong>. This is the memoryless property of the exponential distribution.</p>
+<p>This means that the elapsed waiting time does not affect the distribution of the remaining waiting time. The process does not become more or less likely to produce an arrival simply because no arrival has occurred recently.</p>
+<section id="why-memorylessness-matters" class="level4">
+<h4 class="anchored" data-anchor-id="why-memorylessness-matters">Why Memorylessness Matters</h4>
+</section>
+<section id="why-memorylessness-matters-1" class="level4">
+<h4 class="anchored" data-anchor-id="why-memorylessness-matters-1">Why Memorylessness Matters</h4>
+<p>Consider a bus service in which buses arrive according to a Poisson process with an average rate of one bus every 30 minutes.</p>
+<p>The inter-arrival time <span class="math inline">\(X\)</span> therefore follows an exponential distribution with rate</p>
+<p><span class="math display">\[
+\lambda=\frac{1}{30}
+\quad\text{per minute}.
+\]</span></p>
+<p>Suppose you arrive at the bus stop and find that no bus has arrived during the first 10 minutes. You might wonder whether a bus is now more likely to arrive soon because you have already waited for 10 minutes. In particular, what is the probability that you must wait at least another 20 minutes?</p>
+<p>Since no bus has arrived during the first 10 minutes, we know that <span class="math inline">\(X&gt;10\)</span>. The remaining waiting time is <span class="math inline">\(X-10\)</span>. We therefore want to calculate</p>
+<p><span class="math display">\[
+\Pr(X-10&gt;20\mid X&gt;10).
+\]</span></p>
+<p>Using the definition of conditional probability,</p>
+<p><span class="math display">\[
+\begin{aligned}
+\Pr(X-10&gt;20\mid X&gt;10)
+&amp;=\Pr(X&gt;30\mid X&gt;10)\\
+&amp;=\frac{\Pr(X&gt;30)}{\Pr(X&gt;10)}\\
+&amp;=\frac{e^{-30/30}}{e^{-10/30}}\\
+&amp;=e^{-20/30}.
+\end{aligned}
+\]</span></p>
+<p>This is exactly the probability that a new waiting time exceeds 20 minutes:</p>
+<p><span class="math display">\[
+\Pr(X&gt;20)=e^{-20/30}.
+\]</span></p>
+<p>Thus, the distribution of the remaining waiting time, given that no bus has arrived during the first 10 minutes, is the same as the distribution of the original waiting time. Having already waited for 10 minutes does not change the probability distribution of the remaining waiting time.</p>
+<p>This property is called the <strong>memoryless property</strong>. It means that the exponential distribution has no memory of how long the system has already been waiting. It is a characteristic of the exponential distribution among continuous probability distributions and explains why exponential inter-arrival times are particularly suitable for modelling homogeneous Poisson processes.</p>
+<!-- Consider a bus service in which buses arrive according to a Poisson process with an average rate of one bus every 30 minutes. -->
+<!-- The inter-arrival time $X$ therefore follows an exponential distribution with rate -->
+<!-- $$ -->
+<!-- \lambda=\frac{1}{30} -->
+<!-- \quad\text{per minute}. -->
+<!-- $$ -->
+<!-- Suppose no bus has arrived during the first 10 minutes. We want to calculate the probability that we must wait at least another 20 minutes. -->
+<!-- Using the memoryless property, -->
+<!-- $$ -->
+<!-- \begin{aligned} -->
+<!-- \Pr(X>30\mid X>10) -->
+<!-- &=\frac{\Pr(X>30)}{\Pr(X>10)}\\ -->
+<!-- &=\frac{e^{-30/30}}{e^{-10/30}}\\ -->
+<!-- &=e^{-20/30}. -->
+<!-- \end{aligned} -->
+<!-- $$ -->
+<!-- This is exactly the probability that a new waiting time exceeds 20 minutes: -->
+<!-- $$ -->
+<!-- \Pr(X>20)=e^{-20/30}. -->
+<!-- $$ -->
+<!-- Thus, having already waited 10 minutes does not change the probability distribution of the remaining waiting time. -->
+<!-- The memoryless property is a characteristic of the exponential distribution among continuous distributions. It explains why exponential inter-arrival times are particularly suitable for modelling homogeneous Poisson processes. -->
+<!-- ### Worked Example 11: Time Spent at a Dentist's Office -->
+<!-- Assume that the amount of time a patient spends in a dentist's office follows an exponential distribution with a mean of 40 minutes. -->
+<!-- 1. Calculate the probability that a patient spends more than 60 minutes in the dentist's office. -->
+<!-- 2. Calculate the probability that a patient spends more than 60 minutes in the dentist's office, given that she has already spent 40 minutes there. -->
+<!-- ### Solution: Worked Example 11 -->
+<div id="exm-dentist-waiting-time" class="theorem example">
+<p><span class="theorem-title"><strong>Example 3.10</strong></span> Assume that the amount of time a patient spends in a dentist’s office follows an exponential distribution with a mean of 40 minutes.</p>
+<ol type="1">
+<li>Calculate the probability that a patient spends more than 60 minutes in the dentist’s office.</li>
+<li>Calculate the probability that a patient spends more than 60 minutes in the dentist’s office, given that she has already spent 40 minutes there.</li>
+</ol>
+</div>
+<p><strong>Solution:</strong></p>
+<p>Let <span class="math inline">\(T\)</span> denote the time, in minutes, that a patient spends in the dentist’s office. Since <span class="math inline">\(T\)</span> follows an exponential distribution with mean 40 minutes, its rate parameter is <span class="math inline">\(\lambda=1/40\)</span> per minute. Thus,</p>
+<p><span class="math display">\[
+T\sim\operatorname{Exponential}\left(\frac{1}{40}\right).
+\]</span></p>
+<ol type="1">
+<li><p><strong>Probability of spending more than 60 minutes</strong></p>
+<p>Using the survival function of the exponential distribution,</p>
+<p><span class="math display">\[
+\begin{aligned}
+P(T&gt;60)
+&amp;=e^{-\lambda 60}\\
+&amp;=e^{-60/40}\\
+&amp;\approx 0.2231.
+\end{aligned}
+\]</span></p></li>
+<li><p><strong>Conditional probability given that 40 minutes have elapsed</strong></p>
+<p>We want to calculate <span class="math inline">\(P(T&gt;60\mid T&gt;40)\)</span>. Using the definition of conditional probability,</p>
+<p><span class="math display">\[
+\begin{aligned}
+P(T&gt;60\mid T&gt;40)
+&amp;=\frac{P(T&gt;60)}{P(T&gt;40)}\\
+&amp;=\frac{e^{-60/40}}{e^{-40/40}}\\
+&amp;=e^{-(60-40)/40}\\
+&amp;\approx 0.6065.
+\end{aligned}
+\]</span></p>
+<p>This result illustrates the <strong>memoryless property</strong> of the exponential distribution. The probability of waiting at least another 20 minutes is the same regardless of how long the patient has already waited.</p></li>
+</ol>
+</section>
+</section>
+<section id="superposition-of-independent-poisson-processes" class="level3" data-number="3.5.5">
+<h3 data-number="3.5.5" class="anchored" data-anchor-id="superposition-of-independent-poisson-processes"><span class="header-section-number">3.5.5</span> Superposition of Independent Poisson Processes</h3>
+<p>In many applications, events originate from several independent sources. Instead of studying each source separately, we may be interested in the total number of events from all sources.</p>
+<p>For example, an insurer may receive claims from several independent portfolios. Each portfolio generates claims according to its own Poisson process.</p>
+<p>Suppose there are <span class="math inline">\(k\)</span> independent Poisson processes,</p>
+<p><span class="math display">\[
+N_1(t),N_2(t),\ldots,N_k(t),
+\]</span></p>
+<p>with respective rates</p>
+<p><span class="math display">\[
+\lambda_1,\lambda_2,\ldots,\lambda_k.
+\]</span></p>
+<p>The combined counting process is defined by</p>
+<p><span class="math display">\[
+N(t)=\sum_{i=1}^{k}N_i(t).
+\]</span></p>
+<p>This is called the <strong>superposition</strong> of the independent Poisson processes.</p>
+<section id="the-superposition-property" class="level4">
+<h4 class="anchored" data-anchor-id="the-superposition-property">The Superposition Property</h4>
+<p>The superposition property states that the combined process is also a homogeneous Poisson process, with rate equal to the sum of the individual rates:</p>
+<p><span class="math display">\[
+\boxed{
+\lambda=\sum_{i=1}^{k}\lambda_i.
+}
+\]</span></p>
+<p>To understand this result, consider an interval of length <span class="math inline">\(h\)</span>. The number of events from source <span class="math inline">\(i\)</span> during this interval follows</p>
+<p><span class="math display">\[
+N_i(t+h)-N_i(t)
+\sim\operatorname{Poisson}(\lambda_i h).
+\]</span></p>
+<p>Since the individual processes are independent, the sum of their independent Poisson random variables is also Poisson distributed. Hence,</p>
+<p><span class="math display">\[
+\begin{aligned}
+N(t+h)-N(t)
+&amp;=\sum_{i=1}^{k}
+[N_i(t+h)-N_i(t)]\\
+&amp;\sim
+\operatorname{Poisson}
+\left(h\sum_{i=1}^{k}\lambda_i\right).
+\end{aligned}
+\]</span></p>
+<p>The combined process also has independent increments because the original processes are independent and each has independent increments.</p>
+<p>Therefore, the combined process is a homogeneous Poisson process with rate <span class="math inline">\(\lambda=\sum_{i=1}^{k}\lambda_i\)</span>.</p>
+<p>This result allows us to model several independent arrival streams as a single Poisson process.</p>
+</section>
+<section id="superposition-illustration" class="level4">
+<h4 class="anchored" data-anchor-id="superposition-illustration">Superposition: Illustration</h4>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../figures/Superposition_of_Independent_Poisson_Processes.png" class="img-fluid figure-img" style="width:75.0%"></p>
+<figcaption><strong>Superposition of Independent Poisson Processes</strong></figcaption>
+</figure>
+</div>
+<p>The figure illustrates how arrivals from several independent Poisson processes combine to form a single process. Every arrival from any of the original processes becomes an arrival in the combined process.</p>
+</section>
+</section>
+<section id="identifying-the-source-of-an-arrival" class="level3" data-number="3.5.6">
+<h3 data-number="3.5.6" class="anchored" data-anchor-id="identifying-the-source-of-an-arrival"><span class="header-section-number">3.5.6</span> Identifying the Source of an Arrival</h3>
+<p>The superposition property also allows us to determine the probability that an arrival in the combined process comes from a particular source.</p>
+<p>Suppose independent Poisson processes have rates <span class="math inline">\(\lambda_1,\ldots,\lambda_k\)</span>, and their combined process has rate</p>
+<p><span class="math display">\[
+\lambda=\sum_{i=1}^{k}\lambda_i.
+\]</span></p>
+<p>Given an arrival in the combined process, the probability that it comes from source <span class="math inline">\(i\)</span> is</p>
+<p><span class="math display">\[
+\boxed{
+p_i=\frac{\lambda_i}{\lambda},
+\qquad i=1,\ldots,k.
+}
+\]</span></p>
+<p>These probabilities satisfy</p>
+<p><span class="math display">\[
+\sum_{i=1}^{k}p_i=1.
+\]</span></p>
+<p>Thus, the source of each arrival can be described by a categorical random variable <span class="math inline">\(X\)</span>, where <span class="math inline">\(X=i\)</span> indicates that the arrival comes from source <span class="math inline">\(i\)</span>.</p>
+<p>Its probability mass function is</p>
+<p><span class="math display">\[
+\Pr(X=i)=p_i=\frac{\lambda_i}{\lambda},
+\qquad i=1,\ldots,k.
+\]</span></p>
+<p>For example, suppose two independent sources generate arrivals at rates of 2 and 6 per day. The combined process has rate</p>
+<p><span class="math display">\[
+\lambda=2+6=8
+\quad\text{per day}.
+\]</span></p>
+<p>Given an arrival in the combined process, the probability that it comes from the first source is</p>
+<p><span class="math display">\[
+\Pr(X=1)=\frac{2}{8}=\frac14,
+\]</span></p>
+<p>whereas the probability that it comes from the second source is</p>
+<p><span class="math display">\[
+\Pr(X=2)=\frac{6}{8}=\frac34.
+\]</span></p>
+<p>The source labels of successive arrivals are independent categorical outcomes with these probabilities.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Source of an Arrival
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>When independent Poisson processes are combined, the probability that an arrival comes from a particular source is proportional to that source’s arrival rate.</p>
+</div>
+</div>
+</section>
+<section id="splitting-and-thinning-of-a-poisson-process" class="level3" data-number="3.5.7">
+<h3 data-number="3.5.7" class="anchored" data-anchor-id="splitting-and-thinning-of-a-poisson-process"><span class="header-section-number">3.5.7</span> Splitting and Thinning of a Poisson Process</h3>
+<p>Superposition combines several independent Poisson processes into one process. We now consider the reverse situation: starting with one Poisson process and dividing its arrivals into different categories.</p>
+<p>Suppose arrivals occur according to a Poisson process with rate <span class="math inline">\(\lambda\)</span>. Each arrival is independently assigned to one of <span class="math inline">\(k\)</span> types, with probabilities</p>
+<p><span class="math display">\[
+p_1,p_2,\ldots,p_k,
+\qquad
+\sum_{i=1}^{k}p_i=1.
+\]</span></p>
+<p>Let <span class="math inline">\(N_i(t)\)</span> denote the number of type <span class="math inline">\(i\)</span> arrivals during <span class="math inline">\((0,t]\)</span>.</p>
+<p>The <strong>splitting property</strong>, also called the <strong>thinning property</strong>, states that the processes</p>
+<p><span class="math display">\[
+N_1(t),N_2(t),\ldots,N_k(t)
+\]</span></p>
+<p>are independent Poisson processes with respective rates</p>
+<p><span class="math display">\[
+\boxed{
+\lambda_i=p_i\lambda,
+\qquad i=1,\ldots,k.
+}
+\]</span></p>
+<p>Thus, the rate of each type is the original arrival rate multiplied by the probability that an arrival belongs to that type.</p>
+<p>To understand this result, consider an interval of length <span class="math inline">\(t\)</span>. The total number of arrivals follows</p>
+<p><span class="math display">\[
+N(t)\sim\operatorname{Poisson}(\lambda t).
+\]</span></p>
+<p>Conditional on <span class="math inline">\(N(t)=n\)</span>, the numbers of arrivals assigned to the <span class="math inline">\(k\)</span> types follow a multinomial distribution:</p>
+<p><span class="math display">\[
+(N_1(t),\ldots,N_k(t))\mid N(t)=n
+\sim
+\operatorname{Multinomial}(n;p_1,\ldots,p_k).
+\]</span></p>
+<p>Combining this conditional distribution with the Poisson distribution of <span class="math inline">\(N(t)\)</span> gives independent Poisson counts:</p>
+<p><span class="math display">\[
+N_i(t)\sim\operatorname{Poisson}(p_i\lambda t),
+\qquad i=1,\ldots,k.
+\]</span></p>
+<p>The same argument applies to increments over any time interval. Hence, each type forms a Poisson process, and the resulting processes are independent.</p>
+<p>Each resulting process is called a <strong>thinned Poisson process</strong>.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Conditional Distribution for a Single Subgroup
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>For a particular type <span class="math inline">\(j\)</span>, the number of arrivals assigned to that type, conditional on a total of <span class="math inline">\(n\)</span> arrivals, has a binomial distribution:</p>
+<p><span class="math display">\[
+\boxed{
+N_j(t)\mid N(t)=n
+\sim \operatorname{Binomial}(n,p_j).
+}
+\]</span></p>
+<p>Consequently,</p>
+<p><span class="math display">\[
+\Pr(N_j(t)=r\mid N(t)=n)
+=
+\binom{n}{r}p_j^r(1-p_j)^{n-r},
+\qquad r=0,1,\ldots,n.
+\]</span></p>
+<p>Here, <span class="math inline">\(p_j\)</span> is the probability that an individual arrival belongs to type <span class="math inline">\(j\)</span>.</p>
+</div>
+</div>
+<section id="splitting-and-thinning-illustration" class="level4">
+<h4 class="anchored" data-anchor-id="splitting-and-thinning-illustration">Splitting and Thinning: Illustration</h4>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../figures/Splitting_and_Thinning_Poisson_Process.png" class="img-fluid figure-img" style="width:75.0%"></p>
+<figcaption><strong>Splitting and Thinning of a Poisson Process</strong></figcaption>
+</figure>
+</div>
+<p>The figure illustrates how arrivals from one Poisson process are assigned to different types. Each resulting process is itself a Poisson process, and the processes are independent.</p>
+</section>
+<section id="why-thinning-matters-in-insurance" class="level4">
+<h4 class="anchored" data-anchor-id="why-thinning-matters-in-insurance">Why Thinning Matters in Insurance</h4>
+<p>An insurer may be interested in only a particular category of claims, such as claims exceeding a specified threshold.</p>
+<p>Suppose claims arrive according to a Poisson process with rate <span class="math inline">\(\lambda\)</span>, and each claim independently exceeds a specified threshold with probability <span class="math inline">\(p\)</span>.</p>
+<p>By the thinning property, the claims exceeding the threshold form a Poisson process with rate</p>
+<p><span class="math display">\[
+\boxed{
+\lambda_{\text{selected}}=p\lambda.
+}
+\]</span></p>
+<p>This allows us to model the arrival of large claims directly without first modelling all claims and then identifying which ones exceed the threshold.</p>
+<p>For several independent portfolios, thinning can be applied to each portfolio separately. The resulting selected-claim processes can then be combined using the superposition property.</p>
+<!-- ### Worked Example 12: Claims Above a Threshold -->
+<!-- An insurer has two independent portfolios, A and B. -->
+<!-- - Claims from portfolio A arrive at a rate of 4 per day. Each claim has probability $2/5$ of being at least 5,000 THB. -->
+<!-- - Claims from portfolio B arrive at a rate of 6 per day. Each claim has probability $1/3$ of being at least 5,000 THB. -->
+<!-- Calculate the expected number of claims of at least 5,000 THB during the next day. -->
+<!-- ### Solution: Worked Example 12 -->
+<!-- ### Worked Example 13: Claims from Two Groups -->
+<!-- Claims from male policyholders and female policyholders arrive independently according to Poisson processes with rates of 2 and 6 claims per day, respectively. -->
+<!-- 1. Calculate the probabilities of no claims and at least two claims during a given week. -->
+<!-- 2. Calculate the probability that four claims from female policyholders occur before the second claim from a male policyholder. -->
+<!-- ### Solution: Worked Example 13 -->
+<div id="exm-claims-above-threshold" class="theorem example">
+<p><span class="theorem-title"><strong>Example 3.11</strong></span> An insurer has two independent portfolios, A and B.</p>
+<ul>
+<li>Claims from portfolio A arrive at a rate of 4 per day. Each claim has probability <span class="math inline">\(2/5\)</span> of being at least 5,000 THB.</li>
+<li>Claims from portfolio B arrive at a rate of 6 per day. Each claim has probability <span class="math inline">\(1/3\)</span> of being at least 5,000 THB.</li>
+</ul>
+<p>Calculate the expected number of claims of at least 5,000 THB during the next day.</p>
+</div>
+<p><strong>Solution:</strong></p>
+<p>Let <span class="math inline">\(N_A(t)\)</span> and <span class="math inline">\(N_B(t)\)</span> denote the numbers of claims from portfolios A and B, respectively, during <span class="math inline">\(t\)</span> days.</p>
+<p>By the thinning property of Poisson processes, the qualifying claims from each portfolio form independent Poisson processes with rates</p>
+<p><span class="math display">\[
+\begin{aligned}
+\lambda_A
+&amp;=4\left(\frac{2}{5}\right)
+=\frac{8}{5},\\
+\lambda_B
+&amp;=6\left(\frac{1}{3}\right)
+=2.
+\end{aligned}
+\]</span></p>
+<p>By the superposition property, the combined process of qualifying claims is a Poisson process with rate</p>
+<p><span class="math display">\[
+\begin{aligned}
+\lambda
+&amp;=\lambda_A+\lambda_B\\
+&amp;=\frac{8}{5}+2\\
+&amp;=\frac{18}{5}.
+\end{aligned}
+\]</span></p>
+<p>Let <span class="math inline">\(N(t)\)</span> denote the total number of qualifying claims during <span class="math inline">\(t\)</span> days. Then,</p>
+<p><span class="math display">\[
+N(1)\sim\operatorname{Poisson}\left(\frac{18}{5}\right).
+\]</span></p>
+<p>Therefore, the expected number of qualifying claims during the next day is</p>
+<p><span class="math display">\[
+E[N(1)]=\lambda\times 1
+=\frac{18}{5}
+=3.6.
+\]</span></p>
+<div id="exm-claims-from-two-groups" class="theorem example">
+<p><span class="theorem-title"><strong>Example 3.12</strong></span> Claims from male policyholders and female policyholders arrive independently according to Poisson processes with rates 2 and 6 claims per day, respectively.</p>
+<ol type="1">
+<li>Calculate the probabilities of no claims and at least two claims during a given week.</li>
+<li>Calculate the probability that four claims from female policyholders occur before the second claim from a male policyholder.</li>
+</ol>
+</div>
+<p><strong>Solution:</strong></p>
+<p>By the superposition property, the combined claim process is a Poisson process with rate</p>
+<p><span class="math display">\[
+\lambda=2+6=8\text{ claims per day}.
+\]</span></p>
+<p>Furthermore, each claim is from a male policyholder with probability</p>
+<p><span class="math display">\[
+p_M=\frac{2}{8}=\frac14,
+\]</span></p>
+<p>and from a female policyholder with probability</p>
+<p><span class="math display">\[
+p_F=\frac{6}{8}=\frac34.
+\]</span></p>
+<ol type="1">
+<li><p><strong>Claims during one week</strong></p>
+<p>Let <span class="math inline">\(N(7)\)</span> denote the total number of claims during seven days. Then,</p>
+<p><span class="math display">\[
+N(7)\sim\operatorname{Poisson}(8\times 7)
+=\operatorname{Poisson}(56).
+\]</span></p>
+<p>The probability of no claims is</p>
+<p><span class="math display">\[
+\begin{aligned}
+P(N(7)=0)
+&amp;=e^{-56}\\
+&amp;\approx 4.781e-25.
+\end{aligned}
+\]</span></p>
+<p>The probability of at least two claims is</p>
+<p><span class="math display">\[
+\begin{aligned}
+P(N(7)\geq 2)
+&amp;=1-P(N(7)=0)-P(N(7)=1)\\
+&amp;=1-e^{-56}(1+56)\\
+&amp;\approx 1.
+\end{aligned}
+\]</span></p></li>
+<li><p><strong>Four female claims before the second male claim</strong></p>
+<p>The required event occurs if at least four of the first five claims are from female policyholders.</p>
+<p>Let <span class="math inline">\(Y\)</span> denote the number of female claims among the first five claims. Since each claim is independently from a female policyholder with probability <span class="math inline">\(3/4\)</span>,</p>
+<p><span class="math display">\[
+Y\sim\operatorname{Binomial}\left(5,\frac34\right).
+\]</span></p>
+<p>Therefore,</p>
+<p><span class="math display">\[
+\begin{aligned}
+P(Y\geq 4)
+&amp;=P(Y=4)+P(Y=5)\\
+&amp;=\binom54\left(\frac34\right)^4
+  \left(\frac14\right)
+  +\left(\frac34\right)^5\\
+&amp;\approx 0.6328125.
+\end{aligned}
+\]</span></p></li>
+</ol>
+</section>
+</section>
+<section id="summary-1" class="level3" data-number="3.5.8">
+<h3 data-number="3.5.8" class="anchored" data-anchor-id="summary-1"><span class="header-section-number">3.5.8</span> Summary</h3>
+<p>The properties developed in this section extend the basic Poisson process model and provide useful tools for analysing event arrivals.</p>
+<ul>
+<li><strong>Independent increments:</strong> Event counts in disjoint time intervals are independent.</li>
+<li><strong>Stationary increments:</strong> The distribution of event counts depends only on the interval length.</li>
+<li><strong>Memorylessness:</strong> The remaining waiting time has the same exponential distribution as a new waiting time.</li>
+<li><strong>Superposition:</strong> Independent Poisson processes combine into a single Poisson process whose rate is the sum of the individual rates.</li>
+<li><strong>Thinning:</strong> Independently classified arrivals form independent Poisson processes whose rates are obtained by multiplying the original rate by the corresponding classification probabilities.</li>
+</ul>
+<p>These properties are particularly useful in actuarial applications involving claims from multiple portfolios, different categories of claims, and selected claims exceeding specified thresholds.</p>
+</section>
+<section id="from-poisson-processes-to-markov-jump-processes" class="level3" data-number="3.5.9">
+<h3 data-number="3.5.9" class="anchored" data-anchor-id="from-poisson-processes-to-markov-jump-processes"><span class="header-section-number">3.5.9</span> From Poisson Processes to Markov Jump Processes</h3>
+<p>A Poisson process describes the random occurrence of events over time. It can also be viewed as a continuous-time Markov process.</p>
+<p>Recall that <span class="math inline">\(N(t)\)</span> counts the number of events that have occurred by time <span class="math inline">\(t\)</span>. Because a Poisson process has independent increments, the future number of arrivals depends on the current count but not on the detailed history of the process.</p>
+<p>In particular, for <span class="math inline">\(s,t\geq 0\)</span>,</p>
+<p><span class="math display">\[
+N(s+t)-N(s)\sim\operatorname{Poisson}(\lambda t),
+\]</span></p>
+<p>independently of the events that occurred before time <span class="math inline">\(s\)</span>.</p>
+<p>Consequently, the future evolution of <span class="math inline">\(N(t)\)</span> depends on its current state <span class="math inline">\(N(s)\)</span>, rather than on the full history of the process. This is the Markov property.</p>
+<p>The Poisson process can therefore be viewed as a <strong>continuous-time Markov chain</strong>, also called a <strong>Markov jump process</strong>, with state space</p>
+<p><span class="math display">\[
+\{0,1,2,\ldots\}.
+\]</span></p>
+<p>From state <span class="math inline">\(n\)</span>, the process moves to state <span class="math inline">\(n+1\)</span> at rate <span class="math inline">\(\lambda\)</span>. It cannot move to any other state in a single jump.</p>
+<section id="a-two-state-markov-jump-process-alive-and-dead" class="level4">
+<h4 class="anchored" data-anchor-id="a-two-state-markov-jump-process-alive-and-dead">A Two-State Markov Jump Process: Alive and Dead</h4>
+<p>A related model is used in actuarial science to describe the lifetime of an individual.</p>
+<p>Consider a person whose state is either:</p>
+<ul>
+<li><span class="math inline">\(A\)</span>: Alive;</li>
+<li><span class="math inline">\(D\)</span>: Dead.</li>
+</ul>
+<p>The individual starts in state <span class="math inline">\(A\)</span> and eventually moves to state <span class="math inline">\(D\)</span>. Once the individual has died, the process remains in state <span class="math inline">\(D\)</span>.</p>
+<p>The possible transition is therefore</p>
+<p><span class="math display">\[
+A\longrightarrow D.
+\]</span></p>
+<p>Suppose the transition from Alive to Dead occurs at a constant rate <span class="math inline">\(\mu\)</span>, where <span class="math inline">\(\mu&gt;0\)</span>.</p>
+<p>The time until death, denoted by <span class="math inline">\(X\)</span>, then follows an exponential distribution:</p>
+<p><span class="math display">\[
+X\sim\operatorname{Exp}(\mu).
+\]</span></p>
+<p>Thus, the probability that the individual is still alive after time <span class="math inline">\(t\)</span> is</p>
+<p><span class="math display">\[
+\Pr(X&gt;t)=e^{-\mu t}.
+\]</span></p>
+<p>The corresponding transition probabilities are</p>
+<p><span class="math display">\[
+\begin{aligned}
+p_{AA}(t)&amp;=\Pr(X&gt;t)=e^{-\mu t},\\
+p_{AD}(t)&amp;=\Pr(X\leq t)=1-e^{-\mu t},\\
+p_{DA}(t)&amp;=0,\\
+p_{DD}(t)&amp;=1.
+\end{aligned}
+\]</span></p>
+<p>The transition probability matrix is therefore</p>
+<p><span class="math display">\[
+P(t)=
+\begin{pmatrix}
+e^{-\mu t} &amp; 1-e^{-\mu t}\\
+0 &amp; 1
+\end{pmatrix}.
+\]</span></p>
+<p>Here, the rows and columns are ordered as Alive and Dead.</p>
+<p>This is a simple two-state continuous-time Markov chain. State <span class="math inline">\(D\)</span> is an absorbing state because the individual cannot return to the Alive state.</p>
+</section>
+<section id="connection-with-the-poisson-process" class="level4">
+<h4 class="anchored" data-anchor-id="connection-with-the-poisson-process">Connection with the Poisson Process</h4>
+<p>Both models involve exponentially distributed waiting times and the memoryless property.</p>
+<p>However, there is an important difference:</p>
+<ul>
+<li>In a Poisson process, events continue to occur indefinitely, with successive inter-arrival times independently following an exponential distribution.</li>
+<li>In the two-state mortality model, the individual can experience only one transition, from Alive to Dead. Once this transition occurs, no further transitions are possible.</li>
+</ul>
+<p>Thus, the two-state mortality model is not itself a homogeneous Poisson process. It is a continuous-time Markov chain with an absorbing state.</p>
+<p>The Poisson process provides a useful starting point for studying continuous-time Markov chains. In the next chapter, we extend the idea of random transitions over time to models with more general state spaces and transition structures. We begin with the two-state mortality model, before considering more general Markov jump processes.</p>
+
+
+</section>
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../chapters/02_Discrete_Time_Stochastic_Processes.html" class="pagination-link" aria-label="Chapter 2: Discrete-Time Markov Chains">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Chapter 2: Discrete-Time Markov Chains</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
