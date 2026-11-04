@@ -1790,6 +1790,26 @@ N_j(t)\mid N(t)=n
 \]</span></p>
 <p>This allows us to model the arrival of large claims directly without first modelling all claims and then identifying which ones exceed the threshold.</p>
 <p>For several independent portfolios, thinning can be applied to each portfolio separately. The resulting selected-claim processes can then be combined using the superposition property.</p>
+<div id="exm-conditional-probability" class="theorem example">
+<p><span class="theorem-title"><strong>Example 3.11</strong></span> Customers arrive at a service counter according to a Poisson process with rate <span class="math inline">\(\lambda=12\)</span> customers per hour.</p>
+<p>Given that 5 customers arrive during a one-hour period, find the probability that exactly 2 customers arrive during the first 30 minutes.</p>
+<p><strong>Solution:</strong></p>
+<p>Let <span class="math inline">\(N(t)\)</span> denote the number of customers arriving during the first <span class="math inline">\(t\)</span> hours. Given that 5 customers arrive during a one-hour period, the arrival times are uniformly distributed over that period. Hence, each customer has probability <span class="math inline">\(0.5\)</span> of arriving during the first 30 minutes.</p>
+<p>The number of customers arriving during the first 30 minutes therefore has a binomial distribution:</p>
+<p><span class="math display">\[
+N(0.5)\mid N(1)=5
+\sim \operatorname{Binomial}(5,0.5).
+\]</span></p>
+<p>Thus,</p>
+<p><span class="math display">\[
+\begin{aligned}
+P(N(0.5)=2\mid N(1)=5)
+&amp;=\binom{5}{2}(0.5)^2(1-0.5)^3\\
+&amp;=\binom{5}{2}(0.5)^5\\
+&amp;\approx 0.3125.
+\end{aligned}
+\]</span></p>
+</div>
 <!-- ### Worked Example 12: Claims Above a Threshold -->
 <!-- An insurer has two independent portfolios, A and B. -->
 <!-- - Claims from portfolio A arrive at a rate of 4 per day. Each claim has probability $2/5$ of being at least 5,000 THB. -->
@@ -1802,7 +1822,7 @@ N_j(t)\mid N(t)=n
 <!-- 2. Calculate the probability that four claims from female policyholders occur before the second claim from a male policyholder. -->
 <!-- ### Solution: Worked Example 13 -->
 <div id="exm-claims-above-threshold" class="theorem example">
-<p><span class="theorem-title"><strong>Example 3.11</strong></span> An insurer has two independent portfolios, A and B.</p>
+<p><span class="theorem-title"><strong>Example 3.12</strong></span> An insurer has two independent portfolios, A and B.</p>
 <ul>
 <li>Claims from portfolio A arrive at a rate of 4 per day. Each claim has probability <span class="math inline">\(2/5\)</span> of being at least 5,000 THB.</li>
 <li>Claims from portfolio B arrive at a rate of 6 per day. Each claim has probability <span class="math inline">\(1/3\)</span> of being at least 5,000 THB.</li>
@@ -1842,7 +1862,7 @@ E[N(1)]=\lambda\times 1
 =3.6.
 \]</span></p>
 <div id="exm-claims-from-two-groups" class="theorem example">
-<p><span class="theorem-title"><strong>Example 3.12</strong></span> Claims from male policyholders and female policyholders arrive independently according to Poisson processes with rates 2 and 6 claims per day, respectively.</p>
+<p><span class="theorem-title"><strong>Example 3.13</strong></span> Claims from male policyholders and female policyholders arrive independently according to Poisson processes with rates 2 and 6 claims per day, respectively.</p>
 <ol type="1">
 <li>Calculate the probabilities of no claims and at least two claims during a given week.</li>
 <li>Calculate the probability that four claims from female policyholders occur before the second claim from a male policyholder.</li>
