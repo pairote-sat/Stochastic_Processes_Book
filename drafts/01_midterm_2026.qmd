@@ -1,0 +1,240 @@
+---
+title: "01_midterm_2026"
+format:
+  pdf:
+    toc: false
+    keep-tex: true    
+number-sections: false
+---
+
+
+1. A company is developing a new product. Let $X_n$ denote the development score after period $n$. At each period, the score increases by one with probability $0.5$ and decreases by one with probability $0.5$.
+
+The project is **successfully completed** when the score reaches $10$ and **abandoned** when the score reaches $0$. Suppose that the initial development score is $X_0=4$.
+
+Let
+
+$$
+T=\inf\{n\geq0:X_n\in\{0,10\}\}
+$$
+
+be the number of periods until the project is completed or abandoned.
+
+Using the results for a simple random walk with absorbing barriers at $0$ and $N$:
+
+1. Calculate the probability that the project is abandoned before it is completed.
+
+2. Calculate the expected number of periods until the project is completed or abandoned.
+
+---
+
+<!-- 2. A motor insurer operates a No Claims Discount (NCD) system with three levels: $0%$, $15%$, and $40%$. -->
+
+<!-- If a policyholder makes no claim during the year, they move up one level of discount, or remain at the maximum level. If they make exactly one claim, they move down one level, or remain at the minimum level. If they make two or more claims, they move to, or remain at, the minimum level. -->
+
+<!-- Let -->
+
+<!-- $$ -->
+<!-- a=P(\text{exactly one claim in a year}) -->
+<!-- $$ -->
+
+<!-- and -->
+
+<!-- $$ -->
+<!-- b=P(\text{two or more claims in a year}). -->
+<!-- $$ -->
+
+<!-- It is known that the probability of making two or more claims is $25%$ of the probability of making exactly one claim. -->
+
+<!-- 1. **Claim probabilities** -->
+
+<!--    1. Show that -->
+
+<!--       $$ -->
+<!--       b=\frac14a. -->
+<!--       $$ -->
+<!--    2. Hence, express the probability of making no claim in terms of $a$. -->
+
+<!-- 2. **Transition matrix** -->
+
+<!--    1. Taking the states to be $0%$, $15%$, and $40%$, write down the transition matrix $P$ in terms of $a$. -->
+<!--    2. You may use the result that the long-run probability vector $\boldsymbol{\pi}$ satisfies -->
+
+<!--       $$ -->
+<!--       \boldsymbol{\pi}P=\boldsymbol{\pi}. -->
+<!--       $$ -->
+<!--    3. It is known that the long-run probability of being at the $15%$ level is equal to the long-run probability of being at the $40%$ level. Use this information to show that -->
+
+<!--       $$ -->
+<!--       a=0.4. -->
+<!--       $$ -->
+
+<!-- 3. **Probability after three years** -->
+
+<!--    1. Using the value of $a$ found in part 2, write down the transition matrix $P$. -->
+<!--    2. Calculate the probability that a policyholder who is at the $0%$ level **this year** will be at the $40%$ level **after three years**. -->
+
+<!-- 4. **Long-term behaviour** -->
+
+<!--    1. Estimate the probability that a policyholder who is at the $0%$ level this year will be at the $40%$ level after 10 years. -->
+<!--    2. Briefly explain why the probability in part 4.1 is close to the long-run probability of being at the $40%$ level. -->
+
+
+<!-- IandF_CT4_201209_Examiners'_Report.pdf -->
+
+2. A motor insurer operates a No Claims Discount (NCD) system with three levels: $0%$, $15%$, and $40%$.
+
+The policyholder's discount level changes according to the number of claims made during the year:
+
+* **No claims:** Move up one level of discount, or remain at the maximum level.
+* **Exactly one claim:** Move down one level, or remain at the minimum level.
+* **Two or more claims:** Move to, or remain at, the minimum level.
+
+
+Let
+
+$$
+a=P(\text{exactly one claim in a year})
+$$
+
+and
+
+$$
+b=P(\text{two or more claims in a year}).
+$$
+
+It is known that the probability of making two or more claims is $25%$ of the probability of making exactly one claim.
+
+1. Express $b$ and the probability of making no claim in terms of $a$.
+
+2. Taking the states to be $0%$, $15%$, and $40%$, write down the transition matrix $P$ in terms of $a$. If $\boldsymbol{\pi}$ denotes the long-run probability vector, then it satisfies
+
+   $$
+   \boldsymbol{\pi}P=\boldsymbol{\pi}.
+   $$
+
+   It is known that the long-run probability of being at the $15%$ level is equal to the long-run probability of being at the $40%$ level. Use this information to show that
+
+   $$
+   a=0.4.
+   $$
+
+3. Using the value of $a$ found in Question 2, write down the transition matrix $P$. Calculate the probability that a policyholder who is at the $0%$ level this year will be at the $40%$ level after three years.
+
+4. Calculate the probability that a policyholder who is at the $0%$ level this year will be at the $40%$ level after 10 years. Briefly explain why this probability is close to the long-run probability of being at the $40%$ level.
+
+
+---
+
+<!-- 3. A financial institution classifies a company according to its credit rating. The possible states of a Markov chain are -->
+
+<!-- $$ -->
+<!-- \{A,B,C,D,E\}, -->
+<!-- $$ -->
+
+<!-- where the states represent different levels of credit quality, with state $E$ representing default. -->
+
+<!-- The transition matrix is -->
+
+<!-- $$ -->
+<!-- P= -->
+<!-- \begin{pmatrix} -->
+<!-- 0.6 & 0.3 & 0.1 & 0 & 0\\ -->
+<!-- 0.2 & 0.6 & 0.2 & 0 & 0\\ -->
+<!-- 0 & 0 & 0.7 & 0.3 & 0\\ -->
+<!-- 0 & 0 & 0.4 & 0.6 & 0\\ -->
+<!-- 0 & 0 & 0 & 0 & 1 -->
+<!-- \end{pmatrix}. -->
+<!-- $$ -->
+
+<!-- 1. Determine which states communicate with each other. -->
+
+<!-- 2. Classify the state space into its communication classes. -->
+
+<!-- 3. Identify the closed communication classes. -->
+
+<!-- 4. State which states are transient and which are recurrent. -->
+
+
+
+3. A financial institution classifies a company according to its credit rating. The possible states of a Markov chain are
+
+$$
+\{A,B,C,D,E\},
+$$
+
+where state $E$ represents default.
+
+The transition matrix is
+
+$$
+P=
+\begin{pmatrix}
+0.6 & 0.3 & 0.1 & 0 & 0\\
+0.2 & 0.6 & 0.2 & 0 & 0\\
+0 & 0 & 0.7 & 0.3 & 0\\
+0 & 0 & 0.4 & 0.6 & 0\\
+0 & 0 & 0 & 0 & 1
+\end{pmatrix}.
+$$
+
+1. Suppose a company is currently in state $A$. Calculate:
+
+   a. the probability that its credit rating will be in state $C$ after two years;
+
+   b. the probability that it will have defaulted after three years.
+
+   *Hint:* For part (a), consider all possible paths from $A$ to $C$ involving exactly two transitions. For part (b), first identify how state $E$ can be reached.
+
+2. Determine which pairs of states communicate with each other. Give a brief justification for your answer.
+
+3. Classify the state space into its communication classes. Identify which communication classes are closed.
+
+4. State which states are transient and which are recurrent.
+
+
+---
+
+
+1. **Deterministic and stochastic processes**
+
+   State whether each of the following is deterministic or stochastic, and briefly justify your answer:
+
+   a. The value of a savings account that earns a fixed interest rate of $5%$ per year with no deposits or withdrawals.
+
+   b. The number of claims received by an insurer during a year.
+
+   c. The temperature recorded at a particular location at noon each day.
+
+2. **Time-homogeneous and time-inhomogeneous Markov chains**
+
+   A Markov chain has transition probabilities satisfying
+
+   $$
+   P(X_{n+1}=j\mid X_n=i)=p_{ij}^{(n)}.
+   $$
+
+   State the condition on $p_{ij}^{(n)}$ under which the Markov chain is time-homogeneous. Give one example of a situation in which the transition probabilities may depend on time.
+
+3. **Periodicity and aperiodicity**
+
+   Consider a Markov chain with transition matrix
+
+  $$
+  P=
+  \begin{pmatrix}
+  0 & 0 & 1\\
+  1 & 0 & 0\\
+  0 & 1 & 0
+  \end{pmatrix}
+  $$
+
+
+   a. Determine the period of each state.
+
+   b. State whether the Markov chain is periodic or aperiodic.
+
+   c. Does the chain have a stationary distribution? If so, find it.
+
+   d. Starting from state $1$, explain why the state probabilities do not converge to the stationary distribution.
+

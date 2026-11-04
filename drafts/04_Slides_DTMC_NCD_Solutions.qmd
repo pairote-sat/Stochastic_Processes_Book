@@ -1,0 +1,282 @@
+---
+title: "04 DTMC slides- No-claim discount solutions"
+format:
+  revealjs:
+    scrollable: true
+    incremental: true
+    width: 1200
+    height: 700
+    margin: 0.04    
+---
+
+## Worked Example: No-Claims Discount System
+
+A no-claims discount (NCD) system for motor insurance has three levels of discount.
+
+| Level | 1 | 2 | 3 |
+|:------|--:|--:|--:|
+| Discount | 0% | 30% | 50% |
+
+The rules for moving between levels are as follows:
+
+- Following a claim-free year, move to the next higher level, or remain at level 3.
+- Following a year with one claim, move to the next lower level, or remain at level 1.
+- Following a year with two or more claims, move to level 1.
+
+A portfolio consists of 10,000 policyholders, of whom:
+
+- 5,000 policyholders are classified as good drivers. The number of claims per year for each policyholder in this group follows a $\operatorname{Poisson}(0.1)$ distribution.
+- 5,000 policyholders are classified as bad drivers. The number of claims per year for each policyholder in this group follows a $\operatorname{Poisson}(0.2)$ distribution.
+
+Answer the following questions.
+
+1. Calculate $\Pr(N=0)$, $\Pr(N=1)$, and $\Pr(N\geq 2)$ for each group, where $N$ is the number of claims in one year.
+
+2. Write down the transition probability matrix of the NCD system for each group.
+
+3. Calculate the expected number of policyholders at each level for each group once the system has reached its long-run stable distribution.
+
+4. Calculate the expected premium income per driver for each group once the system has reached its long-run stable distribution.
+
+5. Calculate the ratio of the expected premium income per driver for good drivers to that for bad drivers once the system has reached its long-run stable distribution.
+
+6. Comment on the results. Does this NCD system encourage good driving?
+
+
+## Application: Long-Run Behaviour of an NCD System
+
+```{r}
+#| label: ncd-long-run-calculations
+#| echo: false
+
+# Claim frequencies
+lambda_good <- 0.1
+lambda_bad  <- 0.2
+
+# Calculate claim probabilities and the transition matrix
+ncd_model <- function(lambda) {
+  q0 <- exp(-lambda)
+  q1 <- lambda * exp(-lambda)
+  q2 <- 1 - q0 - q1
+
+  P <- matrix(
+    c(q1 + q2, 1 - q0, q2,
+      q0,       0,     q1,
+      0,        q0,    q0),
+    nrow = 3
+  )
+
+  # Calculate the stationary distribution: pi P = pi
+  A <- t(P) - diag(3)
+  A[3, ] <- 1
+  b <- c(0, 0, 1)
+
+  pi <- as.vector(solve(A, b))
+
+  # Long-run expected numbers of policyholders
+  numbers <- 5000 * pi
+
+  # Expected premium per driver, expressed as a multiple of B
+  premium_factor <- sum(pi * c(1, 0.70, 0.50))
+
+  list(
+    lambda = lambda,
+    q0 = q0,
+    q1 = q1,
+    q2 = q2,
+    P = P,
+    pi = pi,
+    numbers = numbers,
+    premium_factor = premium_factor
+  )
+}
+
+good <- ncd_model(lambda_good)
+bad  <- ncd_model(lambda_bad)
+
+# Ratio of expected premium incomes
+premium_ratio <- good$premium_factor / bad$premium_factor
+```
+
+### 1. Claim probabilities
+
+For a Poisson random variable with parameter $\lambda$,
+
+$$
+\Pr(N=0)=e^{-\lambda}, \qquad
+\Pr(N=1)=\lambda e^{-\lambda},
+$$
+
+and
+
+$$
+\Pr(N\geq 2)=1-e^{-\lambda}(1+\lambda).
+$$
+
+For good drivers, $\lambda=0.1$, giving
+
+$$
+\begin{aligned}
+\Pr(N=0)&=\texttt{`r round(good$q0, 4)`},\\
+\Pr(N=1)&=\texttt{`r round(good$q1, 4)`},\\
+\Pr(N\geq 2)&=\texttt{`r round(good$q2, 4)`}.
+\end{aligned}
+$$
+
+For bad drivers, $\lambda=0.2$, giving
+
+$$
+\begin{aligned}
+\Pr(N=0)&=\texttt{`r round(bad$q0, 4)`},\\
+\Pr(N=1)&=\texttt{`r round(bad$q1, 4)`},\\
+\Pr(N\geq 2)&=\texttt{`r round(bad$q2, 4)`}.
+\end{aligned}
+$$
+
+### 2. Transition probability matrices
+
+Let the states correspond to discount levels $1$, $2$, and $3$. The transition probability matrix is
+
+$$
+P=
+\begin{pmatrix}
+q_1+q_2&q_0&0\\
+1-q_0&0&q_0\\
+q_2&q_1&q_0
+\end{pmatrix}.
+$$
+
+For good drivers, the transition matrix is
+
+$$
+P_G=
+\begin{pmatrix}
+\texttt{`r round(good$P[1,1], 4)`}&
+\texttt{`r round(good$P[1,2], 4)`}&0\\
+\texttt{`r round(good$P[2,1], 4)`}&0&
+\texttt{`r round(good$P[2,3], 4)`}\\
+\texttt{`r round(good$P[3,1], 4)`}&
+\texttt{`r round(good$P[3,2], 4)`}&
+\texttt{`r round(good$P[3,3], 4)`}
+\end{pmatrix}.
+$$
+
+For bad drivers, the transition matrix is
+
+$$
+P_B=
+\begin{pmatrix}
+\texttt{`r round(bad$P[1,1], 4)`}&
+\texttt{`r round(bad$P[1,2], 4)`}&0\\
+\texttt{`r round(bad$P[2,1], 4)`}&0&
+\texttt{`r round(bad$P[2,3], 4)`}\\
+\texttt{`r round(bad$P[3,1], 4)`}&
+\texttt{`r round(bad$P[3,2], 4)`}&
+\texttt{`r round(bad$P[3,3], 4)`}
+\end{pmatrix}.
+$$
+
+### 3. Long-run expected numbers of policyholders
+
+Let $\boldsymbol{\pi}=(\pi_1,\pi_2,\pi_3)$ denote the stationary distribution. It satisfies
+
+$$
+\boldsymbol{\pi}P=\boldsymbol{\pi},
+\qquad
+\pi_1+\pi_2+\pi_3=1.
+$$
+
+For good drivers, the stationary distribution is
+
+$$
+\boldsymbol{\pi}_G=
+(\texttt{`r round(good$pi[1], 4)`},
+\texttt{`r round(good$pi[2], 4)`},
+\texttt{`r round(good$pi[3], 4)`}).
+$$
+
+Hence, the long-run expected numbers at levels $1$, $2$, and $3$ are
+
+$$
+\begin{aligned}
+5000\boldsymbol{\pi}_G
+&=(\texttt{`r round(good$numbers[1], 2)`},
+\texttt{`r round(good$numbers[2], 2)`},
+\texttt{`r round(good$numbers[3], 2)`}).
+\end{aligned}
+$$
+
+For bad drivers, the stationary distribution is
+
+$$
+\boldsymbol{\pi}_B=
+(\texttt{`r round(bad$pi[1], 4)`},
+\texttt{`r round(bad$pi[2], 4)`},
+\texttt{`r round(bad$pi[3], 4)`}).
+$$
+
+Hence, the long-run expected numbers at levels $1$, $2$, and $3$ are
+
+$$
+\begin{aligned}
+5000\boldsymbol{\pi}_B
+&=(\texttt{`r round(bad$numbers[1], 2)`},
+\texttt{`r round(bad$numbers[2], 2)`},
+\texttt{`r round(bad$numbers[3], 2)`}).
+\end{aligned}
+$$
+
+### 4. Expected premium income per driver
+
+Let $B$ be the full premium. The premiums at levels $1$, $2$, and $3$ are $B$, $0.70B$, and $0.50B$, respectively.
+
+The expected premium per good driver in the long run is
+
+$$
+\begin{aligned}
+E[\text{Premium}_G]
+&=B(\pi_{G,1}+0.70\pi_{G,2}+0.50\pi_{G,3})\\
+&=\texttt{`r round(good$premium_factor, 4)`}\,B.
+\end{aligned}
+$$
+
+The expected premium per bad driver in the long run is
+
+$$
+\begin{aligned}
+E[\text{Premium}_B]
+&=B(\pi_{B,1}+0.70\pi_{B,2}+0.50\pi_{B,3})\\
+&=\texttt{`r round(bad$premium_factor, 4)`}\,B.
+\end{aligned}
+$$
+
+### 5. Ratio of expected premium incomes
+
+The ratio of the expected premium per good driver to that per bad driver is
+
+$$
+\begin{aligned}
+\frac{E[\text{Premium}_G]}{E[\text{Premium}_B]}
+&=\frac{\texttt{`r round(good$premium_factor, 4)`}\,B}
+{\texttt{`r round(bad$premium_factor, 4)`}\,B}\\
+&=\texttt{`r round(premium_ratio, 4)`}.
+\end{aligned}
+$$
+
+Thus, good drivers pay approximately $\texttt{`r round(100 * (1 - premium_ratio), 2)`}\%$ less in expected premium per driver than bad drivers in the long run.
+
+
+### 6. Comments
+
+The NCD system distinguishes between good and bad drivers. In the long run, approximately $\texttt{`r round(100 * good$pi[3], 2)`}\%$ of good drivers reach level 3, compared with $\texttt{`r round(100 * bad$pi[3], 2)`}\%$ of bad drivers.
+
+Good drivers therefore receive the highest discount more frequently and pay a lower expected premium. However, the system does not perfectly distinguish between the two groups. If premiums were intended to reflect the difference in underlying risk, good drivers might be expected to pay substantially less than bad drivers. In particular, if the expected premium for a good driver were intended to be half that for a bad driver, the ratio in Part 5 would need to be $0.5$. The calculated ratio is $\texttt{`r round(premium_ratio, 4)`}$, so the NCD system does not achieve this target.
+
+There are also limitations to this model:
+
+- **Claim amounts are not considered.** The model distinguishes policyholders by the number of claims but ignores their amounts. A policyholder with a small claim and one with a very large claim have the same effect on the NCD level if they make the same number of claims.
+
+- **Only long-run behaviour is considered.** The stationary distribution describes the expected proportions of policyholders at each level after the system has reached stability. It does not describe how the distribution changes over time or how long policyholders take to reach their long-run distribution.
+
+Overall, the NCD system rewards policyholders with fewer claims, but its effectiveness in differentiating premiums depends on the claim frequencies, the discount structure, and the extent to which claim frequency reflects the underlying insurance risk.
+

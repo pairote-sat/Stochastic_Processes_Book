@@ -1,0 +1,458 @@
+---
+title: "Solutions_Midterm_337_2019"
+format:
+  pdf:
+    toc: false
+number-sections: false
+---
+
+1. National Credit Bureau Rating
+
+A borrower's creditworthiness is scored by the National Credit Bureau at the end of each year. Suppose that there are three ratings, A, B and D (default), with the following one-step transition probability matrix:
+
+$$
+P =
+\begin{bmatrix}
+0.8 & 0.18 & 0.02 \\
+0.2 & 0.74 & 0.06 \\
+0 & 0 & 1
+\end{bmatrix}.
+$$
+
+Consider the following questions about the credit-rating process:
+
+1. Calculate the probability that a currently B-rated borrower will have each rating after two years.
+
+2. Calculate the expected number of borrowers with default rating within the next two years from a group of 100 borrowers, 30 and 70 of whom are rated A and B, respectively.
+
+3. Calculate the probability that an A-rated borrower will be rated B within the next two years and then rated D within the next two subsequent years.
+
+**Solution**
+
+
+
+```{r}
+library(markovchain)
+library(expm)
+
+P <- matrix(c(
+  0.80, 0.18, 0.02,
+  0.20, 0.74, 0.06,
+  0.00, 0.00, 1.00
+), nrow = 3, byrow = TRUE)
+
+P2 <- P %^% 2
+
+ans1 <- P2[2, ]
+
+ans2 <- 30 * P2[1, 3] + 70 * P2[2, 3]
+
+ans3 <- P2[1, 2] * P2[2, 3]
+```
+
+
+$$
+P =
+\begin{bmatrix}
+0.8 & 0.18 & 0.02 \\
+0.2 & 0.74 & 0.06 \\
+0 & 0 & 1
+\end{bmatrix}.
+$$
+
+1. **Calculate the probability that a currently B-rated borrower will have each rating after two years.**
+
+   The two-year transition matrix is
+
+   $$
+   P^2 =
+   \begin{pmatrix}
+   0.676 & 0.2772 & 0.0468\\
+   0.308 & 0.5836 & 0.1084\\
+   0 & 0 & 1
+   \end{pmatrix}.
+   $$
+
+   Therefore, for a borrower currently rated B,
+
+   $$
+   \Pr(X_2=A\mid X_0=B)=\texttt{`r ans1[1]`},
+   $$
+
+   $$
+   \Pr(X_2=B\mid X_0=B)=\texttt{`r ans1[2]`},
+   $$
+
+   and
+
+   $$
+   \Pr(X_2=D\mid X_0=B)=\texttt{`r ans1[3]`}.
+   $$
+
+2. **Calculate the expected number of borrowers with default rating within the next two years from a group of 100 borrowers, 30 and 70 of whom are rated A and B, respectively.**
+
+   Since D is an absorbing state, the probability of being in default within the next two years is the probability of being in D after two years.
+
+   For an initially A-rated borrower,
+
+   $$
+   \Pr(X_2=D\mid X_0=A)
+   =P^{(2)}_{AD}
+   =\texttt{`r P2[1, 3]`}.
+   $$
+
+   For an initially B-rated borrower,
+
+   $$
+   \Pr(X_2=D\mid X_0=B)
+   =P^{(2)}_{BD}
+   =\texttt{`r P2[2, 3]`}.
+   $$
+
+   Hence, the expected number of borrowers with default rating within two years is
+
+   $$
+   \begin{aligned}
+   E[N_D]
+   &=30P^{(2)}_{AD}+70P^{(2)}_{BD}\\
+   &=30(\texttt{`r P2[1, 3]`})
+     +70(\texttt{`r P2[2, 3]`})\\
+   &=\texttt{`r ans2`}.
+   \end{aligned}
+   $$
+
+3. **Calculate the probability that an A-rated borrower will be rated B within the next two years and then rated D within the next two subsequent years.**
+
+   Interpret this as finding
+
+   $$
+   \Pr(X_2=B,X_4=D\mid X_0=A).
+   $$
+
+   By the Markov property,
+
+   $$
+   \begin{aligned}
+   \Pr(X_2=B,X_4=D\mid X_0=A)
+   &=
+   \Pr(X_2=B\mid X_0=A)
+   \Pr(X_4=D\mid X_2=B)\\
+   &=P^{(2)}_{AB}P^{(2)}_{BD}.
+   \end{aligned}
+   $$
+
+   Therefore,
+
+   $$
+   \Pr(X_2=B,X_4=D\mid X_0=A)
+   =
+   \texttt{`r P2[1, 2]`} \times
+   \texttt{`r P2[2, 3]`}
+   =
+   \texttt{`r ans3`}.
+   $$
+
+
+
+
+
+
+---
+
+
+
+3. Markov Chain: Multi-Step Transitions and Conditional Probabilities
+
+A Markov chain on ${1,2,3}$ has transition matrix
+
+$$
+P =
+\begin{bmatrix}
+0.2 & 0.3 & 0.5\\
+0.1 & 0.3 & 0.6\\
+0 & 0.6 & 0.4
+\end{bmatrix},
+$$
+
+with initial distribution
+
+$$
+\boldsymbol{\mu}=(0.2,0.4,0.4).
+$$
+
+
+
+```{r}
+library(markovchain)
+
+P <- matrix(c(
+  0.2, 0.3, 0.5,
+  0.1, 0.3, 0.6,
+  0.0, 0.6, 0.4
+), nrow = 3, byrow = TRUE)
+
+mu <- c(0.2, 0.4, 0.4)
+
+P2 <- P %^% 2
+mu2 <- mu %*% P2
+muP <- mu %*% P
+
+ans1 <- P2
+ans2 <- P2[2, 3]
+ans3 <- P2[1, 2]
+ans4 <- sum(mu2 * c(1, 2, 3))
+ans5 <- sum(P2[1, ] * c(1, 2, 3))
+ans6 <- mu[1] * P[1, 2] / muP[2]
+```
+
+Calculate the following:
+
+1. **Compute the two-step transition matrix.**
+
+   The two-step transition matrix is
+
+   $$
+   P^2 =
+   \begin{pmatrix}
+   0.07 & 0.45 & 0.48\\
+   0.05 & 0.48 & 0.47\\
+   0.06 & 0.42 & 0.52
+   \end{pmatrix}.
+   $$
+
+2. **Calculate $\Pr(X_2=3\mid X_0=2)$.**
+
+   By the definition of the two-step transition matrix,
+
+   $$
+   \Pr(X_2=3\mid X_0=2)
+   =P^{(2)}_{23}
+   =\texttt{`r ans2`}.
+   $$
+
+3. **Calculate $\Pr(X_7=2\mid X_1=1,X_3=3,X_5=1)$.**
+
+   By the Markov property, conditional on $X_5=1$, the earlier states do not affect the distribution of $X_7$. Hence,
+
+   $$
+   \begin{aligned}
+   \Pr(X_7=2\mid X_1=1,X_3=3,X_5=1)
+   &=\Pr(X_7=2\mid X_5=1)\\
+   &=P^{(2)}_{12}\\
+   &=\texttt{`r ans3`}.
+   \end{aligned}
+   $$
+
+4. **Calculate $\operatorname{E}[X_2]$.**
+
+   First, obtain the distribution of $X_2$:
+
+   $$
+   \boldsymbol{\mu}^{(2)}
+   =\boldsymbol{\mu}P^2.
+   $$
+
+   In R,
+
+   ```r
+   mu2 <- mu %*% P2
+   ```
+
+   giving
+
+   $$
+   \boldsymbol{\mu}^{(2)}
+   =
+   (\texttt{`r mu2[1]`},
+    \texttt{`r mu2[2]`},
+    \texttt{`r mu2[3]`}).
+   $$
+
+   Therefore,
+
+   $$
+   \begin{aligned}
+   \operatorname{E}[X_2]
+   &=1(\texttt{`r mu2[1]`})
+     +2(\texttt{`r mu2[2]`})
+     +3(\texttt{`r mu2[3]`})\\
+   &=\texttt{`r ans4`}.
+   \end{aligned}
+   $$
+
+5. **Calculate $\operatorname{E}[X_2\mid X_0=1]$.**
+
+   Given $X_0=1$, the distribution of $X_2$ is the first row of $P^2$. Hence,
+
+   $$
+   \begin{aligned}
+   \operatorname{E}[X_2\mid X_0=1]
+   &=1P^{(2)}_{11}
+     +2P^{(2)}_{12}
+     +3P^{(2)}_{13}\\
+   &=1(\texttt{`r P2[1, 1]`})
+     +2(\texttt{`r P2[1, 2]`})
+     +3(\texttt{`r P2[1, 3]`})\\
+   &=\texttt{`r ans5`}.
+   \end{aligned}
+   $$
+
+6. **Calculate $\Pr(X_0=1\mid X_1=2)$.**
+
+   By Bayes' theorem,
+
+   $$
+   \Pr(X_0=1\mid X_1=2)
+   =
+   \frac{\Pr(X_0=1)\Pr(X_1=2\mid X_0=1)}
+   {\Pr(X_1=2)}.
+   $$
+
+   The denominator is
+
+   $$
+   \Pr(X_1=2)
+   =(\boldsymbol{\mu}P)_2
+   =\texttt{`r muP[2]`}.
+   $$
+
+   Therefore,
+
+   $$
+   \begin{aligned}
+   \Pr(X_0=1\mid X_1=2)
+   &=
+   \frac{(0.2)(0.3)}
+   {\texttt{`r muP[2]`}}\\
+   &=\texttt{`r ans6`}.
+   \end{aligned}
+   $$
+
+
+---
+
+
+
+4. The daily lunch choices of a student, consisting of ${\text{Rice with curry},\text{Noodle},\text{Salad},\text{Snack}}$, are described by a Markov chain with transition matrix
+
+$$
+P =
+\begin{bmatrix}
+1/4 & 1/4 & 1/4 & 1/4 \\
+1/2 & 0 & 1/2 & 0 \\
+1/4 & 1/4 & 0 & 1/2 \\
+1/2 & 1/2 & 0 & 0
+\end{bmatrix}.
+$$
+
+1. This Markov chain has a unique stationary distribution that is also the limiting distribution of the chain. Find the stationary distribution.
+
+2. Over the long term, calculate the proportion of time that the student chooses snack.
+
+3. Rice with curry costs 30 baht, Noodle costs 35 baht, and Salad and Snack cost 40 baht each. Over the long term, calculate the average amount the student spends on lunch.
+
+```{r}
+P <- matrix(c(
+  1/4, 1/4, 1/4, 1/4,
+  1/2, 0,   1/2, 0,
+  1/4, 1/4, 0,   1/2,
+  1/2, 1/2, 0,   0
+), nrow = 4, byrow = TRUE)
+
+# Stationary distribution
+library(markovchain)
+
+mc <- new("markovchain",
+          states = c("Rice", "Noodle", "Salad", "Snack"),
+          transitionMatrix = P)
+
+pi <- steadyStates(mc)
+pi
+
+# Long-term proportion choosing snack
+ans2 <- pi[1, 4]
+
+# Long-term average lunch cost
+cost <- c(30, 35, 40, 40)
+ans3 <- sum(pi * cost)
+
+ans2
+ans3
+```
+
+**Solutions**
+
+1. Let the stationary distribution be
+
+$$
+\boldsymbol{\pi}
+=
+(\pi_1,\pi_2,\pi_3,\pi_4).
+$$
+
+It satisfies
+
+$$
+\boldsymbol{\pi}P=\boldsymbol{\pi},
+\qquad
+\sum_{i=1}^4\pi_i=1.
+$$
+
+Solving these equations gives
+
+$$
+\boldsymbol{\pi}
+=
+\left(
+\frac{24}{67},
+\frac{16}{67},
+\frac{14}{67},
+\frac{13}{67}
+\right).
+$$
+
+Numerically, the stationary distribution is
+
+$$
+\boldsymbol{\pi}
+\approx
+(`r round(pi[1,1], 4)`,
+ `r round(pi[1,2], 4)`,
+ `r round(pi[1,3], 4)`,
+ `r round(pi[1,4], 4)`).
+$$
+
+Thus, in the long run, the proportions of days on which the student chooses Rice, Noodle, Salad, and Snack are approximately 35.82%, 23.88%, 20.90%, and 19.40%, respectively.
+
+2. The long-term proportion of time that the student chooses Snack is the fourth component of the stationary distribution:
+
+$$
+\Pr(\text{Snack in the long run})
+=
+\pi_4
+=
+\frac{13}{67}
+\approx `r round(ans2, 4)`.
+$$
+
+Hence, the student chooses Snack on approximately `r round(100 * ans2, 2)`% of days in the long run.
+
+3. The long-term average lunch cost is the stationary-distribution-weighted average:
+
+$$
+\begin{aligned}
+\operatorname{E}[\text{Lunch cost}]
+&=
+30\pi_1+35\pi_2+40\pi_3+40\pi_4\\
+&=
+30\left(\frac{24}{67}\right)
++35\left(\frac{16}{67}\right)
++40\left(\frac{14}{67}\right)
++40\left(\frac{13}{67}\right)\\
+&\approx `r round(ans3, 4)`\text{ baht}.
+\end{aligned}
+$$
+
+Therefore, over the long term, the student spends approximately **`r round(ans3, 2)` baht per lunch**, on average.
+
+

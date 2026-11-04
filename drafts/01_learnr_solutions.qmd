@@ -1,0 +1,544 @@
+---
+title: "Solutions to Assignment 3: Probability Analysis of Credit Rating and Random Walk"
+format:
+  pdf:
+    toc: false
+number-sections: true
+---
+
+
+```{r massage = FALSE, warning = FALSE, error = FALSE}
+seednum <- 10
+set.seed(seed = seednum)
+```
+  
+
+```{r massage = FALSE, warning = FALSE, error = FALSE}
+  
+n <- sample(8:15, 1)
+p <- sample(40:60, 1) / 100
+q <- 1 - p
+
+# Choose an attainable position after n steps
+k <- sample(2:(n - 2), 1)
+s <- 2*k - n
+
+# Probability of reaching s after n steps
+ans1 <- choose(n, k) * p^k * q^(n-k)
+
+# Expected value
+ans2 <- n * (p - q)
+
+# Variance
+ans3 <- 4 * n * p * q
+
+# Probability of being at or above s
+ans4 <- 1 - pbinom(k - 1, size = n, prob = p)
+
+# Probability of being below zero
+ans5 <- pbinom(floor((n - 1) / 2), size = n, prob = p)
+
+# Probability of returning to the starting point
+if (n %% 2 == 0) {
+  ans6 <- choose(n, n/2) * p^(n/2) * q^(n/2)
+} else {
+  ans6 <- 0
+}
+
+```
+
+**Questions 1–6: Simple Random Walk**
+
+Consider a simple random walk ${S_n:n\geq0}$ with $S_0=0$. At each step, the process moves one unit to the right with probability `r p` and one unit to the left with probability `r q`, where $q=1-p$.
+
+For this exercise, the number of steps is $n=`r n`$, the probability of moving right is $p=`r p`$, and the target position is $s=`r s`$.
+
+1. **Calculate $\Pr(S_n=s)$. Round your answer to 4 decimal places.**
+
+   Let $R$ be the number of rightward steps in the first $n=10$ steps. Since each step is independently rightward with probability $p=0.48$,
+
+   $$
+   R\sim\operatorname{Binomial}(10,0.48).
+   $$
+
+   The position after 10 steps is
+
+   $$
+   S_{10}=R-(10-R)=2R-10.
+   $$
+
+   To reach $s=-4$,
+
+   $$
+   2R-10=-4
+   \quad\Rightarrow\quad
+   R=3.
+   $$
+
+   Therefore,
+
+   $$
+   \begin{aligned}
+   \Pr(S_{10}=-4)
+   &=\Pr(R=3)\\
+   &={10\choose3}(0.48)^3(0.52)^7.
+   \end{aligned}
+   $$
+
+   Hence, using the R result `r round(ans1, 4)`,
+
+   $$
+   \boxed{\Pr(S_{10}=-4)=\texttt{`r round(ans1, 4)`}}.
+   $$
+
+
+
+2. **Calculate $\operatorname{E}[S_n]$. Round your answer to 4 decimal places.**
+
+   At each step, the expected change is
+
+   $$
+   p-q=0.48-0.52=-0.04.
+   $$
+
+   Hence,
+
+   $$
+   \operatorname{E}[S_{10}]
+   =10(p-q)
+   =10(0.48-0.52).
+   $$
+
+   The R calculation gives `r round(ans2, 4)`, so
+
+   $$
+   \boxed{\operatorname{E}[S_{10}]=\texttt{`r round(ans2, 4)`}}
+   $$
+
+3. **Calculate $\operatorname{Var}(S_n)$. Round your answer to 4 decimal places.**
+
+   For one step, the variance is
+
+   $$
+   4pq.
+   $$
+
+   Since the steps are independent,
+
+   $$
+   \operatorname{Var}(S_{10})
+   =10(4pq)
+   =10(4)(0.48)(0.52).
+   $$
+
+   The R calculation gives `r round(ans3, 4)`, so
+
+   $$
+   \boxed{\operatorname{Var}(S_{10})=\texttt{`r round(ans3, 4)`}}
+   $$
+
+4. **Calculate $\Pr(S_n\geq s)$. Round your answer to 4 decimal places.**
+
+   Let $R$ be the number of rightward steps. Then
+
+   $$
+   R\sim\operatorname{Binomial}(10,0.48),
+   $$
+
+   and
+
+   $$
+   S_{10}=2R-10.
+   $$
+
+   We need
+
+   $$
+   S_{10}\geq -4.
+   $$
+
+   Thus,
+
+   $$
+   2R-10\geq-4
+   \quad\Rightarrow\quad
+   R\geq3.
+   $$
+
+   Therefore,
+
+   $$
+   \begin{aligned}
+   \Pr(S_{10}\geq-4)
+   &=\Pr(R\geq3)\\
+   &=1-\Pr(R\leq2).
+   \end{aligned}
+   $$
+
+   Hence, using the R result `r round(ans4, 4)`,
+
+   $$
+   \boxed{\Pr(S_{10}\geq-4)=\texttt{`r round(ans4, 4)`}}.
+   $$
+
+5. **Calculate $\Pr(S_n<0)$. Round your answer to 4 decimal places.**
+
+   Since
+
+   $$
+   R\sim\operatorname{Binomial}(10,0.48)
+   $$
+
+   and
+
+   $$
+   S_{10}=2R-10,
+   $$
+
+   the condition $S_{10}<0$ gives
+
+   $$
+   2R-10<0
+   \quad\Rightarrow\quad
+   R<5.
+   $$
+
+   Since $R$ is an integer,
+
+   $$
+   R<5
+   \quad\Longleftrightarrow\quad
+   R\leq4.
+   $$
+
+   Therefore,
+
+   $$
+   \Pr(S_{10}<0)
+   =
+   \Pr(R\leq4).
+   $$
+
+   Hence, using the R result `r round(ans5, 4)`,
+
+   $$
+   \boxed{\Pr(S_{10}<0)=\texttt{`r round(ans5, 4)`}}.
+   $$
+
+6. **Calculate the probability that the random walk returns to its starting position after 10 steps. Round your answer to 4 decimal places.**
+
+   The random walk starts at $S_0=0$. Since
+
+   $$
+   S_{10}=2R-10,
+   $$
+
+   returning to the starting position requires
+
+   $$
+   S_{10}=0.
+   $$
+
+   Thus,
+
+   $$
+   2R-10=0
+   \quad\Rightarrow\quad
+   R=5.
+   $$
+
+   Therefore,
+
+   $$
+   \begin{aligned}
+   \Pr(S_{10}=0)
+   &=\Pr(R=5)\\
+   &={10\choose5}(0.48)^5(0.52)^5.
+   \end{aligned}
+   $$
+
+   Hence, using the R result `r round(ans6, 4)`,
+
+   $$
+   \boxed{\Pr(S_{10}=0)=\texttt{`r round(ans6, 4)`}}.
+   $$
+
+
+
+---
+
+
+
+```{r credit-rating-setup, message=FALSE, warning=FALSE}
+library(markovchain)
+library(MASS)
+library(expm)
+
+set.seed(seed = seednum)
+
+# Generate a random 3 x 3 transition matrix
+P <- matrix(sample(1:9, 9, replace = TRUE), nrow = 3)
+
+# Convert each row to probabilities
+P <- P / rowSums(P)
+
+# Generate a random initial distribution
+pi0 <- sample(1:9, 3, replace = TRUE)
+
+# Convert to probabilities
+pi0 <- pi0 / sum(pi0)
+
+mc <- new(
+  "markovchain",
+  states = c("AAA", "BBB", "Default"),
+  transitionMatrix = P,
+  name = "Credit Rating"
+)
+
+P_frac <- fractions(P)
+
+frac_latex <- function(x) {
+  as.character(fractions(x))
+}
+
+ans7 <- P[1, 3]
+
+P2 <- P %^% 2
+P3 <- P %^% 3
+
+ans8 <- P2[1, 2]
+ans9 <- P3[2, 3]
+
+ans10 <- P[1, 3] * P[3, 2]
+ans11 <- P[3, 2]
+
+ans12 <- P[1, 2] * P2[2, 3]
+
+pi2 <- pi0 %*% P2
+pi3 <- pi0 %*% P3
+
+ans13 <- pi2[2]
+ans14 <- pi3[3]
+
+ans15 <- pi0[1] * P2[1, 2] / pi2[2]
+```
+
+
+**Questions 7–15: Credit-rating model**
+
+
+Consider a credit-rating model with three states:
+
+- State 1: AAA
+- State 2: BBB
+- State 3: Default
+
+Let $X_n$ denote the credit rating of a company after $n$ years. The transition
+matrix is
+
+$$
+P =
+\begin{pmatrix}
+p_{11} & p_{12} & p_{13} \\
+p_{21} & p_{22} & p_{23} \\
+p_{31} & p_{32} & p_{33}
+\end{pmatrix}.
+$$
+
+The transition matrix and the initial distribution are generated randomly
+for each student.
+
+
+**Important:** Round all numerical answers to 4 decimal places.
+
+The transition matrix for the credit-rating model is
+
+$$
+P =
+\begin{pmatrix}
+`r frac_latex(P[1,1])` & `r frac_latex(P[1,2])` & `r frac_latex(P[1,3])` \\
+`r frac_latex(P[2,1])` & `r frac_latex(P[2,2])` & `r frac_latex(P[2,3])` \\
+`r frac_latex(P[3,1])` & `r frac_latex(P[3,2])` & `r frac_latex(P[3,3])`
+\end{pmatrix},
+$$
+
+where the rows and columns correspond to the states AAA, BBB, and Default,
+respectively.
+
+The initial distribution is
+
+$$
+\boldsymbol{\pi}^{(0)} =
+\begin{pmatrix}
+`r frac_latex(pi0[1])` &
+`r frac_latex(pi0[2])` &
+`r frac_latex(pi0[3])`
+\end{pmatrix}.
+$$
+
+Thus, $\boldsymbol{\pi}^{(0)}$ gives the probabilities that the company is initially
+rated AAA, BBB, or Default, respectively.
+
+7. Suppose a company is currently rated AAA. What is the probability that its rating is Default after one year?
+
+    Since the company starts in AAA, the required probability is the one-step transition probability $p_{13}$. Thus,
+
+   $$
+   \Pr(X_1=\text{Default}\mid X_0=\text{AAA})=p_{13}=`r round(ans7, 4)`.
+   $$
+
+8. Suppose a company is currently rated AAA. What is the probability that its rating is BBB after two years?
+
+   The required probability is the $(1,2)$ entry of the two-step transition matrix $P^2$:
+
+   $$
+   \Pr(X_2=\text{BBB}\mid X_0=\text{AAA})
+   =(P^2)_{12}=`r round(ans8, 4)`.
+   $$
+
+   An alternative is to use the law of total probability by conditioning on the rating after one year. This avoids explicitly computing $P^2$.
+
+   We condition on the rating after one year:
+
+   $$
+   \begin{aligned}
+   \Pr(X_2=\text{BBB}\mid X_0=\text{AAA})
+   &=
+   \sum_{j=1}^3
+   \Pr(X_1=j\mid X_0=\text{AAA})
+   \Pr(X_2=\text{BBB}\mid X_1=j)\\
+   &=
+   p_{11}p_{12}+p_{12}p_{22}+p_{13}p_{32}\\
+   &=`r round(ans8, 4)`.
+   \end{aligned}
+   $$
+
+   Thus, we can calculate the two-year transition probability directly from the one-step transition probabilities, without computing $P^2$.
+
+
+9. Suppose a company is currently rated BBB. What is the probability that its rating is Default after three years?
+
+   The required probability is the $(2,3)$ entry of the three-step transition matrix $P^3$:
+
+   $$
+   \Pr(X_3=\text{Default}\mid X_0=\text{BBB})
+   =(P^3)_{23}=`r round(ans9, 4)`.
+   $$
+
+   Alternatively, if we avoid computing both $P^2$ and $P^3$, we condition on the rating after two years:
+
+   $$
+   \begin{aligned}
+   &\Pr(X_3=\text{Default}\mid X_0=\text{BBB})\\
+   &\quad =
+   (P^2)_{21}p_{13}
+   +(P^2)_{22}p_{23}
+   +(P^2)_{23}p_{33}.
+   \end{aligned}
+   $$
+
+   Expanding the two-step probabilities,
+
+   $$
+   \begin{aligned}
+   &\Pr(X_3=\text{Default}\mid X_0=\text{BBB})\\
+   &\quad =
+   (p_{21}p_{11}+p_{22}p_{21}+p_{23}p_{31})p_{13}\\
+   &\qquad+
+   (p_{21}p_{12}+p_{22}p_{22}+p_{23}p_{32})p_{23}\\
+   &\qquad+
+   (p_{21}p_{13}+p_{22}p_{23}+p_{23}p_{33})p_{33}\\
+   &\quad =`r round(ans9, 4)`.
+   \end{aligned}
+   $$
+
+   The three terms correspond to the three possible ratings after two years: **AAA, BBB, and Default**, respectively.
+
+
+
+
+10. Suppose a company is currently rated AAA. What is the probability that its rating is Default after one year and BBB after two years? 
+
+    The required path is $\text{AAA}\to\text{Default}\to\text{BBB}$. By the Markov property,
+
+    $$
+    \begin{aligned}
+    &\Pr(X_1=\text{Default},X_2=\text{BBB}\mid X_0=\text{AAA})\\
+    &\qquad=p_{13}p_{32}
+    =`r round(ans10, 4)`.
+    \end{aligned}
+    $$
+
+11. Suppose a company's rating is Default after one year. What is the probability that its rating is BBB after two years?
+   
+    Given that the company is in Default after one year, we need the one-step transition probability from Default to BBB:
+
+    $$
+    \Pr(X_2=\text{BBB}\mid X_1=\text{Default})
+    =p_{32}=`r round(ans11, 4)`.
+    $$
+
+12. Suppose a company is currently rated AAA. What is the probability that its rating is BBB after one year and Default after three years? 
+
+    The required path starts with $\text{AAA}\to\text{BBB}$ in one year, followed by $\text{BBB}\to\text{Default}$ over the next two years. Therefore,
+
+    $$
+    \begin{aligned}
+    &\Pr(X_1=\text{BBB},X_3=\text{Default}\mid X_0=\text{AAA})\\
+    &\qquad=p_{12}(P^2)_{23}
+    =`r round(ans12, 4)`.
+    \end{aligned}
+    $$
+
+13. Suppose a company's initial rating is randomly distributed according to the given initial distribution. What is the probability that its rating is BBB after two years? 
+
+    The distribution after two years is
+
+    $$
+    \boldsymbol{\pi}^{(2)}
+    =\boldsymbol{\pi}^{(0)}P^2.
+    $$
+
+    Therefore, the probability of being rated BBB is the second component:
+
+    $$
+    \Pr(X_2=\text{BBB})
+    =\left(\boldsymbol{\pi}^{(0)}P^2\right)_2
+    =`r round(ans13, 4)`.
+    $$
+
+14. Suppose a company's initial rating is randomly distributed according to the given initial distribution. What is the probability that its rating is Default after three years? 
+
+    The distribution after three years is
+
+    $$
+    \boldsymbol{\pi}^{(3)}
+    =\boldsymbol{\pi}^{(0)}P^3.
+    $$
+
+    Therefore, the probability of being in Default is the third component:
+
+    $$
+    \Pr(X_3=\text{Default})
+    =\left(\boldsymbol{\pi}^{(0)}P^3\right)_3
+    =`r round(ans14, 4)`.
+    $$
+
+15. Suppose a company's initial rating is randomly distributed according to the given initial distribution. Given that its rating is BBB after two years, what is the probability that its initial rating was AAA? 
+
+    Using Bayes' theorem,
+
+    $$
+    \Pr(X_0=\text{AAA}\mid X_2=\text{BBB})
+    =
+    \frac{\pi_1^{(0)}(P^2)_{12}}
+    {\left(\boldsymbol{\pi}^{(0)}P^2\right)_2}.
+    $$
+
+    Hence,
+
+    $$
+    \Pr(X_0=\text{AAA}\mid X_2=\text{BBB})
+    =`r round(ans15, 4)`.
+    $$
+

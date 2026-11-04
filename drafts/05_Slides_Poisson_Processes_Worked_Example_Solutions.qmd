@@ -1,0 +1,326 @@
+---
+title: "05 Slides Worked Examples Solutions"
+---
+
+```{r}
+# Worked Example 2: Machinery Failures
+lambda2 <- 1 / 8
+ans2 <- 1 - dpois(0, lambda = lambda2)
+
+
+# Worked Example 3: Customer Arrivals
+lambda3 <- 10
+
+# (1) More than 30 customers between 11 a.m. and 1 p.m.
+ans3_1 <- ppois(30, lambda = lambda3 * 2, lower.tail = FALSE)
+
+# (2) Exactly 30 customers by noon and exactly 50 by 2 p.m.
+# Independent increments: N(2) - N(1) = 20
+ans3_2 <- dpois(30, lambda = lambda3 * 3) *
+  dpois(20, lambda = lambda3 * 2)
+
+
+# Worked Example 4: Independent Increments
+lambda4 <- 5
+
+# (1) Exactly 3 events between 10 a.m. and 11 a.m.
+ans4_1 <- dpois(3, lambda = lambda4)
+
+# (2) Exactly 3 events in the first hour and 4 in the second hour
+ans4_2 <- dpois(3, lambda = lambda4) *
+  dpois(4, lambda = lambda4)
+
+
+# Worked Example 5: Conditional Probability
+# Given 5 customers arrive in one hour,
+# the number in the first 30 minutes follows Binomial(5, 0.5).
+ans5 <- dbinom(2, size = 5, prob = 0.5)
+```
+
+
+
+
+
+## Solution: Worked Example 2
+
+Let $N(t)$ denote the number of machinery failures in $t$ hours. The failure rate is $\lambda = 1/8$ per hour, so $N(1) \sim \operatorname{Poisson}(1/8)$.
+
+The probability of one or more failures during a given hour is
+
+$$
+\begin{aligned}
+P(N(1)\geq 1)
+&= 1-P(N(1)=0)\\
+&= 1-e^{-1/8}\\
+&\approx `r round(ans2, 4)`.
+\end{aligned}
+$$
+
+## Solution: Worked Example 3
+
+Let $N(t)$ denote the number of customers arriving by $t$ hours after 9 a.m. The arrival rate is $\lambda=10$ customers per hour.
+
+1. **More than 30 customers between 11 a.m. and 1 p.m.**
+
+   By the independent and stationary increments properties,
+
+   $$
+   N(3)-N(2)\sim\operatorname{Poisson}(10\times 2).
+   $$
+
+   Therefore,
+
+   $$
+   \begin{aligned}
+   P(N(4)-N(2)>30)
+   &=P(\operatorname{Poisson}(20)>30)\\
+   &\approx `r round(ans3_1, 4)`.
+   \end{aligned}
+   $$
+
+2. **Exactly 30 customers by noon and exactly 50 by 2 p.m.**
+
+   The event requires $N(3)=30$ and $N(5)=50$. Equivalently, $N(3)=30$ and $N(5)-N(3)=20$. By independent increments,
+
+   $$
+   \begin{aligned}
+   &P(N(3)=30,N(5)=50)\\
+   &\quad=P(N(3)=30)P(N(5)-N(3)=20)\\
+   &\quad=\frac{e^{-30}30^{30}}{30!}
+   \frac{e^{-20}20^{20}}{20!}\\
+   &\quad\approx `r round(ans3_2, 6)`.
+   \end{aligned}
+   $$
+
+## Solution: Worked Example 4
+
+Let $N(t)$ be a Poisson process with rate $\lambda=5$ events per hour.
+
+1. **Exactly 3 events between 10 a.m. and 11 a.m.**
+
+   The number of events during this one-hour interval follows a $\operatorname{Poisson}(5)$ distribution. Hence,
+
+   $$
+   \begin{aligned}
+   P(N(1)-N(0)=3)
+   &=\frac{e^{-5}5^3}{3!}\\
+   &\approx `r round(ans4_1, 4)`.
+   \end{aligned}
+   $$
+
+2. **Exactly 3 events in the first hour and 4 in the second hour.**
+
+   By independent increments,
+
+   $$
+   \begin{aligned}
+   &P(N(1)-N(0)=3,N(2)-N(1)=4)\\
+   &\quad=P(N(1)-N(0)=3)\\
+   &\qquad\quad\times P(N(2)-N(1)=4)\\
+   &\quad=\frac{e^{-5}5^3}{3!}
+   \frac{e^{-5}5^4}{4!}\\
+   &\quad\approx `r round(ans4_2, 6)`.
+   \end{aligned}
+   $$
+
+## Solution: Worked Example 5
+
+Let $N(t)$ denote the number of customers arriving during the first $t$ hours. Given that 5 customers arrive during a one-hour period, the arrival times are distributed uniformly over that period. Thus, the number arriving during the first 30 minutes has a binomial distribution:
+
+$$
+N(0.5)\mid N(1)=5
+\sim\operatorname{Binomial}(5,0.5).
+$$
+
+Therefore,
+
+$$
+\begin{aligned}
+P(N(0.5)=2\mid N(1)=5)
+&=\binom{5}{2}(0.5)^2(0.5)^3\\
+&=\binom{5}{2}(0.5)^5\\
+&\approx `r round(ans5, 4)`.
+\end{aligned}
+$$
+
+
+
+
+
+
+
+
+## Worked Example 6: Inter-Arrival Times
+
+For a Poisson process with rate $\lambda$, the inter-arrival times $\{T_i\}_{i\geq 1}$ are independent and identically distributed exponential random variables with rate $\lambda$.
+
+Suppose events occur according to a Poisson process with rate $\lambda=3$ per hour.
+
+1. State the distribution of the inter-arrival times.
+2. Calculate the expected time between successive events.
+3. Calculate the probability that the time between two successive events exceeds 30 minutes.
+
+## Solution: Worked Example 6
+
+```{r}
+#| echo: false
+lambda6 <- 3
+
+ans6_2 <- 1 / lambda6
+ans6_3 <- exp(-lambda6 * 0.5)
+```
+
+1\. The inter-arrival times are independent and identically distributed exponential random variables with rate $3$ per hour. Thus, $T_i \sim \operatorname{Exponential}(3)$.
+
+2\. The expected time between successive events is
+
+$$E[T_i] = \frac{1}{\lambda} = \frac{1}{3}\text{ hours.}$$
+
+Therefore, the expected time is `r round(ans6_2 * 60, 2)` minutes.
+
+3\. Since 30 minutes is $0.5$ hours,
+
+$$\begin{aligned} P(T_i > 0.5) &= e^{-3 \times 0.5} \\ &= e^{-1.5}. \end{aligned}$$
+
+Therefore, the probability is `r round(ans6_3, 4)`.
+
+## Worked Example 7: Equipment Failures
+
+In Worked Example 2, equipment malfunctions are modelled by a Poisson process with rate $1/8$ failures per hour.
+
+Calculate the probability that the second failure occurs within one hour of the first failure.
+
+## Solution: Worked Example 7
+
+```{r}
+#| echo: false
+lambda7 <- 1 / 8
+
+ans7 <- 1 - exp(-lambda7 * 1)
+```
+
+By the independent and identically distributed inter-arrival time property, the time between the first and second failures, $T$, follows an exponential distribution with rate $\lambda=1/8$ per hour.
+
+Hence,
+
+$$\begin{aligned} P(T \leq 1) &= 1 - e^{-\lambda \times 1} \\ &= 1 - e^{-0.125}. \end{aligned}$$
+
+Therefore, the required probability is `r round(ans7, 4)`.
+
+## Worked Example 8: Insurance Claims
+
+Insurance claims arrive according to a Poisson process with rate 5 claims per day.
+
+1. Calculate the probability that at least two claims are reported on a given day.
+2. Calculate the probability that another claim is reported within the next hour after a claim has just been reported.
+3. Calculate the expected time until the next claim, given that no claims have been reported during the previous two days.
+
+## Solution: Worked Example 8
+
+```{r}
+#| echo: false
+lambda8 <- 5
+
+ans8_1 <- 1 - ppois(1, lambda8)
+ans8_2 <- 1 - exp(-lambda8 / 24)
+ans8_3 <- 1 / lambda8
+```
+
+1\. Let $N(1)$ denote the number of claims reported during a day. Then $N(1) \sim \operatorname{Poisson}(5)$, so
+
+$$\begin{aligned} P(N(1) \geq 2) &= 1 - P(N(1) \leq 1) \\ &= 1 - e^{-5}(1 + 5). \end{aligned}$$
+
+Therefore, the probability is `r round(ans8_1, 4)`.
+
+2\. By the exponential distribution of inter-arrival times, the probability that another claim arrives within one hour ($1/24$ of a day) is
+
+$$\begin{aligned} P(T \leq 1/24) &= 1 - e^{-5 / 24} \\ &\approx 1 - e^{-0.2083}. \end{aligned}$$
+
+Therefore, the probability is `r round(ans8_2, 4)`.
+
+3\. The exponential distribution has the memoryless property. Thus, the expected time until the next claim is unchanged by the absence of claims during the previous two days:
+
+$$E[T] = \frac{1}{\lambda} = \frac{1}{5}\text{ days.}$$
+
+Therefore, the expected waiting time is `r round(ans8_3 * 24, 2)` hours.
+
+## Worked Example 9: Time Until the Second Arrival
+
+Customers arrive at a service centre according to a Poisson process with rate 4 customers per hour.
+
+1. State the distribution of the time until the second customer arrives.
+2. Calculate the probability that the second customer arrives within 30 minutes of the start of observation.
+3. Calculate the expected time until the second customer arrives.
+
+## Solution: Worked Example 9
+
+```{r}
+#| echo: false
+lambda9 <- 4
+t9 <- 0.5
+
+ans9_2 <- 1 - exp(-lambda9 * t9) * (1 + lambda9 * t9)
+ans9_3 <- 2 / lambda9
+```
+
+1\. Let $S_2$ denote the time until the second customer arrives. Since the inter-arrival times are independent exponential random variables with rate $\lambda=4$ per hour,
+
+$$S_2 \sim \operatorname{Gamma}(2, 4).$$
+
+Equivalently, $S_2$ has an Erlang distribution with shape parameter $2$ and rate parameter $4$.
+
+2\. The second customer arrives within 30 minutes if at least two customers arrive within $0.5$ hours. Therefore,
+
+$$\begin{aligned} P(S_2 \leq 0.5) &= P(N(0.5) \geq 2) \\ &= 1 - e^{-4(0.5)}\left[1 + 4(0.5)\right]. \end{aligned}$$
+
+Therefore, the probability is `r round(ans9_2, 4)`.
+
+3\. The expected time until the second arrival is
+
+$$E[S_2] = \frac{2}{\lambda} = \frac{2}{4}\text{ hours.}$$
+
+Therefore, the expected time is `r round(ans9_3 * 60, 2)` minutes.
+
+## Worked Example 10: Inter-Arrival Times and Arrival Times
+
+Claims arrive according to a Poisson process with rate 2 claims per day.
+
+1. Calculate the probability that the time between successive claims exceeds half a day.
+2. Calculate the probability that the third claim arrives within two days of the start of observation.
+3. Calculate the expected time until the third claim arrives.
+
+## Solution: Worked Example 10
+
+```{r}
+#| echo: false
+lambda10 <- 2
+
+ans10_1 <- exp(-lambda10 * 0.5)
+ans10_2 <- ppois(2, lambda10 * 2, lower.tail = FALSE)
+ans10_3 <- 3 / lambda10
+```
+
+1\. Let $T$ denote the time between successive claims. Since $T \sim \operatorname{Exponential}(2)$,
+
+$$P(T > 0.5) = e^{-2 \times 0.5} = e^{-1}.$$
+
+Therefore, the probability is `r round(ans10_1, 4)`.
+
+2\. Let $S_3$ denote the time until the third claim arrives. The third claim arrives within two days if at least three claims occur during that period. Hence,
+
+$$\begin{aligned} P(S_3 \leq 2) &= P(N(2) \geq 3) \\ &= 1 - P(N(2) \leq 2), \end{aligned}$$
+
+where $N(2) \sim \operatorname{Poisson}(4)$.
+
+Therefore, the probability is `r round(ans10_2, 4)`.
+
+3\. The time until the third claim is the sum of three independent exponential inter-arrival times. Thus,
+
+$$S_3 \sim \operatorname{Gamma}(3, 2),$$
+
+and
+
+$$E[S_3] = \frac{3}{\lambda} = \frac{3}{2}\text{ days.}$$
+
+Therefore, the expected time is `r round(ans10_3, 2)` days.
+

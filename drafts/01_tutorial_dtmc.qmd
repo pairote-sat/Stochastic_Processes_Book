@@ -1,0 +1,153 @@
+---
+title: "01_tutorial_dtmc"
+format:
+  pdf:
+    toc: false
+number-sections: false
+---
+
+
+1. Consider a simple random walk ${X_n}$ with state space
+
+    $$
+    \mathcal{S}=\{0,1,\ldots,N\},
+    $$
+    
+    where states $0$ and $N$ are absorbing. For $1\leq i\leq N-1$,
+    
+    $$
+    P(X_{n+1}=i+1\mid X_n=i)=p,
+    \qquad
+    P(X_{n+1}=i-1\mid X_n=i)=q=1-p.
+    $$
+    
+    Suppose the process starts at $X_0=i$.
+    
+    Let
+    
+    $$
+    T=\inf\{n\geq 0:X_n\in\{0,N\}\}
+    $$
+    
+    be the time until absorption.
+
+    1. Let
+    
+    $$
+    u_i=P_i(X_T=N)
+    $$
+    
+    denote the probability that the random walk is eventually absorbed at the upper barrier $N$. Using first-step analysis, derive the equations satisfied by $u_i$, including the boundary conditions.
+    
+    2. Solve the equations in part (1) and obtain $u_i$ for:
+    
+    * $p\neq \frac12$;
+    * $p=\frac12$.
+    
+    3. Let
+    
+    $$
+    e_i=E_i[T]
+    $$
+    
+    denote the expected time until absorption. Using first-step analysis, derive the equations satisfied by $e_i$, including the boundary conditions.
+    
+    4. Suppose the random walk is fair, so that $p=q=\frac12$. Solve the equations in part (3) and show that
+    
+    $$
+    e_i=i(N-i).
+    $$
+    
+    5. Consider $N=10$ and $X_0=4$ with $p=0.8$. Calculate:
+    
+        1. the probability that the process is absorbed at state $10$;
+        2. the probability that the process is absorbed at state $0$.
+    
+    For the expected absorption time, suppose instead that $p=0.5$. Calculate $E_4[T]$.
+    
+    
+
+
+2. Startup Company: Exit or Shutdown
+
+    A startup company monitors its financial position over discrete time periods. Let $X_n$ denote the company's financial position after period $n$. While the company remains in operation,
+    
+    $$
+    X_{n+1} =
+    \begin{cases}
+    X_n+1, & \text{with probability } p,\\
+    X_n-1, & \text{with probability } 1-p.
+    \end{cases}
+    $$
+    
+    The company **exits successfully** when its financial position reaches $N$ and **shuts down** when its financial position reaches $5$. Suppose that $5<i<N$ and $X_0=i$.
+    
+    Let
+    
+    $$
+    T=\inf\{n\geq0:X_n\in\{5,N\}\}
+    $$
+    
+    be the time until the company exits or shuts down.
+    
+    1. **Transform the process**
+    
+       1. Define the transformed process
+    
+          $$
+          Y_n=X_n-5.
+          $$
+       2. Show that ${Y_n}$ is a simple random walk with absorbing barriers at $0$ and $N-5$.
+       3. State the initial value $Y_0$ in terms of $i$.
+    
+    2. **Probability of exit or shutdown**
+    
+       1. Let
+    
+          $$
+          u_i=P_i(X_T=N)
+          $$
+    
+          be the probability that the startup exits successfully before shutting down.
+       2. Using the corresponding result for a simple random walk with absorbing barriers at $0$ and $N-5$, **show that**
+    
+          $$
+          u_i=
+          \begin{cases}
+          \displaystyle
+          \frac{1-\left(\frac{1-p}{p}\right)^{i-5}}
+          {1-\left(\frac{1-p}{p}\right)^{N-5}},
+          & p\neq\frac12,\\[12pt]
+          \displaystyle
+          \frac{i-5}{N-5},
+          & p=\frac12.
+          \end{cases}
+          $$
+       3. Hence, show that the probability that the startup shuts down before reaching $N$ is
+    
+          $$
+          1-u_i.
+          $$
+    
+    3. **Expected time until exit or shutdown**
+    
+       1. Let
+    
+          $$
+          e_i=E_i[T]
+          $$
+    
+          be the expected number of periods until the startup exits or shuts down.
+       2. Using the corresponding result for a simple random walk with absorbing barriers at $0$ and $N-5$, **show that when $p=\frac12$**,
+    
+          $$
+          e_i=(i-5)(N-i).
+          $$
+    
+    4. **Numerical application**
+    
+       1. Suppose $N=20$, $X_0=12$, and $p=0.6$. Calculate the probability that the startup exits successfully before shutting down.
+       2. Suppose $N=20$, $X_0=12$, and $p=0.5$. Calculate the expected number of periods until the startup exits or shuts down.
+
+
+

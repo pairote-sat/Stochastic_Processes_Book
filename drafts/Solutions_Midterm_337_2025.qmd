@@ -1,0 +1,231 @@
+---
+title: "Solution_Mock_25_337.pdf"
+format:
+  pdf:
+    toc: false
+number-sections: false
+---
+
+
+1. Differences between deterministic and stochastic models 
+
+    * Deterministic models: The future behaviour of the system is completely determined by its initial conditions and model parameters. The same inputs always produce the same outputs.
+    There is no uncertainty in the model's predicted outcomes.
+    
+    
+    * Stochastic models: The future behaviour of the system involves randomness. Even with the same initial conditions and model parameters, different outcomes are possible. Outcomes are described using probability distributions to account for uncertainty.
+
+
+
+
+2. Simple random walk
+
+    (a) A **random walk** is a mathematical model that describes a path consisting of a sequence of random steps.
+    
+    * Each step is determined by chance, often based on a probability distribution.
+    * The next position depends on the current position plus a random change.
+    * Commonly expressed as
+      $X_{t+1} = X_t + \varepsilon_t,$
+      where $\varepsilon_t$ represents a random disturbance (e.g., $\varepsilon_t \sim N(0, \sigma^2)$).
+    
+    
+    (b) For a **random walk**, the **state space** and **time domain** can be described as follows:
+    
+    * **State space:**
+    
+      * Can be **discrete** (e.g., integers on a number line: …, −2, −1, 0, 1, 2, …) or **continuous** (e.g., real numbers).
+      * It represents all possible positions or values the process can take.
+    
+    * **Time domain:**
+    
+      * Usually **discrete** (e.g., $t = 0, 1, 2, \dots$), meaning the process evolves in steps.
+      * In some cases, it can be **continuous** (used in continuous-time random walks or Brownian motion).
+    
+    
+    (c) Random walks are widely used to model unpredictable processes such as stock prices, market movements, and diffusion phenomena.
+    
+    
+  
+3. Markov Chain: Classification
+
+    A Markov chain has the following transition matrix:
+        
+    $$
+    P =
+    \begin{pmatrix}
+    0 & 0.6 & 0.4\\
+    0.75 & 0 & 0.25\\
+    0.5 & 0.5 & 0
+    \end{pmatrix}
+    $$
+        
+    The states are ordered as $1,2,3$.
+    
+    (b) The chain is **irreducible** and **aperiodic** (period = 1). 
+    
+    Reasoning:
+        
+    * Irreducible: from every state you can reach every other state in one step (nonzero entries off the diagonal), so all states communicate.
+        
+    * Aperiodic: for state 1, there are returns in 2 steps and in 3 steps:
+        
+    * $P^2_{11}=P_{12}P_{21}+P_{13}P_{31}=0.6\cdot0.75+0.4\cdot0.5=0.65>0$
+    * there is also a 3-step cycle $1\to2\to3\to1$ so $P^3_{11}>0$.
+    * $\gcd(2,3)=1$, so period of state 1 is 1. Because the chain is irreducible all states share period 1.
+        
+    Therefore the chain is irreducible and aperiodic.
+        
+    
+
+
+
+
+
+4. Insurance Company Switching
+
+
+
+
+```{r}
+library(markovchain)
+library(MASS)
+library(expm)
+
+P <- matrix(
+  c(0.5, 0.2, 0.2, 0.1,
+    0.2, 0.6, 0.1, 0.1,
+    0.3, 0.2, 0.4, 0.1,
+    0.0, 0.2, 0.2, 0.6),
+  nrow = 4, byrow = TRUE,
+  dimnames = list(c("A", "B", "C", "D"),
+                  c("A", "B", "C", "D"))
+)
+
+mc <- new("markovchain",
+          states = c("A", "B", "C", "D"),
+          transitionMatrix = P)
+```
+
+
+    (a) Probability of remaining with Company C for at least five years
+
+Y must renew her policy at least four times without changing provider. The probability of renewing with Company C four consecutive times is
+
+```{r}
+ans1 <- P["C", "C"]^4
+ans1
+```
+
+$$
+\Pr(X_1=C,X_2=C,X_3=C,X_4=C\mid X_0=C)
+= `r ans1`.
+$$
+
+
+    (b) Probability that Company A does not cover Z at the time of the fire
+    
+Z starts with Company A in January 2013. The fire occurs on 12 March 2015, so there are two annual transitions.
+    
+The probability that Company A does not cover Z's home at the time of the fire is one minus the probability of being with Company A after two transitions:
+
+```{r}
+P2 <- P %^% 2
+
+ans2 <- 1 - P2["A", "A"]
+ans2
+```
+
+$$
+1-\Pr(X_2=A\mid X_0=A)
+= `r ans2`.
+$$
+
+
+
+    (c) Expected long-run proportions of homeowners
+    
+
+The long-run probability vector $\boldsymbol{\pi}$ is the stationary distribution, satisfying
+
+$$
+\boldsymbol{\pi}P=\boldsymbol{\pi},
+\qquad
+\sum_i \pi_i=1.
+$$
+
+Using the `markovchain` package:
+
+```{r}
+ans3 <- steadyStates(mc)
+ans3
+```    
+
+Hence,
+
+$$
+\boldsymbol{\pi}
+=
+(0.2583,\;0.3333,\;0.2083,\;0.2000),
+$$
+
+so the expected long-run proportions covered by Companies A, B, C, and D are respectively `r ans3[1, ]`.
+    
+
+
+
+    
+    
+5. Website Browsing Markov Chain
+
+
+```{r}
+P <- matrix(
+  c(0,   1/2, 1/2, 0,
+    1/2, 0,   1/2, 0,
+    1/3, 1/3, 0,   1/3,
+    0,   0,   1,   0),
+  nrow = 4, byrow = TRUE,
+  dimnames = list(c("N", "B", "C", "H"),
+                  c("N", "B", "C", "H"))
+)
+
+mc <- new("markovchain",
+          states = c("N", "B", "C", "H"),
+          transitionMatrix = P)
+```
+
+    (b) The transition matrix is
+
+$$
+P =
+\begin{pmatrix}
+0 & \frac12 & \frac12 & 0\\
+\frac12 & 0 & \frac12 & 0\\
+\frac13 & \frac13 & 0 & \frac13\\
+0 & 0 & 1 & 0
+\end{pmatrix}.
+$$
+
+    (c) Let $\boldsymbol{\pi}$ denote the long-run probability vector. It satisfies
+
+$$
+\boldsymbol{\pi}P=\boldsymbol{\pi},
+\qquad
+\sum_i\pi_i=1.
+$$
+
+The stationary distribution can be calculated using:
+
+```{r}
+pi <- steadyStates(mc)
+pi
+```
+
+
+Hence, the long-run proportions of visits to websites N, B, C, and H are
+
+$$
+\boldsymbol{\pi}
+=
+(`r pi[1]`,\; `r pi[2]`,\; `r pi[3]`,\; `r pi[4]`).
+$$

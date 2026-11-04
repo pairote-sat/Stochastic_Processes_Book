@@ -1,0 +1,434 @@
+---
+title: "06 Slides_Poisson_Processes_Part 2"
+format:
+  revealjs:
+    scrollable: true
+    incremental: true
+---
+
+# Conditional Distributions
+
+## Event Times Given the Total Number of Events
+
+Consider a Poisson process $\{N(t):t\geq 0\}$ with rate $\lambda$.
+
+Given that $N(T)=n$, the $n$ event times are distributed as the order statistics of $n$ independent Uniform$(0,T)$ random variables.
+
+- The event times are uniformly distributed over $(0,T)$ before ordering.
+- The conditional distribution of the event times does not depend on $\lambda$.
+
+## Uniform Distribution of Event Times
+
+Given $N(T)=n$, let $T_1<T_2<\cdots<T_n$ denote the ordered event times.
+
+The joint probability density function is
+
+$$
+f_{T_1,\ldots,T_n}(t_1,\ldots,t_n\mid N(T)=n)
+=\frac{n!}{T^n},
+$$
+
+for $0<t_1<\cdots<t_n<T$.
+
+For example, conditional on $N(1)=5$, the five event times are distributed as the order statistics of five independent Uniform$(0,1)$ random variables.
+
+
+
+
+
+
+## Example: Uniform Distribution of Event Times
+
+Customers arrive at a service counter according to a Poisson process.
+
+Given that exactly 3 customers arrive during a one-hour period, consider their arrival times before ordering.
+
+Each arrival time has a Uniform$(0,1)$ distribution, conditional on there being 3 arrivals.
+
+For any interval of length 15 minutes, the probability that a particular arrival occurs in that interval is
+
+$$
+\frac{15}{60}=\frac14.
+$$
+
+For example, the probability that a particular arrival occurs during the first 15 minutes is $1/4$.
+
+The probability is the same for any other 15-minute interval within the hour.
+
+
+## Example: Uniform Distribution of Event Times
+
+Customers arrive at a service counter according to a Poisson process.
+
+Given that exactly 3 customers arrive during a one-hour period, consider their **arrival times before ordering**. That is, label the three arrival times arbitrarily as $U_1,U_2,U_3$, without arranging them from earliest to latest.
+
+Conditional on there being 3 arrivals, $U_1,U_2,U_3$ are independent and uniformly distributed on $(0,1)$:
+
+$$
+U_1,U_2,U_3\overset{\text{i.i.d.}}{\sim}\operatorname{Uniform}(0,1).
+$$
+
+For each arrival time, the probability of falling within any 15-minute interval is
+
+$$
+\Pr(U_i\text{ falls in the interval}\mid N(1)=3)
+=\frac{15}{60}=\frac14.
+$$
+
+The arrival times **before ordering** are independent. After ordering them as $T_1<T_2<T_3$, they are no longer independent.
+
+## Example: The Rate Does Not Affect the Conditional Distribution
+
+Consider two Poisson processes with rates $\lambda=6$ and $\lambda=12$ customers per hour.
+
+Suppose that, for each process, exactly 4 customers arrive during a one-hour period.
+
+For either process, the conditional distribution of the arrival times is the same: the order statistics of 4 independent Uniform$(0,1)$ random variables.
+
+For example, the probability that exactly 2 of the 4 arrivals occur during the first 30 minutes is
+
+$$
+\begin{aligned}
+&\Pr(N(0.5)=2\mid N(1)=4)\\
+&\quad=\binom{4}{2}(0.5)^2(0.5)^2\\
+&\quad=\frac{6}{16}=0.375.
+\end{aligned}
+$$
+
+This probability is $0.375$ for both rates.
+
+The rate $\lambda$ affects the probability of observing 4 arrivals in the first place, but once we condition on 4 arrivals, it does not affect their arrival-time distribution.
+
+
+
+
+
+## Order Statistics: An Illustration
+
+Suppose exactly 3 customers arrive at a service counter during a one-hour period. Denote their arrival times, before ordering, by $U_1,U_2,U_3$.
+
+For example, suppose the arrival times are
+
+$$
+U_1=35,\qquad U_2=10,\qquad U_3=45
+$$
+
+in minutes.
+
+The **order statistics** are obtained by arranging these times in increasing order:
+
+$$
+T_1=10,\qquad T_2=35,\qquad T_3=45.
+$$
+
+Thus, $T_1$ is the first arrival time, $T_2$ is the second arrival time, and $T_3$ is the third arrival time.
+
+In general, the ordered event times satisfy
+
+$$
+T_1<T_2<\cdots<T_n.
+$$
+
+Conditional on $N(1)=3$, the unordered times $U_1,U_2,U_3$ are independent Uniform$(0,1)$ random variables. The ordered times $T_1,T_2,T_3$ are their order statistics.
+
+
+
+
+
+## Order Statistics: Why Do We Need a Joint Distribution?
+
+Suppose exactly 3 customers arrive during a one-hour period. Before ordering, denote their arrival times by $U_1,U_2,U_3$. Conditional on $N(1)=3$, these are independent Uniform$(0,1)$ random variables.
+
+For example, suppose the arrival times are
+
+$$
+U_1=0.35,\qquad U_2=0.10,\qquad U_3=0.45.
+$$
+
+Arranging them in chronological order gives
+
+$$
+T_1=0.10,\qquad T_2=0.35,\qquad T_3=0.45.
+$$
+
+In general, the ordered arrival times satisfy
+
+$$
+T_1<T_2<T_3.
+$$
+
+The ordered times are no longer independent. For example, knowing $T_2=0.5$ tells us that $T_1<0.5$ and $T_3>0.5$.
+
+Therefore, we describe the ordered arrival times using their **joint probability density function**:
+
+$$
+f_{T_1,T_2,T_3}(t_1,t_2,t_3\mid N(1)=3)
+=
+\begin{cases}
+6, & 0<t_1<t_2<t_3<1,\\
+0, & \text{otherwise}.
+\end{cases}
+$$
+
+The constant $6=3!$ accounts for the six possible orderings of the three independent uniform random variables. The joint density is zero outside the region $0<t_1<t_2<t_3<1$.
+
+
+
+
+## Uniform Distribution of Event Times
+
+Given $N(T)=n$, let $T_1<T_2<\cdots<T_n$ denote the ordered event times.
+
+The joint probability density function of these order statistics is
+
+$$
+f_{T_1,\ldots,T_n}(t_1,\ldots,t_n\mid N(T)=n)
+=\frac{n!}{T^n},
+$$
+
+for $0<t_1<\cdots<t_n<T$, and is zero otherwise.
+
+For example, conditional on $N(1)=5$, the five ordered arrival times have the same distribution as the order statistics of five independent Uniform$(0,1)$ random variables.
+
+The density is constant over the region $0<t_1<\cdots<t_5<1$, where the five arrival times must occur in chronological order.
+
+**Important point:** The factor $n!$ appears because the joint density of the $n$ independent Uniform$(0,T)$ random variables is $1/T^n$. Their possible orderings divide the sample space into $n!$ regions of equal probability. Restricting to the region $0<t_1<\cdots<t_n<T$ gives the joint density of the ordered times as $n!/T^n$.
+
+
+
+
+
+
+
+
+
+
+## Conditional Distributions of Event Counts
+
+Suppose $0<s<T$. Given that $N(T)=n$, the number of events during the first $s$ time units has a binomial distribution:
+
+$$
+N(s)\mid N(T)=n
+\sim \operatorname{Bin}\left(n,\frac{s}{T}\right).
+$$
+
+Hence,
+
+$$
+\Pr(N(s)=k\mid N(T)=n)
+=\binom{n}{k}
+\left(\frac{s}{T}\right)^k
+\left(1-\frac{s}{T}\right)^{n-k}.
+$$
+
+The probability depends on the proportion of the observation period, rather than the Poisson rate $\lambda$.
+
+
+
+
+
+
+## Conditional Distributions of Event Counts
+
+Suppose $N(t)$ is a Poisson process with rate $\lambda$, and let $0<s<T$.
+
+We want to find the distribution of $N(s)$, given that $N(T)=n$.
+
+Since $N(T)$ counts all events during $(0,T]$, we have
+
+$$
+N(T)=N(s)+[N(T)-N(s)].
+$$
+
+The two terms count events during $(0,s]$ and $(s,T]$, respectively.
+
+By the independent increments property, these two counts are independent.
+
+## Step 1: Apply the Conditional Probability Formula
+
+For $k=0,1,\ldots,n$,
+
+$$
+\Pr(N(s)=k\mid N(T)=n)
+=
+\frac{\Pr(N(s)=k,N(T)=n)}
+{\Pr(N(T)=n)}.
+$$
+
+If $N(s)=k$ and $N(T)=n$, then exactly $n-k$ events must occur during $(s,T]$.
+
+Therefore,
+
+$$
+\begin{aligned}
+&\Pr(N(s)=k,N(T)=n)\\
+&\quad=\Pr(N(s)=k, N(T)-N(s)=n-k).
+\end{aligned}
+$$
+
+## Step 2: Use Independent Increments
+
+The counts $N(s)$ and $N(T)-N(s)$ are independent.
+
+Hence,
+
+$$
+\begin{aligned}
+&\Pr(N(s)=k,N(T)=n)\\
+&\quad=\Pr(N(s)=k)\\
+&\qquad\times\Pr(N(T)-N(s)=n-k).
+\end{aligned}
+$$
+
+Since $N(s)\sim\operatorname{Poisson}(\lambda s)$ and $N(T)-N(s)\sim\operatorname{Poisson}(\lambda(T-s))$,
+
+$$
+\begin{aligned}
+&\Pr(N(s)=k,N(T)=n)\\
+&\quad=\frac{e^{-\lambda s}(\lambda s)^k}{k!}\\
+&\qquad\times
+\frac{e^{-\lambda(T-s)}
+[\lambda(T-s)]^{n-k}}{(n-k)!}.
+\end{aligned}
+$$
+
+## Step 3: Divide by the Probability of $N(T)=n$
+
+Because $N(T)\sim\operatorname{Poisson}(\lambda T)$,
+
+$$
+\Pr(N(T)=n)
+=\frac{e^{-\lambda T}(\lambda T)^n}{n!}.
+$$
+
+Substituting into the conditional probability formula gives
+
+$$
+\begin{aligned}
+&\Pr(N(s)=k\mid N(T)=n)\\[2pt]
+&=\frac{
+\frac{e^{-\lambda s}(\lambda s)^k}{k!}
+\frac{e^{-\lambda(T-s)}[\lambda(T-s)]^{n-k}}{(n-k)!}
+}{
+\frac{e^{-\lambda T}(\lambda T)^n}{n!}
+}.
+\end{aligned}
+$$
+
+## Step 4: Simplify
+
+Since $e^{-\lambda s}e^{-\lambda(T-s)}=e^{-\lambda T}$, the exponential terms cancel.
+
+The powers of $\lambda$ also cancel, leaving
+
+$$
+\begin{aligned}
+&\Pr(N(s)=k\mid N(T)=n)\\
+&=\frac{n!}{k!(n-k)!}
+\frac{s^k(T-s)^{n-k}}{T^n}\\[4pt]
+&=\binom{n}{k}
+\left(\frac{s}{T}\right)^k
+\left(1-\frac{s}{T}\right)^{n-k}.
+\end{aligned}
+$$
+
+## Result: The Conditional Distribution
+
+We have proved that
+
+$$
+\boxed{
+N(s)\mid N(T)=n
+\sim\operatorname{Bin}\left(n,\frac{s}{T}\right).
+}
+$$
+
+Thus, the conditional probability mass function is
+
+$$
+\boxed{
+\Pr(N(s)=k\mid N(T)=n)
+=\binom{n}{k}
+\left(\frac{s}{T}\right)^k
+\left(1-\frac{s}{T}\right)^{n-k}.
+}
+$$
+
+The conditional distribution depends on the proportion $s/T$, not on the Poisson rate $\lambda$.
+
+## Intuition
+
+Given that $n$ events occur during $(0,T]$, each event has probability $s/T$ of occurring during $(0,s]$.
+
+Therefore, the number of events during the first $s$ time units behaves like the number of successes in $n$ independent Bernoulli trials, each with success probability $s/T$.
+
+This gives the binomial distribution.
+
+
+
+
+
+
+
+
+
+
+## Worked Example: Customer Arrivals
+
+Customers arrive at a service counter according to a Poisson process with rate $\lambda=12$ customers per hour.
+
+Given that 5 customers arrive during a one-hour period, find the probability that exactly 2 customers arrive during the first 30 minutes.
+
+## Solution: Customer Arrivals
+
+Let $N(t)$ denote the number of arrivals during the first $t$ hours.
+
+Given $N(1)=5$,
+
+$$
+N(0.5)\mid N(1)=5
+\sim \operatorname{Bin}(5,0.5).
+$$
+
+Therefore,
+
+$$
+\begin{aligned}
+&\Pr(N(0.5)=2\mid N(1)=5)\\
+&\quad=\binom{5}{2}(0.5)^2(0.5)^3\\
+&\quad=\frac{10}{32}=0.3125.
+\end{aligned}
+$$
+
+The required probability is $0.3125$.
+
+## Worked Example: Insurance Claims
+
+Claims arrive at an insurance company according to a Poisson process with rate $\lambda=8$ claims per day.
+
+Given that 6 claims occur during a 24-hour period, find the probability that exactly 4 claims occur during the first 16 hours.
+
+## Solution: Insurance Claims
+
+Let $N(t)$ denote the number of claims during the first $t$ hours.
+
+Given $N(24)=6$,
+
+$$
+N(16)\mid N(24)=6
+\sim \operatorname{Bin}\left(6,\frac{16}{24}\right).
+$$
+
+Therefore,
+
+$$
+\begin{aligned}
+&\Pr(N(16)=4\mid N(24)=6)\\
+&\quad=\binom{6}{4}
+\left(\frac{2}{3}\right)^4
+\left(\frac{1}{3}\right)^2\\
+&\quad=\frac{240}{729}\approx 0.3292.
+\end{aligned}
+$$
+
+The required probability is approximately $0.3292$.
