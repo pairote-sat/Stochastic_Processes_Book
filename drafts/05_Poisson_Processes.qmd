@@ -2062,6 +2062,45 @@ This allows us to model the arrival of large claims directly without first model
 
 For several independent portfolios, thinning can be applied to each portfolio separately. The resulting selected-claim processes can then be combined using the superposition property.
 
+
+
+```{r}
+#| echo: false
+ans5 <- dbinom(2, size = 5, prob = 0.5)
+```
+
+
+::: {#exm-conditional-probability}
+
+Customers arrive at a service counter according to a Poisson process with rate $\lambda=12$ customers per hour.
+
+Given that 5 customers arrive during a one-hour period, find the probability that exactly 2 customers arrive during the first 30 minutes.
+
+**Solution:**
+
+Let $N(t)$ denote the number of customers arriving during the first $t$ hours. Given that 5 customers arrive during a one-hour period, the arrival times are uniformly distributed over that period. Hence, each customer has probability $0.5$ of arriving during the first 30 minutes.
+
+The number of customers arriving during the first 30 minutes therefore has a binomial distribution:
+
+$$
+N(0.5)\mid N(1)=5
+\sim \operatorname{Binomial}(5,0.5).
+$$
+
+Thus,
+
+$$
+\begin{aligned}
+P(N(0.5)=2\mid N(1)=5)
+&=\binom{5}{2}(0.5)^2(1-0.5)^3\\
+&=\binom{5}{2}(0.5)^5\\
+&\approx `r round(ans5, 4)`.
+\end{aligned}
+$$
+
+::: 
+
+
 <!-- ### Worked Example 12: Claims Above a Threshold -->
 
 <!-- An insurer has two independent portfolios, A and B. -->
