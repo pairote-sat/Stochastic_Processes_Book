@@ -68,6 +68,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
+<link href="../chapters/08_Markov_Jump_Processes.html" rel="next">
 <link href="../chapters/02_Discrete_Time_Stochastic_Processes.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
@@ -197,6 +198,12 @@ window.Quarto = {
  <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Chapter 3: Poisson Processes</span></span></a>
   </div>
 </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/08_Markov_Jump_Processes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Chapter 5: Markov Jump Processes</span></span></a>
+  </div>
+</li>
     </ul>
     </div>
 </nav>
@@ -207,48 +214,45 @@ window.Quarto = {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#chapter-3-poisson-processes" id="toc-chapter-3-poisson-processes" class="nav-link active" data-scroll-target="#chapter-3-poisson-processes"><span class="header-section-number">3.1</span> Chapter 3: Poisson Processes</a>
+  <li><a href="#learning-outcomes" id="toc-learning-outcomes" class="nav-link active" data-scroll-target="#learning-outcomes">Learning Outcomes</a></li>
+  <li><a href="#introduction-to-poisson-processes" id="toc-introduction-to-poisson-processes" class="nav-link" data-scroll-target="#introduction-to-poisson-processes"><span class="header-section-number">3.1</span> Introduction to Poisson Processes</a>
   <ul class="collapse">
-  <li><a href="#learning-outcomes" id="toc-learning-outcomes" class="nav-link" data-scroll-target="#learning-outcomes">Learning Outcomes</a></li>
+  <li><a href="#motivation" id="toc-motivation" class="nav-link" data-scroll-target="#motivation"><span class="header-section-number">3.1.1</span> Motivation</a></li>
+  <li><a href="#from-markov-chains-to-poisson-processes" id="toc-from-markov-chains-to-poisson-processes" class="nav-link" data-scroll-target="#from-markov-chains-to-poisson-processes"><span class="header-section-number">3.1.2</span> From Markov Chains to Poisson Processes</a></li>
+  <li><a href="#counting-events-over-time" id="toc-counting-events-over-time" class="nav-link" data-scroll-target="#counting-events-over-time"><span class="header-section-number">3.1.3</span> Counting Events over Time</a></li>
+  <li><a href="#applications" id="toc-applications" class="nav-link" data-scroll-target="#applications"><span class="header-section-number">3.1.4</span> Applications</a></li>
+  <li><a href="#questions-of-interest" id="toc-questions-of-interest" class="nav-link" data-scroll-target="#questions-of-interest"><span class="header-section-number">3.1.5</span> Questions of Interest</a></li>
   </ul></li>
-  <li><a href="#introduction-to-poisson-processes" id="toc-introduction-to-poisson-processes" class="nav-link" data-scroll-target="#introduction-to-poisson-processes"><span class="header-section-number">3.2</span> Introduction to Poisson Processes</a>
+  <li><a href="#definition-and-properties-of-the-poisson-process" id="toc-definition-and-properties-of-the-poisson-process" class="nav-link" data-scroll-target="#definition-and-properties-of-the-poisson-process"><span class="header-section-number">3.2</span> Definition and Properties of the Poisson Process</a>
   <ul class="collapse">
-  <li><a href="#motivation" id="toc-motivation" class="nav-link" data-scroll-target="#motivation"><span class="header-section-number">3.2.1</span> Motivation</a></li>
-  <li><a href="#from-markov-chains-to-poisson-processes" id="toc-from-markov-chains-to-poisson-processes" class="nav-link" data-scroll-target="#from-markov-chains-to-poisson-processes"><span class="header-section-number">3.2.2</span> From Markov Chains to Poisson Processes</a></li>
-  <li><a href="#counting-events-over-time" id="toc-counting-events-over-time" class="nav-link" data-scroll-target="#counting-events-over-time"><span class="header-section-number">3.2.3</span> Counting Events over Time</a></li>
-  <li><a href="#applications" id="toc-applications" class="nav-link" data-scroll-target="#applications"><span class="header-section-number">3.2.4</span> Applications</a></li>
-  <li><a href="#questions-of-interest" id="toc-questions-of-interest" class="nav-link" data-scroll-target="#questions-of-interest"><span class="header-section-number">3.2.5</span> Questions of Interest</a></li>
+  <li><a href="#two-approaches-to-defining-a-poisson-process" id="toc-two-approaches-to-defining-a-poisson-process" class="nav-link" data-scroll-target="#two-approaches-to-defining-a-poisson-process"><span class="header-section-number">3.2.1</span> Two Approaches to Defining a Poisson Process</a></li>
+  <li><a href="#local-behaviour-of-a-poisson-process" id="toc-local-behaviour-of-a-poisson-process" class="nav-link" data-scroll-target="#local-behaviour-of-a-poisson-process"><span class="header-section-number">3.2.2</span> Local Behaviour of a Poisson Process</a></li>
+  <li><a href="#distributional-definition-of-a-poisson-process" id="toc-distributional-definition-of-a-poisson-process" class="nav-link" data-scroll-target="#distributional-definition-of-a-poisson-process"><span class="header-section-number">3.2.3</span> Distributional Definition of a Poisson Process</a></li>
+  <li><a href="#relationship-between-the-two-definitions" id="toc-relationship-between-the-two-definitions" class="nav-link" data-scroll-target="#relationship-between-the-two-definitions"><span class="header-section-number">3.2.4</span> Relationship Between the Two Definitions</a></li>
+  <li><a href="#which-definition-should-we-use" id="toc-which-definition-should-we-use" class="nav-link" data-scroll-target="#which-definition-should-we-use"><span class="header-section-number">3.2.5</span> Which Definition Should We Use?</a></li>
   </ul></li>
-  <li><a href="#definition-and-properties-of-the-poisson-process" id="toc-definition-and-properties-of-the-poisson-process" class="nav-link" data-scroll-target="#definition-and-properties-of-the-poisson-process"><span class="header-section-number">3.3</span> Definition and Properties of the Poisson Process</a>
+  <li><a href="#inter-arrival-times" id="toc-inter-arrival-times" class="nav-link" data-scroll-target="#inter-arrival-times"><span class="header-section-number">3.3</span> Inter-Arrival Times and Arrival Times</a>
   <ul class="collapse">
-  <li><a href="#two-approaches-to-defining-a-poisson-process" id="toc-two-approaches-to-defining-a-poisson-process" class="nav-link" data-scroll-target="#two-approaches-to-defining-a-poisson-process"><span class="header-section-number">3.3.1</span> Two Approaches to Defining a Poisson Process</a></li>
-  <li><a href="#local-behaviour-of-a-poisson-process" id="toc-local-behaviour-of-a-poisson-process" class="nav-link" data-scroll-target="#local-behaviour-of-a-poisson-process"><span class="header-section-number">3.3.2</span> Local Behaviour of a Poisson Process</a></li>
-  <li><a href="#distributional-definition-of-a-poisson-process" id="toc-distributional-definition-of-a-poisson-process" class="nav-link" data-scroll-target="#distributional-definition-of-a-poisson-process"><span class="header-section-number">3.3.3</span> Distributional Definition of a Poisson Process</a></li>
-  <li><a href="#relationship-between-the-two-definitions" id="toc-relationship-between-the-two-definitions" class="nav-link" data-scroll-target="#relationship-between-the-two-definitions"><span class="header-section-number">3.3.4</span> Relationship Between the Two Definitions</a></li>
-  <li><a href="#which-definition-should-we-use" id="toc-which-definition-should-we-use" class="nav-link" data-scroll-target="#which-definition-should-we-use"><span class="header-section-number">3.3.5</span> Which Definition Should We Use?</a></li>
+  <li><a href="#why-study-inter-arrival-times" id="toc-why-study-inter-arrival-times" class="nav-link" data-scroll-target="#why-study-inter-arrival-times"><span class="header-section-number">3.3.1</span> Why Study Inter-Arrival Times?</a></li>
+  <li><a href="#definition-of-inter-arrival-times-and-arrival-times" id="toc-definition-of-inter-arrival-times-and-arrival-times" class="nav-link" data-scroll-target="#definition-of-inter-arrival-times-and-arrival-times"><span class="header-section-number">3.3.2</span> Definition of Inter-Arrival Times and Arrival Times</a></li>
+  <li><a href="#poisson-process-sample-path" id="toc-poisson-process-sample-path" class="nav-link" data-scroll-target="#poisson-process-sample-path"><span class="header-section-number">3.3.3</span> Poisson Process Sample Path</a></li>
+  <li><a href="#simulating-a-sample-path-of-a-poisson-process" id="toc-simulating-a-sample-path-of-a-poisson-process" class="nav-link" data-scroll-target="#simulating-a-sample-path-of-a-poisson-process"><span class="header-section-number">3.3.4</span> Simulating a Sample Path of a Poisson Process</a></li>
+  <li><a href="#exponential-distribution-of-inter-arrival-times" id="toc-exponential-distribution-of-inter-arrival-times" class="nav-link" data-scroll-target="#exponential-distribution-of-inter-arrival-times"><span class="header-section-number">3.3.5</span> Exponential Distribution of Inter-Arrival Times</a></li>
+  <li><a href="#independence-of-inter-arrival-times" id="toc-independence-of-inter-arrival-times" class="nav-link" data-scroll-target="#independence-of-inter-arrival-times"><span class="header-section-number">3.3.6</span> Independence of Inter-Arrival Times</a></li>
+  <li><a href="#arrival-times-and-the-gamma-distribution" id="toc-arrival-times-and-the-gamma-distribution" class="nav-link" data-scroll-target="#arrival-times-and-the-gamma-distribution"><span class="header-section-number">3.3.7</span> Arrival Times and the Gamma Distribution</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">3.3.8</span> Summary</a></li>
   </ul></li>
-  <li><a href="#inter-arrival-times" id="toc-inter-arrival-times" class="nav-link" data-scroll-target="#inter-arrival-times"><span class="header-section-number">3.4</span> Inter-Arrival Times and Arrival Times</a>
+  <li><a href="#properties-of-the-poisson-process" id="toc-properties-of-the-poisson-process" class="nav-link" data-scroll-target="#properties-of-the-poisson-process"><span class="header-section-number">3.4</span> Properties of the Poisson Process</a>
   <ul class="collapse">
-  <li><a href="#why-study-inter-arrival-times" id="toc-why-study-inter-arrival-times" class="nav-link" data-scroll-target="#why-study-inter-arrival-times"><span class="header-section-number">3.4.1</span> Why Study Inter-Arrival Times?</a></li>
-  <li><a href="#definition-of-inter-arrival-times-and-arrival-times" id="toc-definition-of-inter-arrival-times-and-arrival-times" class="nav-link" data-scroll-target="#definition-of-inter-arrival-times-and-arrival-times"><span class="header-section-number">3.4.2</span> Definition of Inter-Arrival Times and Arrival Times</a></li>
-  <li><a href="#poisson-process-sample-path" id="toc-poisson-process-sample-path" class="nav-link" data-scroll-target="#poisson-process-sample-path"><span class="header-section-number">3.4.3</span> Poisson Process Sample Path</a></li>
-  <li><a href="#simulating-a-sample-path-of-a-poisson-process" id="toc-simulating-a-sample-path-of-a-poisson-process" class="nav-link" data-scroll-target="#simulating-a-sample-path-of-a-poisson-process"><span class="header-section-number">3.4.4</span> Simulating a Sample Path of a Poisson Process</a></li>
-  <li><a href="#exponential-distribution-of-inter-arrival-times" id="toc-exponential-distribution-of-inter-arrival-times" class="nav-link" data-scroll-target="#exponential-distribution-of-inter-arrival-times"><span class="header-section-number">3.4.5</span> Exponential Distribution of Inter-Arrival Times</a></li>
-  <li><a href="#independence-of-inter-arrival-times" id="toc-independence-of-inter-arrival-times" class="nav-link" data-scroll-target="#independence-of-inter-arrival-times"><span class="header-section-number">3.4.6</span> Independence of Inter-Arrival Times</a></li>
-  <li><a href="#arrival-times-and-the-gamma-distribution" id="toc-arrival-times-and-the-gamma-distribution" class="nav-link" data-scroll-target="#arrival-times-and-the-gamma-distribution"><span class="header-section-number">3.4.7</span> Arrival Times and the Gamma Distribution</a></li>
-  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">3.4.8</span> Summary</a></li>
-  </ul></li>
-  <li><a href="#properties-of-the-poisson-process" id="toc-properties-of-the-poisson-process" class="nav-link" data-scroll-target="#properties-of-the-poisson-process"><span class="header-section-number">3.5</span> Properties of the Poisson Process</a>
-  <ul class="collapse">
-  <li><a href="#why-study-the-properties" id="toc-why-study-the-properties" class="nav-link" data-scroll-target="#why-study-the-properties"><span class="header-section-number">3.5.1</span> Why Study the Properties?</a></li>
-  <li><a href="#independent-increments" id="toc-independent-increments" class="nav-link" data-scroll-target="#independent-increments"><span class="header-section-number">3.5.2</span> Independent Increments</a></li>
-  <li><a href="#stationary-increments" id="toc-stationary-increments" class="nav-link" data-scroll-target="#stationary-increments"><span class="header-section-number">3.5.3</span> Stationary Increments</a></li>
-  <li><a href="#the-memoryless-property" id="toc-the-memoryless-property" class="nav-link" data-scroll-target="#the-memoryless-property"><span class="header-section-number">3.5.4</span> The Memoryless Property</a></li>
-  <li><a href="#superposition-of-independent-poisson-processes" id="toc-superposition-of-independent-poisson-processes" class="nav-link" data-scroll-target="#superposition-of-independent-poisson-processes"><span class="header-section-number">3.5.5</span> Superposition of Independent Poisson Processes</a></li>
-  <li><a href="#identifying-the-source-of-an-arrival" id="toc-identifying-the-source-of-an-arrival" class="nav-link" data-scroll-target="#identifying-the-source-of-an-arrival"><span class="header-section-number">3.5.6</span> Identifying the Source of an Arrival</a></li>
-  <li><a href="#splitting-and-thinning-of-a-poisson-process" id="toc-splitting-and-thinning-of-a-poisson-process" class="nav-link" data-scroll-target="#splitting-and-thinning-of-a-poisson-process"><span class="header-section-number">3.5.7</span> Splitting and Thinning of a Poisson Process</a></li>
-  <li><a href="#summary-1" id="toc-summary-1" class="nav-link" data-scroll-target="#summary-1"><span class="header-section-number">3.5.8</span> Summary</a></li>
-  <li><a href="#from-poisson-processes-to-markov-jump-processes" id="toc-from-poisson-processes-to-markov-jump-processes" class="nav-link" data-scroll-target="#from-poisson-processes-to-markov-jump-processes"><span class="header-section-number">3.5.9</span> From Poisson Processes to Markov Jump Processes</a></li>
+  <li><a href="#why-study-the-properties" id="toc-why-study-the-properties" class="nav-link" data-scroll-target="#why-study-the-properties"><span class="header-section-number">3.4.1</span> Why Study the Properties?</a></li>
+  <li><a href="#independent-increments" id="toc-independent-increments" class="nav-link" data-scroll-target="#independent-increments"><span class="header-section-number">3.4.2</span> Independent Increments</a></li>
+  <li><a href="#stationary-increments" id="toc-stationary-increments" class="nav-link" data-scroll-target="#stationary-increments"><span class="header-section-number">3.4.3</span> Stationary Increments</a></li>
+  <li><a href="#the-memoryless-property" id="toc-the-memoryless-property" class="nav-link" data-scroll-target="#the-memoryless-property"><span class="header-section-number">3.4.4</span> The Memoryless Property</a></li>
+  <li><a href="#superposition-of-independent-poisson-processes" id="toc-superposition-of-independent-poisson-processes" class="nav-link" data-scroll-target="#superposition-of-independent-poisson-processes"><span class="header-section-number">3.4.5</span> Superposition of Independent Poisson Processes</a></li>
+  <li><a href="#identifying-the-source-of-an-arrival" id="toc-identifying-the-source-of-an-arrival" class="nav-link" data-scroll-target="#identifying-the-source-of-an-arrival"><span class="header-section-number">3.4.6</span> Identifying the Source of an Arrival</a></li>
+  <li><a href="#splitting-and-thinning-of-a-poisson-process" id="toc-splitting-and-thinning-of-a-poisson-process" class="nav-link" data-scroll-target="#splitting-and-thinning-of-a-poisson-process"><span class="header-section-number">3.4.7</span> Splitting and Thinning of a Poisson Process</a></li>
+  <li><a href="#summary-1" id="toc-summary-1" class="nav-link" data-scroll-target="#summary-1"><span class="header-section-number">3.4.8</span> Summary</a></li>
+  <li><a href="#from-poisson-processes-to-markov-jump-processes" id="toc-from-poisson-processes-to-markov-jump-processes" class="nav-link" data-scroll-target="#from-poisson-processes-to-markov-jump-processes"><span class="header-section-number">3.4.9</span> From Poisson Processes to Markov Jump Processes</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -275,8 +279,7 @@ window.Quarto = {
 </header>
 
 
-<section id="chapter-3-poisson-processes" class="level2" data-number="3.1">
-<h2 data-number="3.1" class="anchored" data-anchor-id="chapter-3-poisson-processes"><span class="header-section-number">3.1</span> Chapter 3: Poisson Processes</h2>
+<!-- ## Chapter 3: Poisson Processes -->
 <section id="learning-outcomes" class="level3 unnumbered">
 <h3 class="unnumbered anchored" data-anchor-id="learning-outcomes">Learning Outcomes</h3>
 <p>After studying this chapter, students should be able to:</p>
@@ -290,24 +293,23 @@ window.Quarto = {
 <li><strong>Explain</strong> the relationship between a Poisson process and a continuous-time Markov chain, including the two-state Alive–Dead model.</li>
 </ol>
 </section>
-</section>
-<section id="introduction-to-poisson-processes" class="level2" data-number="3.2">
-<h2 data-number="3.2" class="anchored" data-anchor-id="introduction-to-poisson-processes"><span class="header-section-number">3.2</span> Introduction to Poisson Processes</h2>
-<section id="motivation" class="level3" data-number="3.2.1">
-<h3 data-number="3.2.1" class="anchored" data-anchor-id="motivation"><span class="header-section-number">3.2.1</span> Motivation</h3>
+<section id="introduction-to-poisson-processes" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="introduction-to-poisson-processes"><span class="header-section-number">3.1</span> Introduction to Poisson Processes</h2>
+<section id="motivation" class="level3" data-number="3.1.1">
+<h3 data-number="3.1.1" class="anchored" data-anchor-id="motivation"><span class="header-section-number">3.1.1</span> Motivation</h3>
 <p>Many real-world systems involve events occurring randomly over time. Examples include insurance claims, customer arrivals, telephone calls, and equipment failures.</p>
 <p>In previous chapters, we studied Markov chains, which describe how a system evolves through a sequence of discrete time steps. We now consider stochastic processes in which events can occur at any time within a continuous time interval.</p>
 <p>A <strong>Poisson process</strong> provides a mathematical model for counting the number of events that occur over time and studying the times at which they occur. It is widely used in actuarial science, finance, telecommunications, and other fields where random arrivals or occurrences need to be modelled.</p>
 </section>
-<section id="from-markov-chains-to-poisson-processes" class="level3" data-number="3.2.2">
-<h3 data-number="3.2.2" class="anchored" data-anchor-id="from-markov-chains-to-poisson-processes"><span class="header-section-number">3.2.2</span> From Markov Chains to Poisson Processes</h3>
+<section id="from-markov-chains-to-poisson-processes" class="level3" data-number="3.1.2">
+<h3 data-number="3.1.2" class="anchored" data-anchor-id="from-markov-chains-to-poisson-processes"><span class="header-section-number">3.1.2</span> From Markov Chains to Poisson Processes</h3>
 <p>A discrete-time Markov chain describes the evolution of a system at times <span class="math inline">\(n=0,1,2,\ldots\)</span>. The system changes state at discrete time steps, and its future behaviour depends on its current state, given the past.</p>
 <p>A Poisson process takes a different approach. Rather than tracking changes in the state of a system at discrete time steps, it counts the number of events that have occurred by time <span class="math inline">\(t\)</span>, where <span class="math inline">\(t\geq 0\)</span> is continuous.</p>
 <p>For example, an insurer may be interested in the number of claims received during a day. Claims can arrive at any time, rather than only at the beginning or end of each hour.</p>
 <p>The main distinction is therefore the time parameter: a discrete-time Markov chain evolves in discrete time, whereas a Poisson process describes event occurrences in continuous time. A Poisson process is also a continuous-time Markov process, a connection that will become clearer when we study its properties.</p>
 </section>
-<section id="counting-events-over-time" class="level3" data-number="3.2.3">
-<h3 data-number="3.2.3" class="anchored" data-anchor-id="counting-events-over-time"><span class="header-section-number">3.2.3</span> Counting Events over Time</h3>
+<section id="counting-events-over-time" class="level3" data-number="3.1.3">
+<h3 data-number="3.1.3" class="anchored" data-anchor-id="counting-events-over-time"><span class="header-section-number">3.1.3</span> Counting Events over Time</h3>
 <p>Let <span class="math inline">\(N(t)\)</span> denote the number of events that have occurred during the time interval <span class="math inline">\((0,t]\)</span>, where <span class="math inline">\(t\geq 0\)</span>.</p>
 <p>The process <span class="math inline">\(\{N(t):t\geq 0\}\)</span> tracks the cumulative number of events over time. For example, consider the arrival of insurance claims:</p>
 <ul>
@@ -330,8 +332,8 @@ N(t)-N(s).
 <!-- - **Healthcare:** The number of patients arriving at an emergency department. -->
 <!-- In each case, the Poisson process provides a framework for modelling the frequency and timing of events. However, the suitability of the model depends on whether its assumptions reasonably describe the underlying event-generating mechanism. -->
 </section>
-<section id="applications" class="level3" data-number="3.2.4">
-<h3 data-number="3.2.4" class="anchored" data-anchor-id="applications"><span class="header-section-number">3.2.4</span> Applications</h3>
+<section id="applications" class="level3" data-number="3.1.4">
+<h3 data-number="3.1.4" class="anchored" data-anchor-id="applications"><span class="header-section-number">3.1.4</span> Applications</h3>
 <p>Poisson processes are used to model the occurrence of events over time. They are particularly useful when events occur individually, at irregular times, and at an approximately constant average rate. The rate parameter, <span class="math inline">\(\lambda\)</span>, describes the average number of events occurring per unit of time.</p>
 <p>The following examples illustrate how Poisson processes can be applied in different fields.</p>
 <ul>
@@ -349,8 +351,8 @@ N(t)-N(s).
 </ol>
 <p>These assumptions determine whether a homogeneous Poisson process is a suitable model. For example, patient arrivals may be more frequent during certain hours, while insurance claims may be affected by seasonal weather conditions. In such situations, a constant-rate model may be inadequate, and a more general model, such as a non-homogeneous Poisson process, may be required.</p>
 </section>
-<section id="questions-of-interest" class="level3" data-number="3.2.5">
-<h3 data-number="3.2.5" class="anchored" data-anchor-id="questions-of-interest"><span class="header-section-number">3.2.5</span> Questions of Interest</h3>
+<section id="questions-of-interest" class="level3" data-number="3.1.5">
+<h3 data-number="3.1.5" class="anchored" data-anchor-id="questions-of-interest"><span class="header-section-number">3.1.5</span> Questions of Interest</h3>
 <p>Suppose insurance claims arrive according to a Poisson process with an average rate of <span class="math inline">\(\lambda=20\)</span> claims per day.</p>
 <p>Several questions may arise:</p>
 <ol type="1">
@@ -368,10 +370,10 @@ N(t)-N(s).
 <p>A Poisson process provides a unified mathematical framework for answering these questions. The following sections develop the relevant probability distributions and properties.</p>
 </section>
 </section>
-<section id="definition-and-properties-of-the-poisson-process" class="level2" data-number="3.3">
-<h2 data-number="3.3" class="anchored" data-anchor-id="definition-and-properties-of-the-poisson-process"><span class="header-section-number">3.3</span> Definition and Properties of the Poisson Process</h2>
-<section id="two-approaches-to-defining-a-poisson-process" class="level3" data-number="3.3.1">
-<h3 data-number="3.3.1" class="anchored" data-anchor-id="two-approaches-to-defining-a-poisson-process"><span class="header-section-number">3.3.1</span> Two Approaches to Defining a Poisson Process</h3>
+<section id="definition-and-properties-of-the-poisson-process" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="definition-and-properties-of-the-poisson-process"><span class="header-section-number">3.2</span> Definition and Properties of the Poisson Process</h2>
+<section id="two-approaches-to-defining-a-poisson-process" class="level3" data-number="3.2.1">
+<h3 data-number="3.2.1" class="anchored" data-anchor-id="two-approaches-to-defining-a-poisson-process"><span class="header-section-number">3.2.1</span> Two Approaches to Defining a Poisson Process</h3>
 <p>A Poisson process models the occurrence of events over time, such as insurance claims, customer arrivals, and equipment failures. The parameter <span class="math inline">\(\lambda&gt;0\)</span> is the constant average number of events per unit time.</p>
 <p>There are two complementary approaches to defining a homogeneous Poisson process:</p>
 <ol type="1">
@@ -381,8 +383,8 @@ N(t)-N(s).
 <p>The local approach describes the behaviour of the process over short intervals, whereas the distributional approach gives the probability distribution of event counts over finite intervals.</p>
 <p>Both approaches lead to the same homogeneous Poisson process under the usual assumptions on a counting process.</p>
 </section>
-<section id="local-behaviour-of-a-poisson-process" class="level3" data-number="3.3.2">
-<h3 data-number="3.3.2" class="anchored" data-anchor-id="local-behaviour-of-a-poisson-process"><span class="header-section-number">3.3.2</span> Local Behaviour of a Poisson Process</h3>
+<section id="local-behaviour-of-a-poisson-process" class="level3" data-number="3.2.2">
+<h3 data-number="3.2.2" class="anchored" data-anchor-id="local-behaviour-of-a-poisson-process"><span class="header-section-number">3.2.2</span> Local Behaviour of a Poisson Process</h3>
 <p>The local approach focuses on what happens during a very short time interval of length <span class="math inline">\(h\)</span>. Suppose the process is observed at time <span class="math inline">\(t\)</span>. During the interval <span class="math inline">\((t,t+h]\)</span>, three possibilities arise:</p>
 <ul>
 <li>No event occurs.</li>
@@ -439,8 +441,8 @@ N(t)-N(s).
 <p>This is a short-interval approximation. It becomes increasingly accurate as <span class="math inline">\(h\)</span> approaches zero. The local conditions describe the behaviour of the process over short intervals, but do not directly provide the probability distribution of the total number of events over a longer interval.</p>
 </section>
 </section>
-<section id="distributional-definition-of-a-poisson-process" class="level3" data-number="3.3.3">
-<h3 data-number="3.3.3" class="anchored" data-anchor-id="distributional-definition-of-a-poisson-process"><span class="header-section-number">3.3.3</span> Distributional Definition of a Poisson Process</h3>
+<section id="distributional-definition-of-a-poisson-process" class="level3" data-number="3.2.3">
+<h3 data-number="3.2.3" class="anchored" data-anchor-id="distributional-definition-of-a-poisson-process"><span class="header-section-number">3.2.3</span> Distributional Definition of a Poisson Process</h3>
 <p>The second approach defines a Poisson process directly through the probability distribution of its increments.</p>
 <div id="def-poisson-distributional" class="theorem definition">
 <p><span class="theorem-title"><strong>Definition 3.2</strong></span> <strong>Definition: Distributional Characterisation of a Poisson Process</strong></p>
@@ -670,8 +672,8 @@ E(S\mid X=3)
 </ol>
 </section>
 </section>
-<section id="relationship-between-the-two-definitions" class="level3" data-number="3.3.4">
-<h3 data-number="3.3.4" class="anchored" data-anchor-id="relationship-between-the-two-definitions"><span class="header-section-number">3.3.4</span> Relationship Between the Two Definitions</h3>
+<section id="relationship-between-the-two-definitions" class="level3" data-number="3.2.4">
+<h3 data-number="3.2.4" class="anchored" data-anchor-id="relationship-between-the-two-definitions"><span class="header-section-number">3.2.4</span> Relationship Between the Two Definitions</h3>
 <p>The local and distributional approaches describe the same homogeneous Poisson process. We now show how the two characterisations are related.</p>
 <section id="from-the-local-approach-to-the-poisson-distribution" class="level4">
 <h4 class="anchored" data-anchor-id="from-the-local-approach-to-the-poisson-distribution">From the Local Approach to the Poisson Distribution</h4>
@@ -775,8 +777,8 @@ e^{-\lambda h}=1-\lambda h+O(h^2),
 <p>Consequently, the two definitions are equivalent under the stated counting-process assumptions.</p>
 </section>
 </section>
-<section id="which-definition-should-we-use" class="level3" data-number="3.3.5">
-<h3 data-number="3.3.5" class="anchored" data-anchor-id="which-definition-should-we-use"><span class="header-section-number">3.3.5</span> Which Definition Should We Use?</h3>
+<section id="which-definition-should-we-use" class="level3" data-number="3.2.5">
+<h3 data-number="3.2.5" class="anchored" data-anchor-id="which-definition-should-we-use"><span class="header-section-number">3.2.5</span> Which Definition Should We Use?</h3>
 <p>The two definitions emphasise different aspects of the same process.</p>
 <ul>
 <li>The <strong>local approach</strong> describes the behaviour of events over very short time intervals. It provides an intuitive foundation for the Poisson process and is useful for deriving its probability distribution.</li>
@@ -785,10 +787,10 @@ e^{-\lambda h}=1-\lambda h+O(h^2),
 <p>In the following sections, we will mainly use the distributional characterisation because it provides a direct way to work with the number of events occurring over a specified time interval.</p>
 </section>
 </section>
-<section id="inter-arrival-times" class="level2" data-number="3.4">
-<h2 data-number="3.4" class="anchored" data-anchor-id="inter-arrival-times"><span class="header-section-number">3.4</span> Inter-Arrival Times and Arrival Times</h2>
-<section id="why-study-inter-arrival-times" class="level3" data-number="3.4.1">
-<h3 data-number="3.4.1" class="anchored" data-anchor-id="why-study-inter-arrival-times"><span class="header-section-number">3.4.1</span> Why Study Inter-Arrival Times?</h3>
+<section id="inter-arrival-times" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="inter-arrival-times"><span class="header-section-number">3.3</span> Inter-Arrival Times and Arrival Times</h2>
+<section id="why-study-inter-arrival-times" class="level3" data-number="3.3.1">
+<h3 data-number="3.3.1" class="anchored" data-anchor-id="why-study-inter-arrival-times"><span class="header-section-number">3.3.1</span> Why Study Inter-Arrival Times?</h3>
 <p>A Poisson process describes the number of events occurring over time. Another way to study the process is through the waiting times between successive events.</p>
 <p>Instead of generating the number of arrivals directly, we can generate the waiting time until each successive arrival. This provides an alternative way to describe and simulate a Poisson process.</p>
 <p>Studying inter-arrival times is useful for several reasons:</p>
@@ -800,8 +802,8 @@ e^{-\lambda h}=1-\lambda h+O(h^2),
 </ul>
 <p>For a homogeneous Poisson process with rate <span class="math inline">\(\lambda\)</span>, the successive inter-arrival times are independent and exponentially distributed with rate <span class="math inline">\(\lambda\)</span>.</p>
 </section>
-<section id="definition-of-inter-arrival-times-and-arrival-times" class="level3" data-number="3.4.2">
-<h3 data-number="3.4.2" class="anchored" data-anchor-id="definition-of-inter-arrival-times-and-arrival-times"><span class="header-section-number">3.4.2</span> Definition of Inter-Arrival Times and Arrival Times</h3>
+<section id="definition-of-inter-arrival-times-and-arrival-times" class="level3" data-number="3.3.2">
+<h3 data-number="3.3.2" class="anchored" data-anchor-id="definition-of-inter-arrival-times-and-arrival-times"><span class="header-section-number">3.3.2</span> Definition of Inter-Arrival Times and Arrival Times</h3>
 <p>Let <span class="math inline">\(T_0\)</span> denote the waiting time from time <span class="math inline">\(0\)</span> until the first arrival. For <span class="math inline">\(i\geq 1\)</span>, let <span class="math inline">\(T_i\)</span> denote the time between the <span class="math inline">\(i\)</span>th and <span class="math inline">\((i+1)\)</span>th arrivals.</p>
 <p>Thus, the successive inter-arrival times are</p>
 <p><span class="math display">\[
@@ -834,8 +836,8 @@ N(t)=\max\{n\geq 0:S_n\leq t\}.
 \]</span></p>
 <p>The counting process starts at zero and increases by one at each arrival time. Between successive arrivals, it remains constant. Its sample path is therefore a non-decreasing, right-continuous step function.</p>
 </section>
-<section id="poisson-process-sample-path" class="level3" data-number="3.4.3">
-<h3 data-number="3.4.3" class="anchored" data-anchor-id="poisson-process-sample-path"><span class="header-section-number">3.4.3</span> Poisson Process Sample Path</h3>
+<section id="poisson-process-sample-path" class="level3" data-number="3.3.3">
+<h3 data-number="3.3.3" class="anchored" data-anchor-id="poisson-process-sample-path"><span class="header-section-number">3.3.3</span> Poisson Process Sample Path</h3>
 <p>The following diagram illustrates the relationship between the inter-arrival times, arrival times, and counting process.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -846,8 +848,8 @@ N(t)=\max\{n\geq 0:S_n\leq t\}.
 <p>Each horizontal segment represents a period during which no new event occurs. At an arrival time <span class="math inline">\(S_n\)</span>, the counting process jumps from <span class="math inline">\(n-1\)</span> to <span class="math inline">\(n\)</span>.</p>
 <p>The length of each horizontal segment is the corresponding inter-arrival time <span class="math inline">\(T_{n-1}\)</span>.</p>
 </section>
-<section id="simulating-a-sample-path-of-a-poisson-process" class="level3" data-number="3.4.4">
-<h3 data-number="3.4.4" class="anchored" data-anchor-id="simulating-a-sample-path-of-a-poisson-process"><span class="header-section-number">3.4.4</span> Simulating a Sample Path of a Poisson Process</h3>
+<section id="simulating-a-sample-path-of-a-poisson-process" class="level3" data-number="3.3.4">
+<h3 data-number="3.3.4" class="anchored" data-anchor-id="simulating-a-sample-path-of-a-poisson-process"><span class="header-section-number">3.3.4</span> Simulating a Sample Path of a Poisson Process</h3>
 <p>A Poisson process can be simulated by generating successive inter-arrival times and adding them to obtain the arrival times.</p>
 <p>For a homogeneous Poisson process with rate <span class="math inline">\(\lambda\)</span>, the inter-arrival times are independent and follow an exponential distribution with rate <span class="math inline">\(\lambda\)</span>:</p>
 <p><span class="math display">\[
@@ -1018,8 +1020,8 @@ N(1)\sim\operatorname{Poisson}(12),
 <p>The simulation demonstrates how a Poisson process can be constructed from its inter-arrival times.</p>
 </section>
 </section>
-<section id="exponential-distribution-of-inter-arrival-times" class="level3" data-number="3.4.5">
-<h3 data-number="3.4.5" class="anchored" data-anchor-id="exponential-distribution-of-inter-arrival-times"><span class="header-section-number">3.4.5</span> Exponential Distribution of Inter-Arrival Times</h3>
+<section id="exponential-distribution-of-inter-arrival-times" class="level3" data-number="3.3.5">
+<h3 data-number="3.3.5" class="anchored" data-anchor-id="exponential-distribution-of-inter-arrival-times"><span class="header-section-number">3.3.5</span> Exponential Distribution of Inter-Arrival Times</h3>
 <p>We now derive the distribution of the waiting time until the first arrival.</p>
 <p>Let <span class="math inline">\(T_0\)</span> denote the time from time <span class="math inline">\(0\)</span> until the first arrival. The event <span class="math inline">\(T_0&gt;t\)</span> means that no events occur during the interval <span class="math inline">\((0,t]\)</span>.</p>
 <p>Therefore,</p>
@@ -1069,8 +1071,8 @@ T_0\sim\operatorname{Exp}(\lambda).
 =2\text{ hours}.
 \]</span></p>
 </section>
-<section id="independence-of-inter-arrival-times" class="level3" data-number="3.4.6">
-<h3 data-number="3.4.6" class="anchored" data-anchor-id="independence-of-inter-arrival-times"><span class="header-section-number">3.4.6</span> Independence of Inter-Arrival Times</h3>
+<section id="independence-of-inter-arrival-times" class="level3" data-number="3.3.6">
+<h3 data-number="3.3.6" class="anchored" data-anchor-id="independence-of-inter-arrival-times"><span class="header-section-number">3.3.6</span> Independence of Inter-Arrival Times</h3>
 <p>The first inter-arrival time <span class="math inline">\(T_0\)</span> and the subsequent inter-arrival times <span class="math inline">\(T_1,T_2,\ldots\)</span> describe waiting times over successive periods.</p>
 <p>The independent-increments property means that the numbers of events occurring in disjoint time intervals are independent. Together with the stationary-increments property, this implies that the waiting time after an arrival has the same exponential distribution as the waiting time until the first arrival.</p>
 <p>In particular, the future evolution of a Poisson process after an arrival time is independent of its past and has the same distribution as a new Poisson process starting at zero. This is a consequence of the strong Markov property of the Poisson process.</p>
@@ -1188,8 +1190,8 @@ E[T-2\mid T&gt;2]
 \]</span></p></li>
 </ol>
 </section>
-<section id="arrival-times-and-the-gamma-distribution" class="level3" data-number="3.4.7">
-<h3 data-number="3.4.7" class="anchored" data-anchor-id="arrival-times-and-the-gamma-distribution"><span class="header-section-number">3.4.7</span> Arrival Times and the Gamma Distribution</h3>
+<section id="arrival-times-and-the-gamma-distribution" class="level3" data-number="3.3.7">
+<h3 data-number="3.3.7" class="anchored" data-anchor-id="arrival-times-and-the-gamma-distribution"><span class="header-section-number">3.3.7</span> Arrival Times and the Gamma Distribution</h3>
 <p>Recall that the time of the <span class="math inline">\(n\)</span>th arrival is</p>
 <p><span class="math display">\[
 S_n=T_0+T_1+\cdots+T_{n-1}.
@@ -1358,8 +1360,8 @@ E[S_3]
 </ol>
 </section>
 </section>
-<section id="summary" class="level3" data-number="3.4.8">
-<h3 data-number="3.4.8" class="anchored" data-anchor-id="summary"><span class="header-section-number">3.4.8</span> Summary</h3>
+<section id="summary" class="level3" data-number="3.3.8">
+<h3 data-number="3.3.8" class="anchored" data-anchor-id="summary"><span class="header-section-number">3.3.8</span> Summary</h3>
 <p>The inter-arrival times provide an alternative description of a homogeneous Poisson process.</p>
 <p>The main results are:</p>
 <ul>
@@ -1372,10 +1374,10 @@ E[S_3]
 <p>These results provide the theoretical basis for simulating Poisson processes and calculating probabilities involving waiting times and arrival times.</p>
 </section>
 </section>
-<section id="properties-of-the-poisson-process" class="level2" data-number="3.5">
-<h2 data-number="3.5" class="anchored" data-anchor-id="properties-of-the-poisson-process"><span class="header-section-number">3.5</span> Properties of the Poisson Process</h2>
-<section id="why-study-the-properties" class="level3" data-number="3.5.1">
-<h3 data-number="3.5.1" class="anchored" data-anchor-id="why-study-the-properties"><span class="header-section-number">3.5.1</span> Why Study the Properties?</h3>
+<section id="properties-of-the-poisson-process" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="properties-of-the-poisson-process"><span class="header-section-number">3.4</span> Properties of the Poisson Process</h2>
+<section id="why-study-the-properties" class="level3" data-number="3.4.1">
+<h3 data-number="3.4.1" class="anchored" data-anchor-id="why-study-the-properties"><span class="header-section-number">3.4.1</span> Why Study the Properties?</h3>
 <p>A Poisson process provides a model for events occurring randomly over time. Its properties allow us to answer questions about event counts and arrival patterns without having to model every arrival time individually.</p>
 <p>The main properties developed in this section are:</p>
 <ul>
@@ -1387,8 +1389,8 @@ E[S_3]
 </ul>
 <p>The first three properties describe the behaviour of a single Poisson process. Superposition and thinning extend the model to situations involving multiple arrival streams or different types of events.</p>
 </section>
-<section id="independent-increments" class="level3" data-number="3.5.2">
-<h3 data-number="3.5.2" class="anchored" data-anchor-id="independent-increments"><span class="header-section-number">3.5.2</span> Independent Increments</h3>
+<section id="independent-increments" class="level3" data-number="3.4.2">
+<h3 data-number="3.4.2" class="anchored" data-anchor-id="independent-increments"><span class="header-section-number">3.4.2</span> Independent Increments</h3>
 <p>The independent-increments property means that the numbers of events occurring in disjoint time intervals are independent.</p>
 <p>Suppose insurance claims arrive according to a Poisson process with rate <span class="math inline">\(\lambda\)</span> claims per day.</p>
 <p>For <span class="math inline">\(0\leq s&lt;t\leq u&lt;v\)</span>, the numbers of claims occurring during the intervals <span class="math inline">\((s,t]\)</span> and <span class="math inline">\((u,v]\)</span> are</p>
@@ -1409,8 +1411,8 @@ N(v)-N(u),
 \]</span></p>
 <p>where <span class="math inline">\(N(A)\)</span> and <span class="math inline">\(N(B)\)</span> denote the numbers of events occurring in the respective intervals.</p>
 </section>
-<section id="stationary-increments" class="level3" data-number="3.5.3">
-<h3 data-number="3.5.3" class="anchored" data-anchor-id="stationary-increments"><span class="header-section-number">3.5.3</span> Stationary Increments</h3>
+<section id="stationary-increments" class="level3" data-number="3.4.3">
+<h3 data-number="3.4.3" class="anchored" data-anchor-id="stationary-increments"><span class="header-section-number">3.4.3</span> Stationary Increments</h3>
 <p>The stationary-increments property means that the probability distribution of the number of events in an interval depends only on its length, not on its starting time.</p>
 <p>For a homogeneous Poisson process with rate <span class="math inline">\(\lambda\)</span>, the number of events during an interval <span class="math inline">\((t,t+h]\)</span> has distribution</p>
 <p><span class="math display">\[
@@ -1435,8 +1437,8 @@ N(t+h)-N(t)
 <p>regardless of when the interval begins.</p>
 <p>Thus, the number of claims during today, yesterday, or any other one-day period has the same probability distribution, provided that the homogeneous Poisson process model remains appropriate.</p>
 </section>
-<section id="the-memoryless-property" class="level3" data-number="3.5.4">
-<h3 data-number="3.5.4" class="anchored" data-anchor-id="the-memoryless-property"><span class="header-section-number">3.5.4</span> The Memoryless Property</h3>
+<section id="the-memoryless-property" class="level3" data-number="3.4.4">
+<h3 data-number="3.4.4" class="anchored" data-anchor-id="the-memoryless-property"><span class="header-section-number">3.4.4</span> The Memoryless Property</h3>
 <!-- The memoryless property describes an important feature of exponential waiting times. -->
 <!-- Recall from the previous section that the inter-arrival time $X$ of a homogeneous Poisson process with rate $\lambda$ follows an exponential distribution: -->
 <!-- $$ -->
@@ -1594,8 +1596,8 @@ P(T&gt;60\mid T&gt;40)
 </ol>
 </section>
 </section>
-<section id="superposition-of-independent-poisson-processes" class="level3" data-number="3.5.5">
-<h3 data-number="3.5.5" class="anchored" data-anchor-id="superposition-of-independent-poisson-processes"><span class="header-section-number">3.5.5</span> Superposition of Independent Poisson Processes</h3>
+<section id="superposition-of-independent-poisson-processes" class="level3" data-number="3.4.5">
+<h3 data-number="3.4.5" class="anchored" data-anchor-id="superposition-of-independent-poisson-processes"><span class="header-section-number">3.4.5</span> Superposition of Independent Poisson Processes</h3>
 <p>In many applications, events originate from several independent sources. Instead of studying each source separately, we may be interested in the total number of events from all sources.</p>
 <p>For example, an insurer may receive claims from several independent portfolios. Each portfolio generates claims according to its own Poisson process.</p>
 <p>Suppose there are <span class="math inline">\(k\)</span> independent Poisson processes,</p>
@@ -1650,8 +1652,8 @@ N(t+h)-N(t)
 <p>The figure illustrates how arrivals from several independent Poisson processes combine to form a single process. Every arrival from any of the original processes becomes an arrival in the combined process.</p>
 </section>
 </section>
-<section id="identifying-the-source-of-an-arrival" class="level3" data-number="3.5.6">
-<h3 data-number="3.5.6" class="anchored" data-anchor-id="identifying-the-source-of-an-arrival"><span class="header-section-number">3.5.6</span> Identifying the Source of an Arrival</h3>
+<section id="identifying-the-source-of-an-arrival" class="level3" data-number="3.4.6">
+<h3 data-number="3.4.6" class="anchored" data-anchor-id="identifying-the-source-of-an-arrival"><span class="header-section-number">3.4.6</span> Identifying the Source of an Arrival</h3>
 <p>The superposition property also allows us to determine the probability that an arrival in the combined process comes from a particular source.</p>
 <p>Suppose independent Poisson processes have rates <span class="math inline">\(\lambda_1,\ldots,\lambda_k\)</span>, and their combined process has rate</p>
 <p><span class="math display">\[
@@ -1702,8 +1704,8 @@ p_i=\frac{\lambda_i}{\lambda},
 </div>
 </div>
 </section>
-<section id="splitting-and-thinning-of-a-poisson-process" class="level3" data-number="3.5.7">
-<h3 data-number="3.5.7" class="anchored" data-anchor-id="splitting-and-thinning-of-a-poisson-process"><span class="header-section-number">3.5.7</span> Splitting and Thinning of a Poisson Process</h3>
+<section id="splitting-and-thinning-of-a-poisson-process" class="level3" data-number="3.4.7">
+<h3 data-number="3.4.7" class="anchored" data-anchor-id="splitting-and-thinning-of-a-poisson-process"><span class="header-section-number">3.4.7</span> Splitting and Thinning of a Poisson Process</h3>
 <p>Superposition combines several independent Poisson processes into one process. We now consider the reverse situation: starting with one Poisson process and dividing its arrivals into different categories.</p>
 <p>Suppose arrivals occur according to a Poisson process with rate <span class="math inline">\(\lambda\)</span>. Each arrival is independently assigned to one of <span class="math inline">\(k\)</span> types, with probabilities</p>
 <p><span class="math display">\[
@@ -1925,8 +1927,8 @@ P(Y\geq 4)
 </ol>
 </section>
 </section>
-<section id="summary-1" class="level3" data-number="3.5.8">
-<h3 data-number="3.5.8" class="anchored" data-anchor-id="summary-1"><span class="header-section-number">3.5.8</span> Summary</h3>
+<section id="summary-1" class="level3" data-number="3.4.8">
+<h3 data-number="3.4.8" class="anchored" data-anchor-id="summary-1"><span class="header-section-number">3.4.8</span> Summary</h3>
 <p>The properties developed in this section extend the basic Poisson process model and provide useful tools for analysing event arrivals.</p>
 <ul>
 <li><strong>Independent increments:</strong> Event counts in disjoint time intervals are independent.</li>
@@ -1937,8 +1939,8 @@ P(Y\geq 4)
 </ul>
 <p>These properties are particularly useful in actuarial applications involving claims from multiple portfolios, different categories of claims, and selected claims exceeding specified thresholds.</p>
 </section>
-<section id="from-poisson-processes-to-markov-jump-processes" class="level3" data-number="3.5.9">
-<h3 data-number="3.5.9" class="anchored" data-anchor-id="from-poisson-processes-to-markov-jump-processes"><span class="header-section-number">3.5.9</span> From Poisson Processes to Markov Jump Processes</h3>
+<section id="from-poisson-processes-to-markov-jump-processes" class="level3" data-number="3.4.9">
+<h3 data-number="3.4.9" class="anchored" data-anchor-id="from-poisson-processes-to-markov-jump-processes"><span class="header-section-number">3.4.9</span> From Poisson Processes to Markov Jump Processes</h3>
 <p>A Poisson process describes the random occurrence of events over time. It can also be viewed as a continuous-time Markov process.</p>
 <p>Recall that <span class="math inline">\(N(t)\)</span> counts the number of events that have occurred by time <span class="math inline">\(t\)</span>. Because a Poisson process has independent increments, the future number of arrivals depends on the current count but not on the detailed history of the process.</p>
 <p>In particular, for <span class="math inline">\(s,t\geq 0\)</span>,</p>
@@ -2418,6 +2420,9 @@ e^{-\mu t} &amp; 1-e^{-\mu t}\\
       </a>          
   </div>
   <div class="nav-page nav-page-next">
+      <a href="../chapters/08_Markov_Jump_Processes.html" class="pagination-link" aria-label="Chapter 5: Markov Jump Processes">
+        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Chapter 5: Markov Jump Processes</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
   </div>
 </nav>
 </div> <!-- /content -->
