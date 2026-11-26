@@ -1,0 +1,5844 @@
+---
+title: "Chapter 5: Markov Jump Processes"
+---
+
+## Introduction and Motivation
+
+In the previous chapter, we studied a two-state Markov model for an individual's mortality. The possible states are Alive and Dead, and the model describes how an individual moves between these states over continuous time.
+
+The model has the following characteristics:
+
+- An individual starts in the Alive state.
+- The individual may move from Alive to Dead at any time.
+- Once the individual enters the Dead state, no further transition is possible.
+
+This is a simple example of a **continuous-time Markov model**. Although the model has only two states, the same modelling framework can be extended to systems with many possible states and more complicated patterns of transitions.
+
+For example, an insurance policy may move between Active, Lapsed and Surrendered states. A company may move between different credit rating categories before eventually entering Default. Similarly, the number of customers in a queue changes as customers arrive and receive service.
+
+These systems share a common feature: the process occupies a particular state for some period of time and may subsequently move to another state. The times at which these transitions occur are random.
+
+We study such models using **Markov jump processes**, which provide a general framework for describing random changes of state over continuous time.
+
+## General Framework of a Markov Jump Process
+
+### State Space and Stochastic Process
+
+Let $\{X(t)\}_{t\geq 0}$ be a stochastic process defined over continuous time, where $X(t)$ represents the state of the system at time $t$.
+
+The set of all possible states is called the **state space**, denoted by $S$. We assume that $S$ is finite or countable.
+
+Thus,
+
+$$
+X(t)\in S,\qquad t\geq 0.
+$$
+
+For example, in the two-state mortality model,
+
+$$
+S=\{\text{Alive},\text{Dead}\}.
+$$
+
+For a credit rating model, the state space might be
+
+$$
+S=\{A,B,C,D,E\},
+$$
+
+where $E$ represents Default.
+
+A **Markov jump process** is a continuous-time stochastic process that moves between states at random times. The process remains in its current state for a random period, called the *holding time*, before making a transition to another state.
+
+Unlike a discrete-time Markov chain, a Markov jump process does not restrict transitions to predetermined time points. A transition may occur at any time.
+
+### The Markov Property
+
+The defining feature of a Markov jump process is the **Markov property**. It states that the future behaviour of the process depends on its current state, rather than on the complete history of the process.
+
+More precisely, for all $s,t\geq 0$ and $i,j\in S$,
+
+$$
+\begin{aligned}
+&\Pr\bigl(X(s+t)=j\mid X(s)=i,\\
+&\qquad\qquad X(u),\,0\leq u<s\bigr)\\
+&\qquad=\Pr\bigl(X(s+t)=j\mid X(s)=i\bigr).
+\end{aligned}
+$$
+
+In other words, once the current state $X(s)$ is known, information about the states visited before time $s$ does not provide any additional information about the state of the process at a future time.
+
+For example, consider a credit rating model in which a company currently has rating B. Under the Markov assumption, the probability of its future credit rating depends on its current rating B, rather than on whether it previously had rating A or C.
+
+This assumption simplifies the modelling of systems whose future behaviour can be described using their current states.
+
+<!-- ## Examples of Markov Jump Processes -->
+
+<!-- Markov jump processes arise in many actuarial, financial and operational applications. Some examples are given below. -->
+
+<!-- ### Mortality Models -->
+
+<!-- In a simple mortality model, an individual can be in one of two states: -->
+
+<!-- $$ -->
+<!-- S=\{\text{Alive},\text{Dead}\}. -->
+<!-- $$ -->
+
+<!-- The only possible transition is from Alive to Dead. The Dead state is an **absorbing state**, since the process cannot leave it once entered. -->
+
+<!-- ### Credit Rating Models -->
+
+<!-- A financial institution may classify a company according to its credit rating. For example, -->
+
+<!-- $$ -->
+<!-- S=\{A,B,C,D,E\}, -->
+<!-- $$ -->
+
+<!-- where $E$ represents Default. -->
+
+<!-- A company may move between different credit rating categories over time. The transition probabilities describe the likelihood of changes in credit quality, including the possibility of entering Default. -->
+
+<!-- ### Insurance Policy Models -->
+
+<!-- An insurance policy may occupy one of several states, such as -->
+
+<!-- $$ -->
+<!-- S=\{\text{Active},\text{Lapsed},\text{Surrendered}\}. -->
+<!-- $$ -->
+
+<!-- The policy may move from Active to Lapsed or Surrendered, depending on the policyholder's actions and other relevant factors. -->
+
+<!-- ### Queueing Models -->
+
+<!-- In a queueing system, the state may represent the number of customers in the system: -->
+
+<!-- $$ -->
+<!-- S=\{0,1,2,\ldots\}. -->
+<!-- $$ -->
+
+<!-- The state increases when a customer arrives and decreases when a customer completes service and leaves the system. -->
+
+
+## Examples of Markov Jump Processes
+
+Markov jump processes arise in many actuarial, financial and operational applications. In these models, the state changes at random times, and the transition rates describe how quickly the process moves between states. Some examples are given below.
+
+### Mortality Models
+
+In a simple mortality model, an individual can be in one of two states:
+
+$$
+S=\{\text{Alive},\text{Dead}\}.
+$$
+
+The only possible transition is from Alive to Dead, with transition intensity $\mu$. The Dead state is an **absorbing state**, since the process cannot leave it once entered.
+
+### Credit Rating Models
+
+A financial institution may classify a company according to its credit rating. Consider the state space
+
+$$
+S=\{A,B,C,D,E\},
+$$
+
+where $A$, $B$, $C$ and $D$ represent different credit rating categories, and $E$ represents Default.
+
+A company may move between adjacent credit rating categories as its credit quality changes over time. For example, a company rated $B$ may be upgraded to $A$ or downgraded to $C$. From any non-default rating, the company may also move directly to Default. The Default state is absorbing.
+
+The transition rates describe the rates of credit rating changes and the rates at which companies enter Default.
+
+
+
+
+::: {#fig-markov-Credit-Rating-Models}
+
+
+```{=latex}
+\begin{center}
+\begin{tikzpicture}[
+  scale=0.85,
+  transform shape,
+  state/.style={
+    draw,
+    rectangle,
+    minimum width=2.2cm,
+    minimum height=0.9cm,
+    align=center
+  },
+  transition/.style={->, >=stealth, thick}
+]
+
+% Credit rating states
+\node[state] (A) at (0,0) {A: Excellent};
+\node[state] (B) at (3.2,0) {B: Good};
+\node[state] (C) at (6.4,0) {C: Satisfactory};
+\node[state] (D) at (9.6,0) {D: Poor};
+
+% Default state
+\node[state] (E) at (4.8,-3.5) {E: Default};
+
+% Transitions between adjacent ratings
+% A <-> B
+\draw[transition]
+  ([yshift=5pt]A.east) -- ([yshift=5pt]B.west)
+  node[midway, above] {$\lambda_{AB}$};
+
+\draw[transition]
+  ([yshift=-5pt]B.west) -- ([yshift=-5pt]A.east)
+  node[midway, below] {$\lambda_{BA}$};
+
+% B <-> C
+\draw[transition]
+  ([yshift=5pt]B.east) -- ([yshift=5pt]C.west)
+  node[midway, above] {$\lambda_{BC}$};
+
+\draw[transition]
+  ([yshift=-5pt]C.west) -- ([yshift=-5pt]B.east)
+  node[midway, below] {$\lambda_{CB}$};
+
+% C <-> D
+\draw[transition]
+  ([yshift=5pt]C.east) -- ([yshift=5pt]D.west)
+  node[midway, above] {$\lambda_{CD}$};
+
+\draw[transition]
+  ([yshift=-5pt]D.west) -- ([yshift=-5pt]C.east)
+  node[midway, below] {$\lambda_{DC}$};
+
+% Transitions to Default
+\draw[transition]
+  (A.south) -- node[pos=0.55, left] {$\mu_A$}
+  ([xshift=-0.75cm]E.north);
+
+\draw[transition]
+  (B.south) -- node[pos=0.55, left] {$\mu_B$}
+  ([xshift=-0.25cm]E.north);
+
+\draw[transition]
+  (C.south) -- node[pos=0.55, right] {$\mu_C$}
+  ([xshift=0.25cm]E.north);
+
+\draw[transition]
+  (D.south) -- node[pos=0.55, right] {$\mu_D$}
+  ([xshift=0.75cm]E.north);
+
+\end{tikzpicture}
+\end{center}
+```
+
+
+
+```{=html}
+<svg viewBox="0 0 1000 440" width="100%" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arrow-credit" markerWidth="8" markerHeight="8"
+            refX="6" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L6,3 L0,6 Z" fill="currentColor"/>
+    </marker>
+  </defs>
+
+  <!-- State boxes -->
+  <g fill="none" stroke="currentColor" stroke-width="1.5">
+    <rect x="35" y="45" width="190" height="75"/>
+    <rect x="275" y="45" width="190" height="75"/>
+    <rect x="515" y="45" width="190" height="75"/>
+    <rect x="755" y="45" width="190" height="75"/>
+    <rect x="405" y="335" width="190" height="75"/>
+  </g>
+
+  <!-- State labels -->
+  <g fill="currentColor" font-family="serif" font-size="18"
+     text-anchor="middle" dominant-baseline="middle">
+    <text x="130" y="83">A: Excellent</text>
+    <text x="370" y="83">B: Good</text>
+    <text x="610" y="83">C: Satisfactory</text>
+    <text x="850" y="83">D: Poor</text>
+    <text x="500" y="373">E: Default</text>
+  </g>
+
+  <!-- Transitions between adjacent ratings -->
+  <g fill="none" stroke="currentColor" stroke-width="1.5"
+     marker-end="url(#arrow-credit)">
+
+    <!-- A and B -->
+    <path d="M227 60 H273"/>
+    <path d="M273 104 H227"/>
+
+    <!-- B and C -->
+    <path d="M467 60 H513"/>
+    <path d="M513 104 H467"/>
+
+    <!-- C and D -->
+    <path d="M707 60 H753"/>
+    <path d="M753 104 H707"/>
+
+    <!-- Transitions to Default -->
+    <path d="M130 122 L428 332"/>
+    <path d="M370 122 L478 332"/>
+    <path d="M610 122 L522 332"/>
+    <path d="M850 122 L572 332"/>
+  </g>
+
+  <!-- Transition intensities between ratings -->
+  <g fill="currentColor" font-family="serif" font-size="17"
+     font-style="italic" text-anchor="middle">
+
+    <text x="250" y="50">λ<tspan baseline-shift="sub" font-size="12">AB</tspan></text>
+    <text x="250" y="123">λ<tspan baseline-shift="sub" font-size="12">BA</tspan></text>
+
+    <text x="490" y="50">λ<tspan baseline-shift="sub" font-size="12">BC</tspan></text>
+    <text x="490" y="123">λ<tspan baseline-shift="sub" font-size="12">CB</tspan></text>
+
+    <text x="730" y="50">λ<tspan baseline-shift="sub" font-size="12">CD</tspan></text>
+    <text x="730" y="123">λ<tspan baseline-shift="sub" font-size="12">DC</tspan></text>
+  </g>
+
+  <!-- Default transition intensities -->
+  <g fill="currentColor" font-family="serif" font-size="17"
+     font-style="italic" text-anchor="middle">
+    <text x="245" y="225">μ<tspan baseline-shift="sub" font-size="12">A</tspan></text>
+    <text x="395" y="230">μ<tspan baseline-shift="sub" font-size="12">B</tspan></text>
+    <text x="605" y="230">μ<tspan baseline-shift="sub" font-size="12">C</tspan></text>
+    <text x="755" y="225">μ<tspan baseline-shift="sub" font-size="12">D</tspan></text>
+  </g>
+</svg>
+```
+
+
+
+
+
+
+State transitions in a Credit Rating Model.
+
+:::
+
+
+
+
+### Insurance Policy Models
+
+An insurance policy may occupy one of several states:
+
+$$
+S=\{\text{Active},\text{Lapsed},\text{Surrendered},\text{Dead}\}.
+$$
+
+An active policy may terminate because the policyholder allows it to lapse, voluntarily surrenders it, or dies. These are represented by transitions from Active to Lapsed, Surrendered and Dead, respectively.
+
+The Lapsed, Surrendered and Dead states are absorbing in this model because no further transitions are considered after the policy reaches any of these states. Here, Dead refers to the death of the insured, which results in the termination of the policy.
+
+
+
+
+
+
+::: {#fig-markov-Insurance-Policy-Model}
+
+```{=latex}
+\begin{center}
+\begin{tikzpicture}[
+  scale=0.85,
+  transform shape,
+  state/.style={
+    draw,
+    rectangle,
+    minimum width=2.4cm,
+    minimum height=0.9cm,
+    align=center
+  },
+  transition/.style={->, >=stealth, thick}
+]
+
+% States
+\node[state] (A) at (0,0) {Active (A)};
+\node[state] (L) at (-4,-3) {Lapsed (L)};
+\node[state] (S) at (0,-3) {Surrendered (S)};
+\node[state] (D) at (4,-3) {Dead (D)};
+
+% Transitions from Active
+\draw[transition]
+  (A.south west) -- node[pos=0.45, left] {$\lambda_{AL}$} (L.north east);
+
+\draw[transition]
+  (A.south) -- node[right] {$\lambda_{AS}$} (S.north);
+
+\draw[transition]
+  (A.south east) -- node[pos=0.45, right] {$\mu_A$} (D.north west);
+
+\end{tikzpicture}
+\end{center}
+```
+
+
+```{=html}
+<svg viewBox="0 0 600 360" width="100%" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arrow-policy" markerWidth="8" markerHeight="8"
+            refX="6" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L6,3 L0,6 Z" fill="currentColor"/>
+    </marker>
+  </defs>
+
+  <!-- State boxes -->
+  <g fill="none" stroke="currentColor" stroke-width="1.5">
+    <rect x="210" y="35" width="180" height="65"/>
+    <rect x="20" y="265" width="180" height="65"/>
+    <rect x="210" y="265" width="180" height="65"/>
+    <rect x="400" y="265" width="180" height="65"/>
+  </g>
+
+  <!-- State labels -->
+  <g fill="currentColor" font-family="serif" font-size="18"
+     text-anchor="middle" dominant-baseline="middle">
+    <text x="300" y="68">Active (A)</text>
+    <text x="110" y="298">Lapsed (L)</text>
+    <text x="300" y="298">Surrendered (S)</text>
+    <text x="490" y="298">Dead (D)</text>
+  </g>
+
+  <!-- Transition arrows -->
+  <g fill="none" stroke="currentColor" stroke-width="1.5"
+     marker-end="url(#arrow-policy)">
+    <path d="M235 102 L125 262"/>
+    <path d="M300 102 V262"/>
+    <path d="M365 102 L475 262"/>
+  </g>
+
+  <!-- Transition intensities -->
+  <g fill="currentColor" font-family="serif" font-size="18"
+     font-style="italic" text-anchor="middle">
+    <text x="155" y="168">λ<tspan baseline-shift="sub" font-size="12">AL</tspan></text>
+    <text x="320" y="190">λ<tspan baseline-shift="sub" font-size="12">AS</tspan></text>
+    <text x="445" y="168">μ<tspan baseline-shift="sub" font-size="12">A</tspan></text>
+  </g>
+</svg>
+```
+
+
+State transitions in an Insurance Policy Model.
+
+
+:::
+
+
+
+
+### Queueing Models
+
+In a queueing system, the state may represent the number of customers currently in the system, including those waiting for service and those receiving service. The state space is
+
+$$
+S=\{0,1,2,\ldots\}.
+$$
+
+A customer arrival increases the state by one, while a service completion decreases it by one. Thus, transitions occur only between neighbouring states.
+
+In the simple model illustrated in the diagram, arrivals occur at a constant rate $\lambda$, and service completions occur at a constant rate $\mu$ whenever at least one customer is in the system. This is the basic structure of an $M/M/1$ queue.
+
+
+
+
+
+
+::: {#fig-markov-Queueing-Model}
+
+
+```{=latex}
+
+\begin{center}
+\begin{tikzpicture}[
+  state/.style={
+    draw,
+    rounded corners=3pt,
+    minimum width=1.4cm,
+    minimum height=1.05cm,
+    align=center
+  },
+  transition/.style={->, >=stealth, thick}
+]
+
+% State nodes
+\node[state] (S0) at (0,0) {$0$};
+\node[state] (S1) at (2.5,0) {$1$};
+\node at (4.2,0) {$\cdots$};
+\node[state] (Sn) at (5.9,0) {$n$};
+\node[state] (Sn1) at (8.4,0) {$n+1$};
+\node at (10.1,0) {$\cdots$};
+
+% Transitions: 0 <-> 1
+\draw[transition] (S0.east) to[bend left=25]
+  node[above] {$\lambda$} (S1.west);
+
+\draw[transition] (S1.west) to[bend left=25]
+  node[below] {$\mu$} (S0.east);
+
+% Transitions: 1 <-> ...
+\draw[transition] (S1.east) to[bend left=25]
+  node[above] {$\lambda$} (3.85,0.35);
+
+\draw[transition] (3.85,-0.35) to[bend left=25]
+  node[below] {$\mu$} (S1.east);
+
+% Transitions: ... <-> n
+\draw[transition] (4.55,0.35) to[bend left=25]
+  node[above] {$\lambda$} (Sn.west);
+
+\draw[transition] (Sn.west) to[bend left=25]
+  node[below] {$\mu$} (4.55,-0.35);
+
+% Transitions: n <-> n+1
+\draw[transition] (Sn.east) to[bend left=25]
+  node[above] {$\lambda$} (Sn1.west);
+
+\draw[transition] (Sn1.west) to[bend left=25]
+  node[below] {$\mu$} (Sn.east);
+
+\end{tikzpicture}
+\end{center}
+
+```
+
+
+```{=html}
+<svg viewBox="0 0 640 190" width="100%" xmlns="http://www.w3.org/2000/svg" font-family="system-ui, -apple-system, sans-serif">
+  <defs>
+    <marker id="queue-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 Z" fill="currentColor"/>
+    </marker>
+  </defs>
+
+  <g fill="none" stroke="currentColor" stroke-width="1.6">
+    <!-- State Nodes -->
+    <rect x="40" y="65" width="56" height="42" rx="6"/>
+    <rect x="165" y="65" width="56" height="42" rx="6"/>
+    <rect x="375" y="65" width="56" height="42" rx="6"/>
+    <rect x="500" y="65" width="56" height="42" rx="6"/>
+
+    <!-- Transitions: 0 <-> 1 -->
+    <path d="M96 75 Q130 38 165 75" marker-end="url(#queue-arrow)"/>
+    <path d="M165 97 Q130 134 96 97" marker-end="url(#queue-arrow)"/>
+
+    <!-- Transitions: 1 <-> ... -->
+    <path d="M221 75 Q248 48 275 70" marker-end="url(#queue-arrow)"/>
+    <path d="M275 102 Q248 124 221 97" marker-end="url(#queue-arrow)"/>
+
+    <!-- Transitions: ... <-> n -->
+    <path d="M321 70 Q348 48 375 75" marker-end="url(#queue-arrow)"/>
+    <path d="M375 97 Q348 124 321 102" marker-end="url(#queue-arrow)"/>
+
+    <!-- Transitions: n <-> n+1 -->
+    <path d="M431 75 Q465 38 500 75" marker-end="url(#queue-arrow)"/>
+    <path d="M500 97 Q465 134 431 97" marker-end="url(#queue-arrow)"/>
+  </g>
+
+  <g fill="currentColor" font-size="16" text-anchor="middle">
+    <!-- State Labels -->
+    <text x="68" y="92">0</text>
+    <text x="193" y="92">1</text>
+    <text x="298" y="92">⋯</text>
+    <text x="403" y="92">n</text>
+    <text x="528" y="92">n+1</text>
+    <text x="595" y="92">⋯</text>
+
+    <!-- Rate Labels (Arrivals) -->
+    <text x="130" y="45" font-style="italic">λ</text>
+    <text x="248" y="50" font-style="italic">λ</text>
+    <text x="348" y="50" font-style="italic">λ</text>
+    <text x="465" y="45" font-style="italic">λ</text>
+
+    <!-- Rate Labels (Departures) -->
+    <text x="130" y="138" font-style="italic">μ</text>
+    <text x="248" y="132" font-style="italic">μ</text>
+    <text x="348" y="132" font-style="italic">μ</text>
+    <text x="465" y="138" font-style="italic">μ</text>
+  </g>
+</svg>
+```
+
+
+State transitions in a Queueing Model.
+
+:::
+
+
+
+
+
+### Connection with the Poisson Process
+
+A familiar example of a Markov jump process is the Poisson process, which was introduced in an earlier chapter..
+
+Let $N(t)$ denote the number of events that have occurred by time $t$. Its state space is
+
+$$
+S=\{0,1,2,\ldots\}.
+$$
+
+The process starts at zero and increases by one whenever an event occurs. For a Poisson process with rate $\lambda$, the time between successive events is exponentially distributed with parameter $\lambda$.
+
+The Poisson process is therefore a special case of a Markov jump process.
+
+
+::: {#fig-markov-Poisson-Processes}
+
+
+```{=latex}
+\begin{center}
+\begin{tikzpicture}[
+  scale=0.8,
+  transform shape,
+  state/.style={
+    draw,
+    circle,
+    minimum size=0.85cm,
+    inner sep=1pt
+  },
+  transition/.style={->, >=stealth, thick}
+]
+\node[state] (S0) at (0,0) {$0$};
+\node[state] (S1) at (2,0) {$1$};
+\node[state] (S2) at (4,0) {$2$};
+\node (dots1) at (5.5,0) {$\cdots$};
+\node[state] (S3) at (7,0) {$n$};
+\node[state] (S4) at (9,0) {$n+1$};
+\node (dots2) at (10.5,0) {$\cdots$};
+
+\draw[transition] (S0) -- node[above] {$\lambda$} (S1);
+\draw[transition] (S1) -- node[above] {$\lambda$} (S2);
+\draw[transition] (S2) -- node[above] {$\lambda$} (dots1);
+\draw[transition] (dots1) -- node[above] {$\lambda$} (S3);
+\draw[transition] (S3) -- node[above] {$\lambda$} (S4);
+\draw[transition] (S4) -- node[above] {$\lambda$} (dots2);
+\end{tikzpicture}
+\end{center}
+```
+
+
+
+
+```{=html}
+<svg viewBox="0 0 600 110" width="100%" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arrow-poisson" markerWidth="8" markerHeight="8"
+            refX="6" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L6,3 L0,6 Z" fill="currentColor"/>
+    </marker>
+  </defs>
+
+  <!-- State circles -->
+  <g fill="none" stroke="currentColor" stroke-width="1.5">
+    <circle cx="45" cy="65" r="24"/>
+    <circle cx="145" cy="65" r="24"/>
+    <circle cx="245" cy="65" r="24"/>
+    <circle cx="445" cy="65" r="24"/>
+    <circle cx="545" cy="65" r="24"/>
+  </g>
+
+  <!-- State labels -->
+  <g fill="currentColor" font-family="serif" font-size="19"
+     text-anchor="middle" dominant-baseline="middle">
+    <text x="45" y="65">0</text>
+    <text x="145" y="65">1</text>
+    <text x="245" y="65">2</text>
+    <text x="445" y="65">n</text>
+    <text x="545" y="65">n+1</text>
+    <text x="345" y="65" font-size="22">⋯</text>
+    <text x="595" y="65" font-size="22">⋯</text>
+  </g>
+
+  <!-- Transition arrows -->
+  <g fill="none" stroke="currentColor" stroke-width="1.5"
+     marker-end="url(#arrow-poisson)">
+    <path d="M70 65 H116"/>
+    <path d="M170 65 H216"/>
+    <path d="M270 65 H320"/>
+    <path d="M370 65 H416"/>
+    <path d="M470 65 H516"/>
+    <path d="M570 65 H588"/>
+  </g>
+
+  <!-- Transition rates -->
+  <g fill="currentColor" font-family="serif" font-size="18"
+     font-style="italic" text-anchor="middle">
+    <text x="93" y="27">λ</text>
+    <text x="193" y="27">λ</text>
+    <text x="295" y="27">λ</text>
+    <text x="395" y="27">λ</text>
+    <text x="493" y="27">λ</text>
+    <text x="580" y="27">λ</text>
+  </g>
+</svg>
+```
+
+State transitions in a Poisson process.
+
+:::
+
+
+
+## Time-Homogeneous Markov Jump Processes
+
+In this chapter, we focus on **time-homogeneous Markov jump processes**.
+
+A Markov jump process is time-homogeneous if its transition behaviour does not depend explicitly on the time at which the process is observed. In particular, the transition probabilities depend only on the length of the time interval.
+
+To understand this distinction, consider two observations of the same process:
+
+- The process is in state $i$ at time $s$.
+- The process is in state $i$ at a later time $r$.
+
+If the process is time-homogeneous, the probability of being in state $j$ after a further period of length $t$ is the same in both cases.
+
+Thus, for all $i,j\in S$ and $s,t\geq 0$,
+
+$$
+\Pr(X(s+t)=j\mid X(s)=i)
+=
+\Pr(X(t)=j\mid X(0)=i).
+$$
+
+The transition probabilities therefore depend on the duration of the observation interval, rather than its starting time.
+
+This assumption is particularly useful because it allows us to describe the transition behaviour of the process without having to specify the calendar time at which an observation begins.
+
+### Discrete-Time and Continuous-Time Markov Models
+
+It is useful to distinguish a Markov jump process from the discrete-time Markov chains studied previously.
+
+In a discrete-time Markov chain, the process is observed at fixed time points, such as $0,1,2,\ldots$. In contrast, a Markov jump process evolves continuously in time, and transitions may occur at arbitrary random times.
+
+The main differences are summarised below.
+
+| Discrete-Time Markov Chain | Continuous-Time Markov Jump Process |
+|:---|:---|
+| Time is discrete. | Time is continuous. |
+| Transitions are represented at fixed time steps. | Transitions occur at random times. |
+| Described by a one-step transition probability matrix. | Described by transition probabilities over continuous time intervals. |
+| The number of transitions over $n$ steps cannot exceed $n$. | The number of transitions over a given time interval is random. |
+| Holding times are measured in discrete time steps. | Holding times are continuous random variables. |
+
+The continuous-time framework is more appropriate when changes in the system can occur at any time, such as the arrival of insurance claims, changes in credit ratings and the occurrence of deaths.
+
+## Transition Probabilities
+
+### General Notation
+
+We now introduce the notation for transition probabilities in a Markov jump process.
+
+For a process with state space $S$, the transition probability from state $i$ at time $s$ to state $j$ at time $t$, where $s\leq t$, is denoted by
+
+$$
+p_{ij}(s,t)
+=
+\Pr(X(t)=j\mid X(s)=i).
+$$
+
+Here:
+
+- $i$ denotes the state occupied at the starting time $s$.
+- $j$ denotes the state at the observation time $t$.
+- $p_{ij}(s,t)$ is the conditional probability that the process is in state $j$ at time $t$, given that it is in state $i$ at time $s$.
+
+For a fixed starting time $s$ and observation time $t$, the transition probabilities can be arranged into a transition probability matrix:
+
+$$
+P(s,t)=\bigl(p_{ij}(s,t)\bigr).
+$$
+
+For a finite state space containing $n$ states, this is an $n\times n$ matrix. Each entry is a probability, and the entries in each row sum to one:
+
+$$
+\sum_{j\in S}p_{ij}(s,t)=1,
+\qquad i\in S.
+$$
+
+The transition probability matrix therefore describes the distribution of the process at time $t$, conditional on its state at time $s$.
+
+### Transition Probabilities in the Time-Homogeneous Model
+
+For a time-homogeneous Markov jump process, the transition probabilities depend only on the elapsed time $t-s$.
+
+Consequently,
+
+$$
+p_{ij}(s,t)=p_{ij}(t-s).
+$$
+
+It is therefore convenient to write
+
+$$
+p_{ij}(u)
+=
+\Pr(X(u)=j\mid X(0)=i),
+$$
+
+where $u\geq 0$ denotes the length of the observation interval.
+
+In particular,
+
+$$
+p_{ij}(t)
+=
+\Pr(X(t)=j\mid X(0)=i).
+$$
+
+We denote the corresponding transition probability matrix by
+
+$$
+P(t)=\bigl(p_{ij}(t)\bigr).
+$$
+
+The notation $P(t)$ will be used throughout this chapter when considering time-homogeneous Markov jump processes.
+
+At time zero, the process has not yet had any time to change its state. Hence,
+
+$$
+p_{ij}(0)=
+\begin{cases}
+1, & i=j,\\
+0, & i\neq j.
+\end{cases}
+$$
+
+Equivalently,
+
+$$
+P(0)=I,
+$$
+
+where $I$ denotes the identity matrix.
+
+### Connection with the Two-State Mortality Model
+
+The two-state mortality model studied in the previous chapter is a special case of a Markov jump process.
+
+Suppose an individual is aged $x$ at the beginning of the observation period. The state space is
+
+$$
+S=\{\text{Alive},\text{Dead}\}.
+$$
+
+The transition probability matrix over a period of $t$ years is
+
+$$
+P(t)=
+\begin{pmatrix}
+{}_tp_x & {}_tq_x\\
+0 & 1
+\end{pmatrix},
+$$
+
+where
+
+- ${}_tp_x$ is the probability that an individual aged $x$ survives for at least another $t$ years.
+- ${}_tq_x$ is the probability that an individual aged $x$ dies within the next $t$ years.
+
+Since
+
+$$
+{}_tp_x+{}_tq_x=1,
+$$
+
+the entries in the first row sum to one. The second row reflects the fact that Dead is an absorbing state.
+
+Thus, the familiar actuarial survival and death probabilities are particular examples of transition probabilities in a continuous-time Markov model.
+
+## Transition Rates
+
+### Definition of a Transition Rate
+
+Transition probabilities describe the behaviour of a process over a specified time interval. However, it is also useful to understand how quickly transitions occur between states.
+
+For this purpose, we introduce the concept of a **transition rate**, which describes the instantaneous rate of transition from one state to another.
+
+For two distinct states $i,j\in S$, the transition rate from state $i$ to state $j$ at time $s$ is denoted by $\mu_{ij}(s)$ and is defined by
+
+$$
+\mu_{ij}(s)
+=
+\lim_{h\rightarrow 0}
+\frac{
+\Pr(X(s+h)=j\mid X(s)=i)
+}{h},
+\qquad i\neq j,
+$$
+
+provided that the limit exists.
+
+The quantity $h$ represents a small time interval following time $s$.
+
+For sufficiently small $h$, we can interpret the definition as
+
+$$
+\Pr(X(s+h)=j\mid X(s)=i)
+\approx \mu_{ij}(s)h,
+\qquad i\neq j.
+$$
+
+This approximation shows that the transition rate measures the probability of moving from state $i$ to state $j$ per unit of time, over a sufficiently short interval.
+
+Unlike a transition probability, a transition rate is not itself a probability. It is a non-negative quantity measured in units of inverse time.
+
+### Transition Rates in the Time-Homogeneous Model
+
+For a time-homogeneous Markov jump process, the transition rates do not depend explicitly on time.
+
+Therefore,
+
+$$
+\mu_{ij}(s)=\mu_{ij},
+\qquad i\neq j.
+$$
+
+The transition rate $\mu_{ij}$ is constant over time for a given pair of states $i$ and $j$.
+
+However, different pairs of states may have different transition rates. For example, in a credit rating model, the rate of moving from rating A to rating B need not be the same as the rate of moving from rating B to rating C.
+
+In the two-state mortality model, the transition rate from Alive to Dead is the force of mortality. Under the constant-force assumption, this rate is denoted by $\mu_x$.
+
+Some actuarial texts also use the notation $\sigma_{ij}$ for the transition rate from state $i$ to state $j$.
+
+Throughout this chapter, we use $\mu_{ij}$ to denote the transition rate.
+
+::: {.callout-note}
+## Transition Probabilities and Transition Rates
+
+It is important to distinguish between these two quantities.
+
+- A **transition probability** describes the probability of moving from one state to another over a specified time interval.
+- A **transition rate** describes the instantaneous rate at which such a transition occurs.
+
+For a small time interval of length $h$, the transition probability is approximately the transition rate multiplied by $h$.
+
+The transition probabilities describe the overall behaviour of the process, whereas the transition rates provide the instantaneous description from which the transition probabilities can be developed.
+:::
+
+
+
+
+
+
+
+
+
+## The Chapman–Kolmogorov Equations
+
+The transition probabilities introduced in the previous section describe the probability of moving from one state to another over a specified time interval. An important question is how these probabilities are related when an observation interval is divided into two consecutive parts.
+
+The **Chapman–Kolmogorov equations** provide this relationship. They express a transition probability over a longer time interval in terms of transition probabilities over two shorter intervals.
+
+### Mathematical Formulation
+
+Consider a time-homogeneous Markov jump process $\{X(t)\}_{t\geq 0}$ with state space $S$. For any states $i,j\in S$ and times $s,t\geq 0$, the Chapman–Kolmogorov equations are
+
+$$
+\boxed{
+p_{ij}(s+t)
+=
+\sum_{k\in S}p_{ik}(s)p_{kj}(t).
+}
+$$
+
+The equation expresses the probability of being in state $j$ after a total time of $s+t$, given that the process starts in state $i$, by considering all possible intermediate states $k$ at time $s$.
+
+Each term in the summation has the following interpretation:
+
+- $p_{ik}(s)$ is the probability that the process moves from state $i$ to state $k$ over the first time interval of length $s$.
+- $p_{kj}(t)$ is the probability that the process moves from state $k$ to state $j$ over the subsequent time interval of length $t$.
+- The product $p_{ik}(s)p_{kj}(t)$ is the probability of being in state $k$ at time $s$ and subsequently being in state $j$ at time $s+t$, conditional on starting in state $i$.
+
+Since the process must occupy exactly one state at time $s$, summing over all possible intermediate states accounts for every possible way in which the process can be in state $j$ at time $s+t$.
+
+For a countably infinite state space, the summation is understood as an infinite sum.
+
+### Derivation Using the Markov Property
+
+The Chapman–Kolmogorov equations follow from the law of total probability and the Markov property.
+
+Suppose that the process starts in state $i$ at time $0$. At time $s$, the process must be in some state $k\in S$.
+
+By conditioning on the state occupied at time $s$, we obtain
+
+$$
+\begin{aligned}
+p_{ij}(s+t)
+&=\Pr(X(s+t)=j\mid X(0)=i)\\
+&=\sum_{k\in S}
+\Pr(X(s)=k, X(s+t)=j\mid X(0)=i).
+\end{aligned}
+$$
+
+Using the multiplication rule for conditional probabilities,
+
+$$
+\begin{aligned}
+p_{ij}(s+t)
+&=\sum_{k\in S}
+\Pr(X(s)=k\mid X(0)=i)\\
+&\qquad\times
+\Pr(X(s+t)=j\mid X(s)=k,X(0)=i).
+\end{aligned}
+$$
+
+By the Markov property, the future behaviour of the process depends only on its current state. Hence,
+
+$$
+\begin{aligned}
+p_{ij}(s+t)
+&=\sum_{k\in S}
+\Pr(X(s)=k\mid X(0)=i)\\
+&\qquad\times
+\Pr(X(s+t)=j\mid X(s)=k).
+\end{aligned}
+$$
+
+Using the time-homogeneity assumption and the transition probability notation,
+
+$$
+\begin{aligned}
+p_{ij}(s+t)
+&=\sum_{k\in S}p_{ik}(s)p_{kj}(t).
+\end{aligned}
+$$
+
+This establishes the Chapman–Kolmogorov equations.
+
+The derivation illustrates the roles of the two main assumptions:
+
+- The **Markov property** allows us to express the probability of the future transition using only the state occupied at the intermediate time.
+- **Time homogeneity** allows us to express the transition probabilities in terms of the lengths of the two time intervals.
+
+### Interpretation of the Chapman–Kolmogorov Equations
+
+The Chapman–Kolmogorov equations can be understood as a decomposition of a transition over two consecutive time intervals.
+
+Suppose a process starts in state $i$ at time $0$ and is observed in state $j$ at time $s+t$. The process may have occupied any state $k$ at the intermediate time $s$.
+
+The probability of reaching state $j$ is therefore obtained by:
+
+1. Considering each possible intermediate state $k$.
+2. Calculating the probability of reaching $k$ during the first interval.
+3. Multiplying this by the probability of reaching $j$ during the second interval, given that the process is in state $k$.
+4. Summing over all possible intermediate states.
+
+The equations are valid for any choice of non-negative time intervals $s$ and $t$. Consequently, a transition probability over a long interval can be decomposed into transition probabilities over shorter intervals.
+
+This property is fundamental to the mathematical analysis of Markov jump processes.
+
+## Example: The Poisson Process
+
+Consider a homogeneous Poisson process $\{N(t)\}_{t\geq 0}$ with rate $\lambda$, where $N(t)$ denotes the number of events that have occurred by time $t$.
+
+The state space is
+
+$$
+S=\{0,1,2,\ldots\}.
+$$
+
+The process starts in state $0$ and increases by one whenever an event occurs. Thus, if the process is in state $i$ at time $s$, it can only move to state $i$ or a higher state.
+
+The number of additional events occurring during an interval of length $t$ has a Poisson distribution with parameter $\lambda t$ and is independent of the process history up to the beginning of that interval.
+
+Therefore,
+
+$$
+N(s+t)-N(s)\sim\operatorname{Poisson}(\lambda t).
+$$
+
+### Transition Probabilities
+
+For $j\geq i$, moving from state $i$ to state $j$ requires exactly $j-i$ additional events during the interval.
+
+Hence,
+
+$$
+\begin{aligned}
+p_{ij}(t)
+&=\Pr(N(t)=j\mid N(0)=i)\\
+&=\Pr(N(t)-N(0)=j-i)\\
+&=e^{-\lambda t}
+\frac{(\lambda t)^{j-i}}{(j-i)!}.
+\end{aligned}
+$$
+
+If $j<i$, the transition is impossible because the number of events cannot decrease.
+
+Thus, the transition probabilities are
+
+$$
+\boxed{
+p_{ij}(t)=
+\begin{cases}
+e^{-\lambda t}
+\dfrac{(\lambda t)^{j-i}}{(j-i)!},
+& j\geq i,\\[8pt]
+0, & j<i.
+\end{cases}
+}
+$$
+
+In particular, when $j=i$, no additional events occur, giving
+
+$$
+p_{ii}(t)=e^{-\lambda t}.
+$$
+
+### Verification of the Chapman–Kolmogorov Equations
+
+We now verify that the transition probabilities of the Poisson process satisfy the Chapman–Kolmogorov equations.
+
+For $j\geq i$,
+
+$$
+p_{ij}(s+t)
+=
+\sum_{k\in S}p_{ik}(s)p_{kj}(t).
+$$
+
+Since the Poisson process can only move to higher states, the intermediate state $k$ must satisfy
+
+$$
+i\leq k\leq j.
+$$
+
+Therefore,
+
+$$
+p_{ij}(s+t)
+=
+\sum_{k=i}^{j}p_{ik}(s)p_{kj}(t).
+$$
+
+Substituting the transition probabilities gives
+
+$$
+\begin{aligned}
+p_{ij}(s+t)
+&=\sum_{k=i}^{j}
+e^{-\lambda s}
+\frac{(\lambda s)^{k-i}}{(k-i)!}
+e^{-\lambda t}
+\frac{(\lambda t)^{j-k}}{(j-k)!}\\[6pt]
+&=e^{-\lambda(s+t)}
+\sum_{k=i}^{j}
+\frac{(\lambda s)^{k-i}
+(\lambda t)^{j-k}}
+{(k-i)!(j-k)!}.
+\end{aligned}
+$$
+
+Let $r=k-i$ and $n=j-i$. Then $j-k=n-r$, and the summation becomes
+
+$$
+\begin{aligned}
+p_{ij}(s+t)
+&=e^{-\lambda(s+t)}
+\sum_{r=0}^{n}
+\frac{(\lambda s)^r(\lambda t)^{n-r}}
+{r!(n-r)!}\\[6pt]
+&=\frac{e^{-\lambda(s+t)}}{n!}
+\sum_{r=0}^{n}
+\binom{n}{r}
+(\lambda s)^r(\lambda t)^{n-r}.
+\end{aligned}
+$$
+
+By the binomial theorem,
+
+$$
+\sum_{r=0}^{n}
+\binom{n}{r}
+(\lambda s)^r(\lambda t)^{n-r}
+=
+\{\lambda(s+t)\}^{n}.
+$$
+
+Consequently,
+
+$$
+\begin{aligned}
+p_{ij}(s+t)
+&=e^{-\lambda(s+t)}
+\frac{\{\lambda(s+t)\}^{j-i}}{(j-i)!}.
+\end{aligned}
+$$
+
+This is precisely the transition probability obtained directly for an interval of length $s+t$.
+
+Therefore, the Poisson process satisfies the Chapman–Kolmogorov equations.
+
+The result is consistent with the independent and stationary increments properties of the Poisson process: the number of events occurring over two consecutive intervals has the same distribution as the number of events occurring over their combined interval.
+
+
+
+
+
+
+
+
+
+
+
+
+
+## The Transition Probability Matrix
+
+The Chapman–Kolmogorov equations describe the relationship between transition probabilities over consecutive time intervals. For a finite state space, these probabilities can be arranged into a matrix, providing a convenient way to study the evolution of a Markov jump process.
+
+This section develops the matrix representation of transition probabilities and examines how it can be used to determine the probability distribution of the process at a future time. We also consider the joint distribution of the process at several observation times.
+
+### Definition and Properties of the Transition Probability Matrix
+
+Consider a time-homogeneous Markov jump process $\{X(t)\}_{t\geq 0}$ with state space $S$.
+
+The matrix whose $(i,j)$-th entry is the transition probability $p_{ij}(t)$ is called the **transition probability matrix** and is denoted by
+
+$$
+P(t)=\bigl(p_{ij}(t)\bigr)_{i,j\in S}.
+$$
+
+For a finite state space containing $n$ states, $P(t)$ is an $n\times n$ matrix.
+
+Since each entry represents a probability, the transition probability matrix satisfies
+
+$$
+0\leq p_{ij}(t)\leq 1,
+\qquad i,j\in S.
+$$
+
+Furthermore, the process must occupy exactly one state at time $t$. Therefore, the probabilities in each row must sum to one:
+
+$$
+\boxed{
+\sum_{j\in S}p_{ij}(t)=1,
+\qquad i\in S.
+}
+$$
+
+A matrix satisfying these conditions is called a **stochastic matrix**.
+
+Thus, for every $t\geq 0$, the transition probability matrix $P(t)$ is a stochastic matrix.
+
+Recall also that, at time zero, the process remains in its initial state with probability one. Hence,
+
+$$
+p_{ij}(0)=
+\begin{cases}
+1, & i=j,\\
+0, & i\neq j.
+\end{cases}
+$$
+
+In matrix notation, this gives
+
+$$
+\boxed{P(0)=I,}
+$$
+
+where $I$ denotes the identity matrix of the appropriate dimension.
+
+### Matrix Form of the Chapman–Kolmogorov Equations
+
+The Chapman–Kolmogorov equations established in the previous section can be expressed compactly using matrix multiplication.
+
+For states $i,j\in S$,
+
+$$
+p_{ij}(s+t)
+=
+\sum_{k\in S}p_{ik}(s)p_{kj}(t).
+$$
+
+The right-hand side is precisely the $(i,j)$-th entry of the matrix product $P(s)P(t)$. Therefore,
+
+$$
+\boxed{
+P(s+t)=P(s)P(t),
+\qquad s,t\geq 0.
+}
+$$
+
+This is known as the **semigroup property** of the transition probability matrices.
+
+Together with $P(0)=I$, it gives
+
+$$
+P(0)=I,
+\qquad
+P(s+t)=P(s)P(t).
+$$
+
+The semigroup property means that the transition behaviour over a period of length $s+t$ can be obtained by combining the transition matrices over two consecutive periods of lengths $s$ and $t$.
+
+In particular, for any positive integer $n$,
+
+$$
+P(nt)=\underbrace{P(t)P(t)\cdots P(t)}_{n\text{ times}}
+=P(t)^n.
+$$
+
+This allows transition probabilities over longer intervals to be calculated using repeated matrix multiplication, provided the transition matrix for the shorter interval is known.
+
+It is important to note that the semigroup property is a consequence of the Markov property and time homogeneity. It is not an additional assumption imposed on the process.
+
+### Determining the Probability Distribution at a Future Time
+
+The transition probability matrix describes the future distribution of the process conditional on its initial state. We can extend this result to situations in which the initial state is itself random.
+
+Let the initial distribution of the process be represented by the row vector
+
+$$
+\boldsymbol{\mu}^{(0)}
+=
+\bigl(\mu_1^{(0)},\mu_2^{(0)},\ldots\bigr),
+$$
+
+where
+
+$$
+\mu_i^{(0)}=\Pr(X(0)=i),
+\qquad i\in S.
+$$
+
+The components of the initial distribution satisfy
+
+$$
+\mu_i^{(0)}\geq 0,
+\qquad
+\sum_{i\in S}\mu_i^{(0)}=1.
+$$
+
+Define the probability distribution of the process at time $t$ by
+
+$$
+\boldsymbol{\mu}(t)
+=
+\bigl(\mu_1(t),\mu_2(t),\ldots\bigr),
+$$
+
+where
+
+$$
+\mu_j(t)=\Pr(X(t)=j).
+$$
+
+Using the law of total probability, we condition on the initial state:
+
+$$
+\begin{aligned}
+\mu_j(t)
+&=\sum_{i\in S}
+\Pr(X(0)=i)\Pr(X(t)=j\mid X(0)=i)\\
+&=\sum_{i\in S}\mu_i^{(0)}p_{ij}(t).
+\end{aligned}
+$$
+
+This is precisely the $j$-th component of the matrix product $\boldsymbol{\mu}^{(0)}P(t)$.
+
+Therefore,
+
+$$
+\boxed{
+\boldsymbol{\mu}(t)
+=
+\boldsymbol{\mu}^{(0)}P(t).
+}
+$$
+
+This result shows that the probability distribution at any future time is completely determined by the initial distribution and the transition probability matrix.
+
+In particular, if the process starts in a known state $i$, then its initial distribution is concentrated entirely on that state. The corresponding initial distribution vector has a one in position $i$ and zeros elsewhere. Consequently, the distribution at time $t$ is given by the $i$-th row of $P(t)$.
+
+### Joint Probabilities at Several Time Points
+
+The transition probability matrix can also be used to determine the joint distribution of the process at several observation times.
+
+Consider a sequence of observation times
+
+$$
+0<t_1<t_2<\cdots<t_n.
+$$
+
+Suppose that the process starts in state $i_0$ and is subsequently observed in states $i_1,i_2,\ldots,i_n$ at times $t_1,t_2,\ldots,t_n$, respectively.
+
+By repeatedly applying the Markov property, the joint probability can be expressed as
+
+$$
+\boxed{
+\begin{aligned}
+&\Pr\bigl(X(0)=i_0,X(t_1)=i_1,\ldots,X(t_n)=i_n\bigr)\\
+&\quad=
+\mu_{i_0}^{(0)}
+p_{i_0i_1}(t_1)
+p_{i_1i_2}(t_2-t_1)
+\cdots
+p_{i_{n-1}i_n}(t_n-t_{n-1}).
+\end{aligned}
+}
+$$
+
+Each transition probability corresponds to the time elapsed between two consecutive observations.
+
+For example, the probability of observing the process in states $i_0$, $i_1$ and $i_2$ at times $0$, $t_1$ and $t_2$, respectively, is
+
+$$
+\begin{aligned}
+&\Pr(X(0)=i_0,X(t_1)=i_1,X(t_2)=i_2)\\
+&\quad=
+\mu_{i_0}^{(0)}
+p_{i_0i_1}(t_1)
+p_{i_1i_2}(t_2-t_1).
+\end{aligned}
+$$
+
+If the initial state is not specified, we sum over all possible initial states:
+
+$$
+\boxed{
+\begin{aligned}
+&\Pr(X(t_1)=i_1,\ldots,X(t_n)=i_n)\\
+&\quad=
+\sum_{i_0\in S}
+\mu_{i_0}^{(0)}
+p_{i_0i_1}(t_1)
+p_{i_1i_2}(t_2-t_1)
+\cdots
+p_{i_{n-1}i_n}(t_n-t_{n-1}).
+\end{aligned}
+}
+$$
+
+This result is useful when studying the behaviour of a Markov jump process at several observation times, rather than at just one future time.
+
+It also shows that the initial distribution and the transition probability matrices over consecutive time intervals determine the finite-dimensional distributions of the process.
+
+
+
+
+:::{#exm-Worked-Example}
+## Distribution of a Two-State Markov Jump Process
+
+Consider a time-homogeneous Markov jump process with two states, State 1 and State 2. Its transition probability matrix over an interval of length $t$ is
+
+$$
+P(t)=
+\begin{pmatrix}
+0.8 & 0.2\\
+0.3 & 0.7
+\end{pmatrix}.
+$$
+
+Here, $t$ denotes a fixed observation interval. Although $P(t)$ is written as a function of time, the matrix above gives its numerical value for this particular interval. Since the process is time-homogeneous, the same transition probability matrix applies to every consecutive interval of the same length.
+
+Suppose the initial probability distribution is
+
+$$
+\boldsymbol{\mu}^{(0)}
+=
+\begin{pmatrix}
+0.6 & 0.4
+\end{pmatrix}.
+$$
+
+Calculate:
+
+1. The probability distribution of the process after one observation interval.
+2. The probability distribution after two consecutive intervals of the same length.
+3. The probability that the process is in State 2 after two intervals.
+
+:::
+
+**Solution**
+
+**Part 1: Distribution after one observation interval**
+
+The probability distribution after one interval is obtained by multiplying the initial distribution by the transition probability matrix:
+
+$$
+\boldsymbol{\mu}(t)
+=
+\boldsymbol{\mu}^{(0)}P(t).
+$$
+
+Therefore,
+
+$$
+\begin{aligned}
+\boldsymbol{\mu}(t)
+&=
+\begin{pmatrix}
+0.6 & 0.4
+\end{pmatrix}
+\begin{pmatrix}
+0.8 & 0.2\\
+0.3 & 0.7
+\end{pmatrix}\\[6pt]
+&=
+\begin{pmatrix}
+0.6(0.8)+0.4(0.3)
+&
+0.6(0.2)+0.4(0.7)
+\end{pmatrix}\\[6pt]
+&=
+\begin{pmatrix}
+0.60 & 0.40
+\end{pmatrix}.
+\end{aligned}
+$$
+
+Hence, after one observation interval,
+
+$$
+\boxed{
+\begin{aligned}
+\Pr(X(t)=1)&=0.60,\\
+\Pr(X(t)=2)&=0.40.
+\end{aligned}
+}
+$$
+
+The resulting vector is a probability distribution because its entries are non-negative and sum to one.
+
+**Part 2: Distribution after two consecutive intervals**
+
+Since the process is time-homogeneous, the transition probability matrix is the same for both consecutive intervals. By the Chapman–Kolmogorov equation,
+
+$$
+P(2t)=P(t)P(t)=P(t)^2.
+$$
+
+Thus,
+
+$$
+\begin{aligned}
+P(2t)
+&=
+\begin{pmatrix}
+0.8 & 0.2\\
+0.3 & 0.7
+\end{pmatrix}
+\begin{pmatrix}
+0.8 & 0.2\\
+0.3 & 0.7
+\end{pmatrix}\\[6pt]
+&=
+\begin{pmatrix}
+0.70 & 0.30\\
+0.45 & 0.55
+\end{pmatrix}.
+\end{aligned}
+$$
+
+The probability distribution after two intervals is therefore
+
+$$
+\begin{aligned}
+\boldsymbol{\mu}(2t)
+&=\boldsymbol{\mu}^{(0)}P(2t)\\[4pt]
+&=
+\begin{pmatrix}
+0.6 & 0.4
+\end{pmatrix}
+\begin{pmatrix}
+0.70 & 0.30\\
+0.45 & 0.55
+\end{pmatrix}\\[6pt]
+&=
+\begin{pmatrix}
+0.6(0.70)+0.4(0.45)
+&
+0.6(0.30)+0.4(0.55)
+\end{pmatrix}\\[6pt]
+&=
+\begin{pmatrix}
+0.60 & 0.40
+\end{pmatrix}.
+\end{aligned}
+$$
+
+Hence,
+
+$$
+\boxed{
+\boldsymbol{\mu}(2t)
+=
+\begin{pmatrix}
+0.60 & 0.40
+\end{pmatrix}.
+}
+$$
+
+**Part 3: Probability of being in State 2 after two intervals**
+
+From the probability distribution obtained in Part 2,
+
+$$
+\boxed{
+\Pr(X(2t)=2)=0.40.
+}
+$$
+
+The probability distribution remains unchanged after both observation intervals. This is because the initial distribution is already an invariant distribution of the transition probability matrix. In other words,
+
+$$
+\boldsymbol{\mu}^{(0)}P(t)
+=
+\boldsymbol{\mu}^{(0)}.
+$$
+
+This example illustrates that when a Markov jump process starts with an invariant distribution, its probability distribution remains unchanged over time.
+
+
+
+
+
+
+<!-- ### Worked Example: Distribution of a Two-State Markov Jump Process -->
+
+<!-- Consider a time-homogeneous Markov jump process with two states, State 1 and State 2. Its transition probability matrix over an interval of length $t$ is -->
+
+<!-- $$ -->
+<!-- P(t)= -->
+<!-- \begin{pmatrix} -->
+<!-- 0.8 & 0.2\\ -->
+<!-- 0.3 & 0.7 -->
+<!-- \end{pmatrix} -->
+<!-- $$ -->
+
+<!-- for a particular observation interval. -->
+
+<!-- Suppose the initial distribution is -->
+
+<!-- $$ -->
+<!-- \boldsymbol{\mu}^{(0)} -->
+<!-- = -->
+<!-- \begin{pmatrix} -->
+<!-- 0.6 & 0.4 -->
+<!-- \end{pmatrix}. -->
+<!-- $$ -->
+
+<!-- Calculate: -->
+
+<!-- 1. The probability distribution of the process after one observation interval. -->
+<!-- 2. The probability distribution after two consecutive intervals of the same length. -->
+<!-- 3. The probability that the process is in State 2 after two intervals. -->
+
+<!-- ### Solution -->
+
+<!-- **Part 1: Distribution after one observation interval** -->
+
+<!-- Using the initial distribution and the transition probability matrix, -->
+
+<!-- $$ -->
+<!-- \boldsymbol{\mu}(t) -->
+<!-- = -->
+<!-- \boldsymbol{\mu}^{(0)}P(t). -->
+<!-- $$ -->
+
+<!-- Therefore, -->
+
+<!-- $$ -->
+<!-- \begin{aligned} -->
+<!-- \boldsymbol{\mu}(t) -->
+<!-- &= -->
+<!-- \begin{pmatrix} -->
+<!-- 0.6 & 0.4 -->
+<!-- \end{pmatrix} -->
+<!-- \begin{pmatrix} -->
+<!-- 0.8 & 0.2\\ -->
+<!-- 0.3 & 0.7 -->
+<!-- \end{pmatrix}\\[6pt] -->
+<!-- &= -->
+<!-- \begin{pmatrix} -->
+<!-- 0.6(0.8)+0.4(0.3) -->
+<!-- & -->
+<!-- 0.6(0.2)+0.4(0.7) -->
+<!-- \end{pmatrix}\\[6pt] -->
+<!-- &= -->
+<!-- \begin{pmatrix} -->
+<!-- 0.60 & 0.40 -->
+<!-- \end{pmatrix}. -->
+<!-- \end{aligned} -->
+<!-- $$ -->
+
+<!-- Hence, after one observation interval, -->
+
+<!-- $$ -->
+<!-- \boxed{ -->
+<!-- \begin{aligned} -->
+<!-- \Pr(X(t)=1)&=0.60,\\ -->
+<!-- \Pr(X(t)=2)&=0.40. -->
+<!-- \end{aligned} -->
+<!-- } -->
+<!-- $$ -->
+
+<!-- **Part 2: Distribution after two consecutive intervals** -->
+
+<!-- By the semigroup property, -->
+
+<!-- $$ -->
+<!-- P(2t)=P(t)P(t)=P(t)^2. -->
+<!-- $$ -->
+
+<!-- Thus, -->
+
+<!-- $$ -->
+<!-- \begin{aligned} -->
+<!-- P(2t) -->
+<!-- &= -->
+<!-- \begin{pmatrix} -->
+<!-- 0.8 & 0.2\\ -->
+<!-- 0.3 & 0.7 -->
+<!-- \end{pmatrix} -->
+<!-- \begin{pmatrix} -->
+<!-- 0.8 & 0.2\\ -->
+<!-- 0.3 & 0.7 -->
+<!-- \end{pmatrix}\\[6pt] -->
+<!-- &= -->
+<!-- \begin{pmatrix} -->
+<!-- 0.70 & 0.30\\ -->
+<!-- 0.45 & 0.55 -->
+<!-- \end{pmatrix}. -->
+<!-- \end{aligned} -->
+<!-- $$ -->
+
+<!-- The probability distribution after two intervals is therefore -->
+
+<!-- $$ -->
+<!-- \begin{aligned} -->
+<!-- \boldsymbol{\mu}(2t) -->
+<!-- &=\boldsymbol{\mu}^{(0)}P(2t)\\[4pt] -->
+<!-- &= -->
+<!-- \begin{pmatrix} -->
+<!-- 0.6 & 0.4 -->
+<!-- \end{pmatrix} -->
+<!-- \begin{pmatrix} -->
+<!-- 0.70 & 0.30\\ -->
+<!-- 0.45 & 0.55 -->
+<!-- \end{pmatrix}\\[6pt] -->
+<!-- &= -->
+<!-- \begin{pmatrix} -->
+<!-- 0.6(0.70)+0.4(0.45) -->
+<!-- & -->
+<!-- 0.6(0.30)+0.4(0.55) -->
+<!-- \end{pmatrix}\\[6pt] -->
+<!-- &= -->
+<!-- \begin{pmatrix} -->
+<!-- 0.60 & 0.40 -->
+<!-- \end{pmatrix}. -->
+<!-- \end{aligned} -->
+<!-- $$ -->
+
+<!-- Hence, -->
+
+<!-- $$ -->
+<!-- \boxed{ -->
+<!-- \boldsymbol{\mu}(2t) -->
+<!-- = -->
+<!-- \begin{pmatrix} -->
+<!-- 0.60 & 0.40 -->
+<!-- \end{pmatrix}. -->
+<!-- } -->
+<!-- $$ -->
+
+<!-- **Part 3: Probability of being in State 2 after two intervals** -->
+
+<!-- From the distribution obtained in Part 2, -->
+
+<!-- $$ -->
+<!-- \boxed{ -->
+<!-- \Pr(X(2t)=2)=0.40. -->
+<!-- } -->
+<!-- $$ -->
+
+<!-- The probability distribution remains unchanged after both observation intervals. In this example, the initial distribution is already an invariant distribution of the transition probability matrix. -->
+
+### Summary
+
+The transition probability matrix provides a convenient representation of the transition behaviour of a time-homogeneous Markov jump process.
+
+The main results established in this section are:
+
+1. For every $t\geq 0$, $P(t)$ is a stochastic matrix.
+2. The transition probability matrices satisfy the semigroup property:
+
+   $$
+   P(s+t)=P(s)P(t).
+   $$
+
+3. Given an initial distribution $\boldsymbol{\mu}^{(0)}$, the distribution at time $t$ is
+
+   $$
+   \boldsymbol{\mu}(t)=\boldsymbol{\mu}^{(0)}P(t).
+   $$
+
+4. The joint distribution at several observation times can be expressed as a product of transition probabilities over consecutive time intervals.
+
+These results provide the matrix framework for studying the evolution of a Markov jump process. The next section introduces the generator matrix, which describes the instantaneous transition behaviour and provides a way to determine the transition probability matrices.
+
+
+
+
+
+
+
+## Transition Rates and the Generator Matrix
+
+The transition probability matrix describes the probabilities of moving between states over a specified time interval. The generator matrix provides a description of the process at the instant when a transition occurs. Its entries are determined by the transition rates.
+
+### Transition Rates
+
+For distinct states $i$ and $j$, the transition rate from state $i$ to state $j$ is denoted by $q_{ij}$. Assuming that the transition probabilities are right-differentiable at $t=0$, define
+
+$$
+\boxed{
+q_{ij}
+=
+p'_{ij}(0)
+=
+\lim_{h\rightarrow 0}
+\frac{p_{ij}(h)}{h},
+\qquad i\neq j.
+}
+$$
+
+The rate $q_{ij}$ measures the instantaneous rate at which the process moves from state $i$ to state $j$.
+
+For example, in a two-state mortality model, the transition rate from Alive to Dead is the force of mortality under the time-homogeneous assumption.
+
+### Small-Time Behaviour of Transition Probabilities
+
+The transition rates describe how the transition probabilities behave over a very short time interval. Since $p_{ij}(0)=\delta_{ij}$, a first-order expansion around $t=0$ gives
+
+$$
+p_{ij}(h)
+=
+\delta_{ij}+q_{ij}h+o(h),
+\qquad h\rightarrow 0,
+$$
+
+where $\delta_{ij}$ is the Kronecker delta and $o(h)$ denotes a term that, when divided by $h$, tends to zero as $h\rightarrow 0$.
+
+For distinct states $i$ and $j$,
+
+$$
+p_{ij}(h)=q_{ij}h+o(h).
+$$
+
+Thus, over a sufficiently short interval of length $h$, the probability of moving from state $i$ to state $j$ is approximately $q_{ij}h$.
+
+For the probability of remaining in state $i$, we obtain
+
+$$
+p_{ii}(h)=1+q_{ii}h+o(h).
+$$
+
+The diagonal quantity $q_{ii}$ is non-positive and is related to the total rate of leaving state $i$, as shown below.
+
+### Properties of the Transition Rates
+
+The transition rates satisfy two properties.
+
+**1. Non-negative off-diagonal entries**
+
+For distinct states $i$ and $j$,
+
+$$
+\boxed{q_{ij}\geq 0.}
+$$
+
+This follows because transition probabilities are non-negative.
+
+**2. Each row sums to zero**
+
+For a finite state space, differentiating the identity
+
+$$
+\sum_{j\in S}p_{ij}(t)=1
+$$
+
+at $t=0$ gives
+
+$$
+\boxed{\sum_{j\in S}q_{ij}=0.}
+$$
+
+Consequently, the diagonal entry is determined by the off-diagonal entries:
+
+$$
+\boxed{
+q_{ii}
+=
+-\sum_{\substack{j\in S\\j\neq i}}q_{ij}.
+}
+$$
+
+The total rate of leaving state $i$ is therefore
+
+$$
+\boxed{
+\nu_i
+=
+\sum_{\substack{j\in S\\j\neq i}}q_{ij}
+=
+-q_{ii}.
+}
+$$
+
+Here, $\nu_i$ is called the **exit rate** from state $i$. The corresponding mean holding time in state $i$ is $1/\nu_i$, provided that $\nu_i>0$.
+
+If $\nu_i=0$, the process cannot leave state $i$, so that state is absorbing.
+
+For countably infinite state spaces, the same row-sum condition applies when the relevant sums and differentiation are justified.
+
+### The Generator Matrix
+
+The matrix formed by the transition rates is called the **generator matrix**, **transition rate matrix**, or **infinitesimal generator** of the process:
+
+$$
+Q=(q_{ij})_{i,j\in S}.
+$$
+
+Its entries satisfy
+
+$$
+q_{ij}\geq 0,\qquad i\neq j,
+$$
+
+and
+
+$$
+q_{ii}=-\sum_{\substack{j\in S\\j\neq i}}q_{ij}.
+$$
+
+Thus, the generator matrix has non-negative off-diagonal entries and rows that sum to zero. Its diagonal entries are non-positive.
+
+For a finite state space, the transition probability matrix can be obtained from the generator matrix using the matrix exponential:
+
+$$
+\boxed{P(t)=e^{Qt}.}
+$$
+
+This relationship provides a way to obtain transition probabilities from the instantaneous transition rates. It will be developed through Kolmogorov's differential equations.
+
+For a countably infinite state space, such as the state space of a Poisson process, the generator is an infinite matrix. The matrix exponential representation requires additional mathematical conditions and cannot be applied directly as in the finite-state case.
+
+
+::: {.callout-note}
+In this course, we will not study how to evaluate the matrix exponential directly. Instead, we will obtain the transition probabilities by solving the corresponding Kolmogorov differential equations component by component, using the techniques for solving differential equations that students have learned in their Calculus course.
+:::
+
+
+::: {#exm-Two-State-model}
+
+## Two-State Markov Jump Process
+
+Consider a time-homogeneous Markov jump process with two states, State 1 and State 2. The transition rate from State 1 to State 2 is $\lambda$, while the transition rate from State 2 to State 1 is $\mu$, where $\lambda,\mu>0$.
+
+1. Draw the state transition diagram.
+2. Determine the generator matrix $Q$.
+
+:::
+
+**Solution**
+
+**State transition diagram**
+
+The process can move from State 1 to State 2 at rate $\lambda$, and from State 2 to State 1 at rate $\mu$.
+
+
+
+::: {#fig-markov-two-states}
+
+```{=latex}
+\begin{center}
+\begin{tikzpicture}[scale=0.8,x=0.75pt,y=0.75pt,yscale=-1,xscale=1]
+%uncomment if require: \path (0,300); %set diagram left start at 0, and has height of 300
+
+%Shape: Rectangle [id:dp6461073533685131] 
+\draw   (20.57,59.47) -- (168.67,59.47) -- (168.67,140.67) -- (20.57,140.67) -- cycle ;
+%Straight Lines [id:da9206552550981602] 
+\draw    (171.25,81.07) -- (238.2,80.71) ;
+\draw [shift={(240.2,80.7)}, rotate = 539.7] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]  [draw opacity=0] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- cycle    ;
+
+%Straight Lines [id:da16336977884683224] 
+\draw    (170.57,120.9) -- (240.75,121.07) ;
+
+\draw [shift={(168.57,120.9)}, rotate = 0.13] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]  [draw opacity=0] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- cycle    ;
+%Shape: Rectangle [id:dp6701645831587428] 
+\draw   (242.23,59.97) -- (390.33,59.97) -- (390.33,141.17) -- (242.23,141.17) -- cycle ;
+
+% Text Node
+\draw (94.62,100.07) node  [align=left] {{\fontfamily{ptm}\selectfont State 1}};
+% Text Node
+\draw (316.28,100.57) node  [align=left] {{\fontfamily{ptm}\selectfont State 2}};
+% Text Node
+\draw (202.7,65.3) node   {$\lambda $};
+% Text Node
+\draw (203.8,133.6) node   {$\mu $};
+
+\end{tikzpicture}
+\end{center}
+```
+
+
+
+```{=html}
+<svg viewBox="0 0 440 170" width="100%" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8"
+            refX="6" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L6,3 L0,6 Z" fill="currentColor"/>
+    </marker>
+  </defs>
+
+  <rect x="20" y="50" width="150" height="82"
+        fill="none" stroke="currentColor" stroke-width="1.5"/>
+  <rect x="270" y="50" width="150" height="82"
+        fill="none" stroke="currentColor" stroke-width="1.5"/>
+
+  <g fill="currentColor" font-family="serif" font-size="18"
+     text-anchor="middle">
+    <text x="95" y="98">State 1</text>
+    <text x="345" y="98">State 2</text>
+    <text x="220" y="48" font-style="italic">λ</text>
+    <text x="220" y="150" font-style="italic">μ</text>
+  </g>
+
+  <g stroke="currentColor" stroke-width="1.5" fill="none"
+     marker-end="url(#arrow)">
+    <path d="M172 72 L265 72"/>
+    <path d="M268 112 L175 112"/>
+  </g>
+</svg>
+```
+
+
+State transitions in a two-state Markov jump process.
+
+:::
+
+
+
+**Generator matrix**
+
+The off-diagonal entries are the transition rates shown in the diagram:
+
+$$
+q_{12}=\lambda,
+\qquad
+q_{21}=\mu.
+$$
+
+The total rate of leaving State 1 is $\lambda$, while the total rate of leaving State 2 is $\mu$. Hence,
+
+$$
+q_{11}=-\lambda,
+\qquad
+q_{22}=-\mu.
+$$
+
+Therefore, the generator matrix is
+
+$$
+\boxed{
+Q=
+\begin{pmatrix}
+-\lambda & \lambda\\
+\mu & -\mu
+\end{pmatrix}.
+}
+$$
+
+Each row sums to zero, as required.
+
+
+::: {#exm-HSD-model}
+
+## Health-Sickness-Death Model
+
+Consider a time-homogeneous health-sickness-death (HSD) model with three states:
+
+- Healthy ($h$);
+- Ill ($i$);
+- Dead ($d$).
+
+The transition rates are constant and are denoted by $\sigma$, $\rho$, $\mu$, and $\nu$, as shown in the state transition diagram.
+
+Determine the generator matrix $Q$, using the state ordering $(h,i,d)$.
+
+:::
+
+**Solution**
+
+**State transition diagram**
+
+The possible transitions are:
+
+- Healthy to Ill, at rate $\sigma$;
+- Ill to Healthy, at rate $\rho$;
+- Healthy to Dead, at rate $\mu$;
+- Ill to Dead, at rate $\nu$.
+
+The Dead state is absorbing because the process cannot leave this state.
+
+
+::: {#fig-markov-HSD}
+
+
+```{=latex}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.6,x=0.75pt,y=0.75pt,yscale=-1,xscale=1]
+%uncomment if require: \path (0,427); %set diagram left start at 0, and has height of 427
+
+%Shape: Rectangle [id:dp6461073533685131] 
+\draw   (20.57,59.47) -- (168.67,59.47) -- (168.67,140.67) -- (20.57,140.67) -- cycle ;
+%Straight Lines [id:da9206552550981602] 
+\draw    (171.25,81.07) -- (238.2,80.71) ;
+\draw [shift={(240.2,80.7)}, rotate = 539.7] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]  [draw opacity=0] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- cycle    ;
+
+%Straight Lines [id:da16336977884683224] 
+\draw    (170.57,120.9) -- (240.75,121.07) ;
+
+\draw [shift={(168.57,120.9)}, rotate = 0.13] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]  [draw opacity=0] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- cycle    ;
+%Shape: Rectangle [id:dp6701645831587428] 
+\draw   (242.23,59.97) -- (390.33,59.97) -- (390.33,141.17) -- (242.23,141.17) -- cycle ;
+%Shape: Rectangle [id:dp5857755229985386] 
+\draw   (133.23,203.97) -- (281.33,203.97) -- (281.33,285.17) -- (133.23,285.17) -- cycle ;
+%Straight Lines [id:da26767212610765867] 
+\draw    (89.25,144.07) -- (173.81,197.93) ;
+\draw [shift={(175.5,199)}, rotate = 212.49] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]  [draw opacity=0] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- cycle    ;
+
+%Straight Lines [id:da34728994666942503] 
+\draw    (317.25,149.07) -- (243.19,195.93) ;
+\draw [shift={(241.5,197)}, rotate = 327.68] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]  [draw opacity=0] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- cycle    ;
+
+
+% Text Node
+\draw (94.62,100.07) node  [align=left] {{\fontfamily{ptm}\selectfont Healthy: \textit{h}}};
+% Text Node
+\draw (202.7,65.3) node   {$\sigma $};
+% Text Node
+\draw (203.8,133.6) node   {$\rho $};
+% Text Node
+\draw (316.28,100.57) node  [align=left] {{\fontfamily{ptm}\selectfont Ill: \textit{i}}};
+% Text Node
+\draw (207.28,244.57) node  [align=left] {{\fontfamily{ptm}\selectfont Dead: \textit{d}}};
+% Text Node
+\draw (104.7,175.3) node   {$\mu $};
+% Text Node
+\draw (307.7,176.3) node   {$\nu $};
+
+
+\end{tikzpicture}
+\end{center}
+```
+
+
+
+```{=html}
+<svg viewBox="0 0 440 330" width="100%" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arrow-health" markerWidth="8" markerHeight="8"
+            refX="6" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L6,3 L0,6 Z" fill="currentColor"/>
+    </marker>
+  </defs>
+
+  <!-- State boxes -->
+  <g fill="none" stroke="currentColor" stroke-width="1.5">
+    <rect x="20.57" y="59.47" width="148.1" height="81.2"/>
+    <rect x="242.23" y="59.97" width="148.1" height="81.2"/>
+    <rect x="133.23" y="203.97" width="148.1" height="81.2"/>
+  </g>
+
+  <!-- State labels -->
+  <g fill="currentColor" font-family="serif" font-size="17"
+     text-anchor="middle">
+    <text x="94.62" y="105">Healthy: <tspan font-style="italic">h</tspan></text>
+    <text x="316.28" y="105">Ill: <tspan font-style="italic">i</tspan></text>
+    <text x="207.28" y="250">Dead: <tspan font-style="italic">d</tspan></text>
+  </g>
+
+  <!-- Transition arrows -->
+  <g fill="none" stroke="currentColor" stroke-width="1.5"
+     marker-end="url(#arrow-health)">
+    <!-- Healthy to Ill -->
+    <path d="M171.25 81.07 L238.2 80.71"/>
+
+    <!-- Ill to Healthy -->
+    <path d="M240.75 121.07 L170.57 120.9"/>
+
+    <!-- Healthy to Dead -->
+    <path d="M89.25 144.07 L173.81 197.93"/>
+
+    <!-- Ill to Dead -->
+    <path d="M317.25 149.07 L243.19 195.93"/>
+  </g>
+
+  <!-- Transition intensities -->
+  <g fill="currentColor" font-family="serif" font-size="18"
+     font-style="italic" text-anchor="middle">
+    <text x="202.7" y="53">σ</text>
+    <text x="203.8" y="153">ρ</text>
+    <text x="104.7" y="180">μ</text>
+    <text x="307.7" y="181">ν</text>
+  </g>
+</svg>
+```
+
+
+
+State transitions in a Health-Sickness-Death Model.
+
+:::
+
+
+**Generator matrix**
+
+Using the state ordering $(h,i,d)$, the off-diagonal entries are determined by the transition rates:
+
+$$
+q_{hi}=\sigma,\qquad
+q_{hd}=\mu,\qquad
+q_{ih}=\rho,\qquad
+q_{id}=\nu.
+$$
+
+All other off-diagonal entries are zero.
+
+The total rates of leaving the three states are:
+
+- Healthy: $\sigma+\mu$;
+- Ill: $\rho+\nu$;
+- Dead: $0$.
+
+The diagonal entries are therefore
+
+$$
+q_{hh}=-(\sigma+\mu),
+\qquad
+q_{ii}=-(\rho+\nu),
+\qquad
+q_{dd}=0.
+$$
+
+Hence, the generator matrix is
+
+$$
+\boxed{
+Q=
+\begin{pmatrix}
+-(\sigma+\mu) & \sigma & \mu\\
+\rho & -(\rho+\nu) & \nu\\
+0 & 0 & 0
+\end{pmatrix}.
+}
+$$
+
+The last row consists entirely of zeros because the Dead state is absorbing. Each row sums to zero, and all off-diagonal entries are non-negative.
+
+
+::: {#exm-Poisson-model}
+
+## Generator Matrix of a Poisson Process
+
+Consider a homogeneous Poisson process $\{N(t)\}_{t\geq 0}$ with rate $\lambda>0$, where $N(t)$ represents the number of events that have occurred by time $t$.
+
+The process has state space
+
+$$
+S=\{0,1,2,\ldots\}.
+$$
+
+1. Draw the state transition diagram.
+2. Determine the generator matrix $Q$.
+
+:::
+
+**Solution**
+
+**State transition diagram**
+
+Each event increases the number of events by exactly one. Therefore, from any state $i$, the only possible transition is to state $i+1$, at rate $\lambda$.
+
+```{=latex}
+\begin{center}
+\begin{tikzpicture}[
+  state/.style={draw, circle, minimum size=0.85cm, inner sep=1pt},
+  transition/.style={->, >=stealth, thick}
+]
+\node[state] (S0) at (0,0) {$0$};
+\node[state] (S1) at (2,0) {$1$};
+\node[state] (S2) at (4,0) {$2$};
+\node (D1) at (5.5,0) {$\cdots$};
+\node[state] (Sn) at (7,0) {$n$};
+\node[state] (Sn1) at (9,0) {$n+1$};
+\node (D2) at (10.5,0) {$\cdots$};
+
+\draw[transition] (S0) -- node[above] {$\lambda$} (S1);
+\draw[transition] (S1) -- node[above] {$\lambda$} (S2);
+\draw[transition] (S2) -- node[above] {$\lambda$} (D1);
+\draw[transition] (D1) -- node[above] {$\lambda$} (Sn);
+\draw[transition] (Sn) -- node[above] {$\lambda$} (Sn1);
+\draw[transition] (Sn1) -- node[above] {$\lambda$} (D2);
+\end{tikzpicture}
+\end{center}
+```
+
+**Generator matrix**
+
+From every state $i$:
+
+- The transition rate from state $i$ to state $i+1$ is $\lambda$.
+- The total rate of leaving state $i$ is $\lambda$.
+- All other transition rates are zero.
+
+Thus,
+
+$$
+q_{ij}=
+\begin{cases}
+-\lambda, & j=i,\\
+\lambda, & j=i+1,\\
+0, & \text{otherwise}.
+\end{cases}
+$$
+
+The generator matrix is the infinite matrix
+
+$$
+\boxed{
+Q=
+\begin{pmatrix}
+-\lambda & \lambda & 0 & 0 & 0 & \cdots\\
+0 & -\lambda & \lambda & 0 & 0 & \cdots\\
+0 & 0 & -\lambda & \lambda & 0 & \cdots\\
+0 & 0 & 0 & -\lambda & \lambda & \cdots\\
+\vdots & \vdots & \vdots & \ddots & \ddots & \ddots
+\end{pmatrix}.
+}
+$$
+
+Each row sums to zero, and all off-diagonal entries are non-negative.
+
+An important feature of this generator is that it has non-zero off-diagonal entries only immediately above the main diagonal. This reflects the fact that each individual event increases the process by exactly one. Although the process can increase by more than one over a positive time interval, it cannot make a direct jump from state $i$ to state $i+2$ or higher.
+
+
+
+
+
+
+
+## Kolmogorov's Differential Equations
+
+### From Transition Rates to Transition Probabilities
+
+The generator matrix $Q$ describes the instantaneous transition rates of a Markov jump process. In many applications, however, we are interested in transition probabilities over a specified period, such as the probability that an individual becomes ill within the next five years or the probability that a policyholder is in a particular state at a future time.
+
+Kolmogorov's differential equations provide the link between the generator matrix $Q$ and the transition probability matrix $P(t)$. They describe how the transition probabilities change over time and can be used to determine $P(t)$ from the transition rates.
+
+In practice, the generator matrix is often estimated from observed transition data and the corresponding time spent in each state. Kolmogorov's equations can then be used to calculate transition probabilities for different time horizons.
+
+### Kolmogorov's Forward Differential Equations
+
+The forward equations are obtained by applying the Chapman–Kolmogorov equations over a short interval at the end of the observation period.
+
+Recall that, for $h>0$,
+
+$$
+p_{ij}(t+h)
+=
+\sum_{k\in S}p_{ik}(t)p_{kj}(h).
+$$
+
+Using the small-time expansion from the previous section,
+
+$$
+p_{kj}(h)
+=
+\delta_{kj}+q_{kj}h+o(h),
+$$
+
+we obtain
+
+$$
+\begin{aligned}
+p_{ij}(t+h)
+&=\sum_{k\in S}p_{ik}(t)
+\left(\delta_{kj}+q_{kj}h+o(h)\right)\\
+&=p_{ij}(t)
++h\sum_{k\in S}p_{ik}(t)q_{kj}
++o(h).
+\end{aligned}
+$$
+
+Subtracting $p_{ij}(t)$, dividing by $h$, and taking the limit as $h\rightarrow 0$ gives
+
+$$
+\boxed{
+\frac{d}{dt}p_{ij}(t)
+=
+\sum_{k\in S}p_{ik}(t)q_{kj},
+\qquad i,j\in S.
+}
+$$
+
+These are the **Kolmogorov forward differential equations**.
+
+In matrix form,
+
+$$
+\boxed{
+P'(t)=P(t)Q,
+\qquad P(0)=I.
+}
+$$
+
+The forward equations describe how the transition probabilities change over time, with the initial state fixed and probability flowing towards the possible destination states.
+
+### Interpretation of the Forward Equations
+
+For a fixed initial state $i$ and destination state $j$, the forward equation is
+
+$$
+p_{ij}'(t)
+=
+\sum_{k\in S}p_{ik}(t)q_{kj}.
+$$
+
+Each term in the sum describes the contribution from a possible state $k$ occupied at time $t$:
+
+- $p_{ik}(t)$ is the probability that the process is in state $k$ at time $t$, given that it started in state $i$.
+- $q_{kj}$ is the instantaneous rate of transition from state $k$ to state $j$.
+
+For $k\neq j$, the term $p_{ik}(t)q_{kj}$ describes the probability flow into state $j$ from state $k$. The term with $k=j$ is
+
+$$
+p_{ij}(t)q_{jj},
+$$
+
+which accounts for the probability flow out of state $j$, since $q_{jj}$ is the negative of its total exit rate.
+
+Separating the inflow and outflow terms gives
+
+$$
+\boxed{
+\begin{aligned}
+p_{ij}'(t)
+={}&
+\underbrace{
+\sum_{\substack{k\in S\\k\neq j}}
+p_{ik}(t)q_{kj}
+}_{\text{Probability flow into state }j}\\
+&-
+\underbrace{
+p_{ij}(t)
+\sum_{\substack{\ell\in S\\\ell\neq j}}q_{j\ell}
+}_{\text{Probability flow out of state }j}.
+\end{aligned}
+}
+$$
+
+Thus, the rate of change in the probability of occupying state $j$ is the total probability flow into that state minus the total probability flow out of it.
+
+
+
+The following diagram illustrates the probability flow into state $j$ over a short time interval.
+
+
+::: {#fig-Probability-Flow}
+
+```{=latex}
+\begin{center}
+\resizebox{0.8\textwidth}{!}{%
+\tikzset{every picture/.style={line width=0.75pt}}
+\begin{tikzpicture}[x=0.75pt,y=0.75pt,yscale=-1,xscale=1]
+% Straight Lines
+\draw (102,81.5) -- (391,82.5);
+
+% State markers
+\draw [fill={rgb,255:red,8;green,1;blue,1},fill opacity=1]
+(98.5,81.5) .. controls (98.5,79.57) and (100.07,78) .. (102,78)
+.. controls (103.93,78) and (105.5,79.57) .. (105.5,81.5)
+.. controls (105.5,83.43) and (103.93,85) .. (102,85)
+.. controls (100.07,85) and (98.5,83.43) .. (98.5,81.5) -- cycle;
+
+\draw [fill={rgb,255:red,8;green,1;blue,1},fill opacity=1]
+(244.5,81.5) .. controls (244.5,79.57) and (246.07,78) .. (248,78)
+.. controls (249.93,78) and (251.5,79.57) .. (251.5,81.5)
+.. controls (251.5,83.43) and (249.93,85) .. (248,85)
+.. controls (246.07,85) and (244.5,83.43) .. (244.5,81.5) -- cycle;
+
+\draw [fill={rgb,255:red,8;green,1;blue,1},fill opacity=1]
+(384.5,81.5) .. controls (384.5,79.57) and (386.07,78) .. (388,78)
+.. controls (389.93,78) and (391.5,79.57) .. (391.5,81.5)
+.. controls (391.5,83.43) and (389.93,85) .. (388,85)
+.. controls (386.07,85) and (384.5,83.43) .. (384.5,81.5) -- cycle;
+
+% Text labels
+\draw (102,102) node {$x$};
+\draw (102.67,59.67) node {$i$};
+\draw (34,95) node [anchor=north west][inner sep=0.75pt] {Time};
+\draw (36,53) node [anchor=north west][inner sep=0.75pt] {State};
+\draw (248,102) node {$x+t$};
+\draw (247.67,52.67) node {$
+\begin{array}{l}
+\text{State }j\\
+\text{State }k,\ k\neq j
+\end{array}$};
+\draw (388,102) node {$x+t+h$};
+\draw (388.67,59.67) node {$j$};
+\end{tikzpicture}%
+}
+\end{center}
+```
+
+
+
+```{=html}
+<svg viewBox="0 0 650 190" width="100%" xmlns="http://www.w3.org/2000/svg">
+  <!-- Timeline -->
+  <line x1="105" y1="85" x2="590" y2="85"
+        stroke="currentColor" stroke-width="1.5"/>
+
+  <!-- Time markers -->
+  <g fill="#e02020" stroke="#e02020">
+    <circle cx="105" cy="85" r="4.5"/>
+    <circle cx="350" cy="85" r="4.5"/>
+    <circle cx="590" cy="85" r="4.5"/>
+  </g>
+
+  <!-- Left-side labels -->
+  <g fill="currentColor" font-family="serif" font-size="17">
+    <text x="15" y="58">State</text>
+    <text x="15" y="112">Time</text>
+  </g>
+
+  <!-- State labels -->
+  <g fill="currentColor" font-family="serif" font-size="17"
+     text-anchor="middle">
+    <text x="105" y="55" font-style="italic">i</text>
+    <text x="590" y="55" font-style="italic">j</text>
+    <text x="350" y="35">State <tspan font-style="italic">j</tspan></text>
+    <text x="350" y="56">State <tspan font-style="italic">k</tspan>, <tspan font-style="italic">k</tspan> ≠ <tspan font-style="italic">j</tspan></text>
+  </g>
+
+  <!-- Time labels -->
+  <g fill="currentColor" font-family="serif" font-size="17"
+     font-style="italic" text-anchor="middle">
+    <text x="105" y="120">x</text>
+    <text x="350" y="120">x + t</text>
+    <text x="590" y="120">x + t + h</text>
+  </g>
+</svg>
+```
+
+
+
+Schematic of the probability flow entering state j over a short time interval.
+
+:::
+
+At time $t$, the process may be in state $j$ or in another state $k\neq j$. During the short interval $h$, probability flows into state $j$ from the other states and flows out of state $j$ to other states.
+
+
+
+### Kolmogorov's Backward Differential Equations
+
+The backward equations are obtained by applying the Chapman–Kolmogorov equations over a short interval at the beginning of the observation period:
+
+$$
+p_{ij}(t+h)
+=
+\sum_{k\in S}p_{ik}(h)p_{kj}(t).
+$$
+
+Using the small-time expansion,
+
+$$
+p_{ik}(h)
+=
+\delta_{ik}+q_{ik}h+o(h),
+$$
+
+gives
+
+$$
+\begin{aligned}
+p_{ij}(t+h)
+&=\sum_{k\in S}
+\left(\delta_{ik}+q_{ik}h+o(h)\right)p_{kj}(t)\\
+&=p_{ij}(t)
++h\sum_{k\in S}q_{ik}p_{kj}(t)
++o(h).
+\end{aligned}
+$$
+
+Subtracting $p_{ij}(t)$, dividing by $h$, and taking the limit as $h\rightarrow 0$ gives
+
+$$
+\boxed{
+\frac{d}{dt}p_{ij}(t)
+=
+\sum_{k\in S}q_{ik}p_{kj}(t),
+\qquad i,j\in S.
+}
+$$
+
+These are the **Kolmogorov backward differential equations**.
+
+In matrix form,
+
+$$
+\boxed{
+P'(t)=QP(t),
+\qquad P(0)=I.
+}
+$$
+
+The backward equations describe how the transition probabilities are affected by the possible first transitions from the initial state.
+
+### Forward and Backward Equations: Comparison
+
+Both sets of equations describe the evolution of the same transition probability matrix, but the generator matrix appears in a different order.
+
+| Forward equations | Backward equations |
+|:--|:--|
+| $P'(t)=P(t)Q$ | $P'(t)=QP(t)$ |
+| Apply the generator to the destination state | Apply the generator to the initial state |
+| Emphasise probability flow into and out of destination states | Emphasise the possible first transitions from the initial state |
+
+For a finite-state, time-homogeneous Markov jump process, both equations have the solution
+
+$$
+\boxed{P(t)=e^{Qt}.}
+$$
+
+The two equations are consistent because, for a fixed matrix $Q$, the matrix exponential commutes with $Q$. The forward and backward equations therefore give the same transition probability matrix.
+
+The forward equations are particularly useful for studying the evolution of state probabilities. The backward equations are useful when the problem focuses on the effect of the initial state, such as calculating expected future costs, rewards or times to reach specified states.
+
+:::{#exm-A-Two-State-Markov-Jump-Process}
+## A Two-State Markov Jump Process
+
+Consider a time-homogeneous Markov jump process with two states, State 0 and State 1. The transition rates are:
+
+- $\lambda$ from State 0 to State 1;
+- $\mu$ from State 1 to State 0,
+
+where $\lambda,\mu>0$.
+
+The generator matrix is
+
+$$
+Q=
+\begin{pmatrix}
+-\lambda & \lambda\\
+\mu & -\mu
+\end{pmatrix}.
+$$
+
+1. Write down the forward differential equations.
+2. Verify that the following expressions satisfy the forward equations:
+
+$$
+\begin{aligned}
+p_{00}(t)
+&=\frac{\mu}{\lambda+\mu}
++\frac{\lambda}{\lambda+\mu}
+e^{-(\lambda+\mu)t},\\
+p_{01}(t)
+&=\frac{\lambda}{\lambda+\mu}
+-\frac{\lambda}{\lambda+\mu}
+e^{-(\lambda+\mu)t}.
+\end{aligned}
+$$
+
+3. Determine $p_{10}(t)$ and $p_{11}(t)$.
+4. Find the limiting transition probability matrix as $t\to\infty$, and interpret the result.
+
+:::
+
+**Solution**
+
+**1. Forward differential equations**
+
+The transition diagram is
+
+
+::: {#fig-markov-two-state-Markov-Jump}
+
+```{=latex}
+\begin{center}
+\begin{tikzpicture}[scale=0.8,x=0.75pt,y=0.75pt,yscale=-1,xscale=1]
+%uncomment if require:
+\path (0,300);
+
+% State 0 rectangle
+\draw (20.57,59.47) -- (168.67,59.47) -- (168.67,140.67) -- (20.57,140.67) -- cycle;
+
+% Transition arrows
+\draw (171.25,81.07) -- (238.2,80.71);
+\draw [shift={(240.2,80.7)}, rotate=539.7]
+[fill={rgb,255:red,0;green,0;blue,0}]
+[line width=0.75] [draw opacity=0]
+(8.93,-4.29) -- (0,0) -- (8.93,4.29) -- cycle;
+
+\draw (170.57,120.9) -- (240.75,121.07);
+\draw [shift={(168.57,120.9)}, rotate=0.13]
+[fill={rgb,255:red,0;green,0;blue,0}]
+[line width=0.75] [draw opacity=0]
+(8.93,-4.29) -- (0,0) -- (8.93,4.29) -- cycle;
+
+% State 1 rectangle
+\draw (242.23,59.97) -- (390.33,59.97) -- (390.33,141.17) -- (242.23,141.17) -- cycle;
+
+% State labels
+\draw (94.62,100.07) node [align=left]
+{{\fontfamily{ptm}\selectfont State 0}};
+
+\draw (316.28,100.57) node [align=left]
+{{\fontfamily{ptm}\selectfont State 1}};
+
+% Transition rates
+\draw (202.7,65.3) node {$\lambda$};
+\draw (203.8,133.6) node {$\mu$};
+
+\end{tikzpicture}
+\end{center}
+```
+
+```{=html}
+<svg viewBox="0 0 440 170" width="100%" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8"
+            refX="6" refY="3" orient="auto"
+            markerUnits="strokeWidth">
+      <path d="M0,0 L6,3 L0,6 Z" fill="currentColor"/>
+    </marker>
+  </defs>
+
+  <rect x="20" y="50" width="150" height="82"
+        fill="none" stroke="currentColor" stroke-width="1.5"/>
+
+  <rect x="270" y="50" width="150" height="82"
+        fill="none" stroke="currentColor" stroke-width="1.5"/>
+
+  <g fill="currentColor" font-family="serif" font-size="18"
+     text-anchor="middle">
+    <text x="95" y="98">State 0</text>
+    <text x="345" y="98">State 1</text>
+    <text x="220" y="65" font-style="italic">λ</text>
+    <text x="220" y="137" font-style="italic">μ</text>
+  </g>
+
+  <g stroke="currentColor" stroke-width="1.5"
+     fill="none" marker-end="url(#arrow)">
+    <path d="M170 81 L270 81"/>
+  </g>
+
+  <g stroke="currentColor" stroke-width="1.5"
+     fill="none">
+    <path d="M270 121 L170 121" marker-end="url(#arrow)"/>
+  </g>
+</svg>
+```
+
+State transitions in a two-state Markov jump process.
+
+:::
+
+
+Using $P'(t)=P(t)Q$, we obtain
+
+$$
+\boxed{
+\begin{aligned}
+p_{i0}'(t)
+&=-\lambda p_{i0}(t)+\mu p_{i1}(t),\\
+p_{i1}'(t)
+&=\lambda p_{i0}(t)-\mu p_{i1}(t),
+\end{aligned}
+\qquad i=0,1.
+}
+$$
+
+The initial conditions are
+
+$$
+p_{ij}(0)=
+\begin{cases}
+1, & i=j,\\
+0, & i\neq j.
+\end{cases}
+$$
+
+**2. Transition probabilities starting from State 0**
+
+Starting from State 0, the initial conditions are
+
+$$
+p_{00}(0)=1,
+\qquad
+p_{01}(0)=0.
+$$
+
+Since the probabilities in the first row sum to one,
+
+$$
+p_{00}(t)+p_{01}(t)=1.
+$$
+
+Substituting $p_{00}(t)=1-p_{01}(t)$ into the forward equation for $p_{01}(t)$ gives
+
+$$
+\begin{aligned}
+p_{01}'(t)
+&=\lambda p_{00}(t)-\mu p_{01}(t)\\
+&=\lambda-(\lambda+\mu)p_{01}(t).
+\end{aligned}
+$$
+
+Rearranging,
+
+$$
+p_{01}'(t)+(\lambda+\mu)p_{01}(t)=\lambda.
+$$
+
+This first-order linear differential equation has the solution
+
+$$
+p_{01}(t)
+=
+\frac{\lambda}{\lambda+\mu}
++
+Ce^{-(\lambda+\mu)t}.
+$$
+
+Using $p_{01}(0)=0$, we obtain
+
+$$
+C=-\frac{\lambda}{\lambda+\mu}.
+$$
+
+Therefore,
+
+$$
+\boxed{
+p_{01}(t)
+=
+\frac{\lambda}{\lambda+\mu}
+\left(1-e^{-(\lambda+\mu)t}\right).
+}
+$$
+
+It follows that
+
+$$
+\boxed{
+p_{00}(t)
+=
+1-p_{01}(t)
+=
+\frac{\mu}{\lambda+\mu}
++
+\frac{\lambda}{\lambda+\mu}
+e^{-(\lambda+\mu)t}.
+}
+$$
+
+These are the required expressions.
+
+**3. Transition probabilities starting from State 1**
+
+Starting from State 1, the initial conditions are
+
+$$
+p_{10}(0)=0,
+\qquad
+p_{11}(0)=1.
+$$
+
+Since
+
+$$
+p_{10}(t)+p_{11}(t)=1,
+$$
+
+the forward equation for $p_{10}(t)$ becomes
+
+$$
+\begin{aligned}
+p_{10}'(t)
+&=-\lambda p_{10}(t)+\mu p_{11}(t)\\
+&=\mu-(\lambda+\mu)p_{10}(t).
+\end{aligned}
+$$
+
+Solving this differential equation with $p_{10}(0)=0$ gives
+
+$$
+\boxed{
+p_{10}(t)
+=
+\frac{\mu}{\lambda+\mu}
+\left(1-e^{-(\lambda+\mu)t}\right).
+}
+$$
+
+Consequently,
+
+$$
+\boxed{
+p_{11}(t)
+=
+\frac{\lambda}{\lambda+\mu}
++
+\frac{\mu}{\lambda+\mu}
+e^{-(\lambda+\mu)t}.
+}
+$$
+
+**4. Transition probability matrix and limiting behaviour**
+
+Combining the four transition probabilities gives
+
+$$
+\boxed{
+P(t)=
+\begin{pmatrix}
+\displaystyle
+\frac{\mu+\lambda e^{-(\lambda+\mu)t}}
+{\lambda+\mu}
+&
+\displaystyle
+\frac{\lambda(1-e^{-(\lambda+\mu)t})}
+{\lambda+\mu}
+\\[12pt]
+\displaystyle
+\frac{\mu(1-e^{-(\lambda+\mu)t})}
+{\lambda+\mu}
+&
+\displaystyle
+\frac{\lambda+\mu e^{-(\lambda+\mu)t}}
+{\lambda+\mu}
+\end{pmatrix}.
+}
+$$
+
+As $t\to\infty$,
+
+$$
+e^{-(\lambda+\mu)t}\longrightarrow 0.
+$$
+
+Therefore,
+
+$$
+\boxed{
+\lim_{t\to\infty}P(t)
+=
+\begin{pmatrix}
+\displaystyle\frac{\mu}{\lambda+\mu}
+&
+\displaystyle\frac{\lambda}{\lambda+\mu}
+\\[8pt]
+\displaystyle\frac{\mu}{\lambda+\mu}
+&
+\displaystyle\frac{\lambda}{\lambda+\mu}
+\end{pmatrix}.
+}
+$$
+
+The limiting distribution is
+
+$$
+\boldsymbol{\pi}
+=
+\left(
+\frac{\mu}{\lambda+\mu},
+\frac{\lambda}{\lambda+\mu}
+\right).
+$$
+
+Both rows of the limiting matrix are identical. Hence, the limiting distribution does not depend on the initial state.
+
+In the long run, the process spends a proportion $\mu/(\lambda+\mu)$ of its time in State 0 and a proportion $\lambda/(\lambda+\mu)$ of its time in State 1.
+
+
+:::{#exm-Permanent-Health-Insurance-model}
+
+## Permanent Health Insurance Model
+
+Consider a three-state Markov jump process representing the health status of an individual covered by a permanent health insurance (PHI) policy. The possible states are:
+
+- Healthy ($h$);
+- Ill ($i$);
+- Dead ($d$).
+
+The transition rates are constant:
+
+- Healthy to Ill, at rate $\sigma$;
+- Ill to Healthy, at rate $\rho$;
+- Healthy to Dead, at rate $\mu$;
+- Ill to Dead, at rate $\nu$.
+
+The Dead state is absorbing.
+
+Using the state ordering $(h,i,d)$, the generator matrix is
+
+$$
+Q=
+\begin{pmatrix}
+-(\sigma+\mu) & \sigma & \mu\\
+\rho & -(\rho+\nu) & \nu\\
+0 & 0 & 0
+\end{pmatrix}.
+$$
+
+1. Write down the forward differential equations for $p_{hh}(t)$, $p_{hi}(t)$ and $p_{hd}(t)$.
+2. Let
+
+$$
+u(t)=p_{hi}(t),
+\qquad
+w(t)=p_{hh}(t).
+$$
+
+Show that $u(t)$ satisfies the second-order differential equation
+
+$$
+\boxed{
+u''(t)
++(\sigma+\mu+\rho+\nu)u'(t)
++(\sigma\nu+\mu\rho+\mu\nu)u(t)=0.
+}
+$$
+
+3. State the initial conditions for this differential equation.
+:::
+
+**Solution**
+
+**1. Forward differential equations**
+
+The transition diagram is
+
+
+
+::: {#fig-markov-HSD}
+
+
+```{=latex}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.6,x=0.75pt,y=0.75pt,yscale=-1,xscale=1]
+%uncomment if require: \path (0,427); %set diagram left start at 0, and has height of 427
+
+%Shape: Rectangle [id:dp6461073533685131] 
+\draw   (20.57,59.47) -- (168.67,59.47) -- (168.67,140.67) -- (20.57,140.67) -- cycle ;
+%Straight Lines [id:da9206552550981602] 
+\draw    (171.25,81.07) -- (238.2,80.71) ;
+\draw [shift={(240.2,80.7)}, rotate = 539.7] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]  [draw opacity=0] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- cycle    ;
+
+%Straight Lines [id:da16336977884683224] 
+\draw    (170.57,120.9) -- (240.75,121.07) ;
+
+\draw [shift={(168.57,120.9)}, rotate = 0.13] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]  [draw opacity=0] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- cycle    ;
+%Shape: Rectangle [id:dp6701645831587428] 
+\draw   (242.23,59.97) -- (390.33,59.97) -- (390.33,141.17) -- (242.23,141.17) -- cycle ;
+%Shape: Rectangle [id:dp5857755229985386] 
+\draw   (133.23,203.97) -- (281.33,203.97) -- (281.33,285.17) -- (133.23,285.17) -- cycle ;
+%Straight Lines [id:da26767212610765867] 
+\draw    (89.25,144.07) -- (173.81,197.93) ;
+\draw [shift={(175.5,199)}, rotate = 212.49] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]  [draw opacity=0] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- cycle    ;
+
+%Straight Lines [id:da34728994666942503] 
+\draw    (317.25,149.07) -- (243.19,195.93) ;
+\draw [shift={(241.5,197)}, rotate = 327.68] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]  [draw opacity=0] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- cycle    ;
+
+
+% Text Node
+\draw (94.62,100.07) node  [align=left] {{\fontfamily{ptm}\selectfont Healthy: \textit{h}}};
+% Text Node
+\draw (202.7,65.3) node   {$\sigma $};
+% Text Node
+\draw (203.8,133.6) node   {$\rho $};
+% Text Node
+\draw (316.28,100.57) node  [align=left] {{\fontfamily{ptm}\selectfont Ill: \textit{i}}};
+% Text Node
+\draw (207.28,244.57) node  [align=left] {{\fontfamily{ptm}\selectfont Dead: \textit{d}}};
+% Text Node
+\draw (104.7,175.3) node   {$\mu $};
+% Text Node
+\draw (307.7,176.3) node   {$\nu $};
+
+
+\end{tikzpicture}
+\end{center}
+```
+
+
+
+```{=html}
+<svg viewBox="0 0 440 330" width="100%" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arrow-health" markerWidth="8" markerHeight="8"
+            refX="6" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L6,3 L0,6 Z" fill="currentColor"/>
+    </marker>
+  </defs>
+
+  <!-- State boxes -->
+  <g fill="none" stroke="currentColor" stroke-width="1.5">
+    <rect x="20.57" y="59.47" width="148.1" height="81.2"/>
+    <rect x="242.23" y="59.97" width="148.1" height="81.2"/>
+    <rect x="133.23" y="203.97" width="148.1" height="81.2"/>
+  </g>
+
+  <!-- State labels -->
+  <g fill="currentColor" font-family="serif" font-size="17"
+     text-anchor="middle">
+    <text x="94.62" y="105">Healthy: <tspan font-style="italic">h</tspan></text>
+    <text x="316.28" y="105">Ill: <tspan font-style="italic">i</tspan></text>
+    <text x="207.28" y="250">Dead: <tspan font-style="italic">d</tspan></text>
+  </g>
+
+  <!-- Transition arrows -->
+  <g fill="none" stroke="currentColor" stroke-width="1.5"
+     marker-end="url(#arrow-health)">
+    <!-- Healthy to Ill -->
+    <path d="M171.25 81.07 L238.2 80.71"/>
+
+    <!-- Ill to Healthy -->
+    <path d="M240.75 121.07 L170.57 120.9"/>
+
+    <!-- Healthy to Dead -->
+    <path d="M89.25 144.07 L173.81 197.93"/>
+
+    <!-- Ill to Dead -->
+    <path d="M317.25 149.07 L243.19 195.93"/>
+  </g>
+
+  <!-- Transition intensities -->
+  <g fill="currentColor" font-family="serif" font-size="18"
+     font-style="italic" text-anchor="middle">
+    <text x="202.7" y="53">σ</text>
+    <text x="203.8" y="153">ρ</text>
+    <text x="104.7" y="180">μ</text>
+    <text x="307.7" y="181">ν</text>
+  </g>
+</svg>
+```
+
+
+
+State transitions in a Health-Sickness-Death Model.
+
+:::
+
+
+
+
+The forward equations are obtained from
+
+$$
+P'(t)=P(t)Q.
+$$
+
+Starting from the Healthy state, we obtain
+
+$$
+\boxed{
+\begin{aligned}
+p_{hh}'(t)
+&=-(\sigma+\mu)p_{hh}(t)
++\rho p_{hi}(t),\\
+p_{hi}'(t)
+&=\sigma p_{hh}(t)
+-(\rho+\nu)p_{hi}(t),\\
+p_{hd}'(t)
+&=\mu p_{hh}(t)+\nu p_{hi}(t).
+\end{aligned}
+}
+$$
+
+The initial conditions are
+
+$$
+p_{hh}(0)=1,
+\qquad
+p_{hi}(0)=p_{hd}(0)=0.
+$$
+
+**2. Derivation of the second-order differential equation**
+
+Let
+
+$$
+u(t)=p_{hi}(t),
+\qquad
+w(t)=p_{hh}(t).
+$$
+
+The first two forward equations become
+
+$$
+\begin{aligned}
+w'(t)
+&=-(\sigma+\mu)w(t)+\rho u(t),\\
+u'(t)
+&=\sigma w(t)-(\rho+\nu)u(t).
+\end{aligned}
+$$
+
+Rearranging the second equation gives
+
+$$
+w(t)
+=
+\frac{u'(t)+(\rho+\nu)u(t)}{\sigma}.
+$$
+
+Differentiating the equation for $u(t)$,
+
+$$
+u''(t)
+=
+\sigma w'(t)-(\rho+\nu)u'(t).
+$$
+
+Substituting the expression for $w'(t)$,
+
+$$
+u''(t)
+=
+\sigma\left\{-(\sigma+\mu)w(t)+\rho u(t)\right\}
+-(\rho+\nu)u'(t).
+$$
+
+Now substitute
+
+$$
+w(t)
+=
+\frac{u'(t)+(\rho+\nu)u(t)}{\sigma}.
+$$
+
+This gives
+
+$$
+\begin{aligned}
+u''(t)
+={}&-(\sigma+\mu)
+\left\{u'(t)+(\rho+\nu)u(t)\right\}\\
+&+\sigma\rho u(t)-(\rho+\nu)u'(t).
+\end{aligned}
+$$
+
+Collecting the terms involving $u'(t)$ and $u(t)$,
+
+$$
+\begin{aligned}
+u''(t)
+={}&-(\sigma+\mu+\rho+\nu)u'(t)\\
+&-\left\{(\sigma+\mu)(\rho+\nu)-\sigma\rho\right\}u(t).
+\end{aligned}
+$$
+
+Since
+
+$$
+\begin{aligned}
+(\sigma+\mu)(\rho+\nu)-\sigma\rho
+&=\sigma\nu+\mu\rho+\mu\nu,
+\end{aligned}
+$$
+
+we obtain
+
+$$
+\boxed{
+u''(t)
++(\sigma+\mu+\rho+\nu)u'(t)
++(\sigma\nu+\mu\rho+\mu\nu)u(t)=0.
+}
+$$
+
+**3. Initial conditions**
+
+From the original initial conditions,
+
+$$
+u(0)=p_{hi}(0)=0.
+$$
+
+Also, using the forward equation for $p_{hi}(t)$,
+
+$$
+\begin{aligned}
+u'(0)
+&=\sigma p_{hh}(0)-(\rho+\nu)p_{hi}(0)\\
+&=\sigma.
+\end{aligned}
+$$
+
+Thus, the initial conditions are
+
+$$
+\boxed{
+u(0)=0,
+\qquad
+u'(0)=\sigma.
+}
+$$
+
+These conditions, together with the second-order differential equation, determine $p_{hi}(t)$.
+
+
+
+
+
+
+<!-- ## Probability of Remaining Continuously in a State -->
+
+<!-- For a Markov jump process, it is important to distinguish between the probability of being in a particular state at a given time and the probability of remaining continuously in that state over an interval. -->
+
+<!-- The transition probability -->
+
+<!-- $$ -->
+<!-- p_{ii}(t) -->
+<!-- = -->
+<!-- \Pr(X(s+t)=i\mid X(s)=i) -->
+<!-- $$ -->
+
+<!-- is the probability that the process is in state $i$ at time $s+t$, given that it was in state $i$ at time $s$. -->
+
+<!-- This probability does **not** require the process to remain in state $i$ throughout the interval $[s,s+t]$. The process may leave state $i$ and subsequently return before time $s+t$. -->
+
+<!-- In contrast, define -->
+
+<!-- $$ -->
+<!-- \overline p_{ii}(t) -->
+<!-- = -->
+<!-- \Pr\left( -->
+<!-- X(u)=i\text{ for all }u\in[s,s+t] -->
+<!-- \mid X(s)=i -->
+<!-- \right). -->
+<!-- $$ -->
+
+<!-- This is the probability that the process remains continuously in state $i$ throughout the entire interval $[s,s+t]$. -->
+
+<!-- ### Probability of Remaining in a State -->
+
+<!-- For a time-homogeneous Markov jump process, the holding time in state $i$ (the time until the next transition out of state $i$) follows an exponential distribution with parameter $-q_{ii}$, where $q_{ii}$ is the diagonal element of the transition rate matrix. -->
+
+<!-- Consequently, -->
+
+<!-- $$ -->
+<!-- \begin{aligned} -->
+<!-- \overline p_{ii}(t) -->
+<!-- &=\Pr(\text{holding time in state }i>t)\\ -->
+<!-- &=e^{-(-q_{ii})t}. -->
+<!-- \end{aligned} -->
+<!-- $$ -->
+
+<!-- Therefore, -->
+
+<!-- $$ -->
+<!-- \boxed{ -->
+<!-- \overline p_{ii}(t)=e^{q_{ii}t}. -->
+<!-- } -->
+<!-- $$ -->
+
+<!-- Here, $-q_{ii}$ is the total rate of leaving state $i$. -->
+
+<!-- In general, -->
+
+<!-- $$ -->
+<!-- p_{ii}(t)\geq \overline p_{ii}(t), -->
+<!-- $$ -->
+
+<!-- because $p_{ii}(t)$ includes paths that leave state $i$ and subsequently return, whereas $\overline p_{ii}(t)$ only includes paths that remain in state $i$ throughout the interval. -->
+
+<!-- If returning to state $i$ is impossible once the process leaves it, the two probabilities are equal: -->
+
+<!-- $$ -->
+<!-- \boxed{ -->
+<!-- p_{ii}(t)=\overline p_{ii}(t). -->
+<!-- } -->
+<!-- $$ -->
+
+<!-- The following examples illustrate these two probabilities in different Markov jump models. -->
+
+
+
+
+
+## Continuous Occupancy and Transition Probabilities
+
+For a Markov jump process, it is important to distinguish between the probability of remaining continuously in a particular state throughout an interval and the probability of being in that state at the end of the interval.
+
+Suppose that $X(0)=i$. The probability of remaining continuously in state $i$ throughout $[0,t]$ is defined as
+
+$$
+\overline p_{ii}(t)
+=
+\Pr\left(
+X(u)=i\text{ for all }0\leq u\leq t
+\mid X(0)=i
+\right).
+$$
+
+This probability is determined by the holding-time distribution in state $i$. For a time-homogeneous Markov jump process, the holding time in state $i$ follows an exponential distribution with parameter $\lambda_i=-q_{ii}$, where $q_{ii}$ is the diagonal element of the transition rate matrix.
+
+Consequently,
+
+$$
+\begin{aligned}
+\overline p_{ii}(t)
+&=\Pr(\text{holding time in state }i>t)\\
+&=e^{-\lambda_i t}\\
+&=e^{q_{ii}t}.
+\end{aligned}
+$$
+
+Therefore,
+
+$$
+\boxed{
+\overline p_{ii}(t)=e^{q_{ii}t}.
+}
+$$
+
+In contrast, the transition probability
+
+$$
+p_{ii}(t)
+=
+\Pr(X(t)=i\mid X(0)=i)
+$$
+
+is the probability that the process occupies state $i$ at time $t$, regardless of its path between times $0$ and $t$.
+
+In particular, the process may leave state $i$, visit another state, and subsequently return to state $i$ before time $t$. Such a path contributes to $p_{ii}(t)$ but not to $\overline p_{ii}(t)$.
+
+It follows that
+
+$$
+\boxed{
+\overline p_{ii}(t)\leq p_{ii}(t).
+}
+$$
+
+Equality holds when the process cannot return to state $i$ after leaving it. In this case, being in state $i$ at time $t$ is equivalent to having remained continuously in that state throughout $[0,t]$. Thus,
+
+$$
+p_{ii}(t)=\overline p_{ii}(t).
+$$
+
+This distinction is important in applications. The continuous occupancy probability measures the probability of an uninterrupted stay in a state, whereas the transition probability measures the probability of occupying that state at a specified future time.
+
+The following examples illustrate these two probabilities in different Markov jump models.
+
+
+:::{#exm-A-Two-State-Markov-Jump-Process}
+## A Two-State Markov Jump Process
+
+Consider a time-homogeneous Markov jump process with two states, 0 and 1. The transition rates are $\lambda$ from State 0 to State 1 and $\mu$ from State 1 to State 0, where both rates are constant.
+
+Answer the following questions:
+
+1. Write down the transition rate matrix $Q$.
+2. Find the probabilities $\overline p_{00}(t)$ and $\overline p_{11}(t)$.
+3. Explain why $p_{00}(t)$ and $p_{11}(t)$ are not necessarily equal to $\overline p_{00}(t)$ and $\overline p_{11}(t)$, respectively.
+:::
+
+**Solution**
+
+The transition rate matrix is
+
+$$
+Q=
+\begin{pmatrix}
+-\lambda & \lambda\\
+\mu & -\mu
+\end{pmatrix}.
+$$
+
+The total rate of leaving State 0 is $\lambda$. Hence,
+
+$$
+\boxed{
+\overline p_{00}(t)=e^{-\lambda t}.
+}
+$$
+
+Similarly, the total rate of leaving State 1 is $\mu$. Therefore,
+
+$$
+\boxed{
+\overline p_{11}(t)=e^{-\mu t}.
+}
+$$
+
+However, in this model, the process can move from State 0 to State 1 and subsequently return to State 0. Similarly, it can leave State 1 and return to State 1.
+
+Consequently, the probabilities $p_{00}(t)$ and $p_{11}(t)$ include paths involving such returns. Thus, for $t>0$ and positive transition rates,
+
+$$
+p_{00}(t)>\overline p_{00}(t),
+\qquad
+p_{11}(t)>\overline p_{11}(t).
+$$
+
+
+
+:::{#exm-Terminal-Illness-Model}
+## A Terminal Illness Model
+
+Consider a three-state Markov jump process representing the health status of an individual:
+
+- Well ($w$);
+- Ill ($i$);
+- Dead ($d$).
+
+The transition rates are $\sigma$ from Well to Ill and $\mu$ from Ill to Dead. Assume that both rates are constant.
+
+The transition diagram is shown below.
+:::
+
+::: {#fig-markov-terminal-illness-model}
+
+```{=latex}
+\begin{center}
+\resizebox{0.85\textwidth}{!}{%
+\begin{tikzpicture}[x=0.75pt,y=0.75pt,yscale=-1,xscale=1]
+\draw (20.57,59.47) -- (168.67,59.47) -- (168.67,140.67) -- (20.57,140.67) -- cycle;
+\draw (169.92,101.73) -- (236.87,101.38);
+\draw [shift={(238.87,101.37)}, rotate=539.7] [fill=black] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- cycle;
+\draw (242.23,58.97) -- (390.33,58.97) -- (390.33,140.17) -- (242.23,140.17) -- cycle;
+\draw (463.23,58.63) -- (611.33,58.63) -- (611.33,139.83) -- (463.23,139.83) -- cycle;
+\draw (391.92,100.73) -- (458.87,100.38);
+\draw [shift={(460.87,100.37)}, rotate=539.7] [fill=black] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- cycle;
+\draw (94.62,100.07) node [align=left] {{\fontfamily{ptm}\selectfont Well: $w$}};
+\draw (201.37,79.3) node {$\sigma$};
+\draw (316.28,100.57) node [align=left] {{\fontfamily{ptm}\selectfont Ill: $i$}};
+\draw (537.28,99.23) node [align=left] {{\fontfamily{ptm}\selectfont Dead: $d$}};
+\draw (426.03,78.63) node {$\mu$};
+\end{tikzpicture}%
+}
+\end{center}
+```
+
+
+
+```{=html}
+<svg viewBox="0 0 650 160" width="100%" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arrow-health-model" markerWidth="8" markerHeight="8"
+            refX="6" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L6,3 L0,6 Z" fill="currentColor"/>
+    </marker>
+  </defs>
+
+  <!-- State boxes -->
+  <g fill="none" stroke="currentColor" stroke-width="1.5">
+    <rect x="20.57" y="59.47" width="148.1" height="81.2"/>
+    <rect x="242.23" y="58.97" width="148.1" height="81.2"/>
+    <rect x="463.23" y="58.63" width="148.1" height="81.2"/>
+  </g>
+
+  <!-- Transition arrows -->
+  <g fill="none" stroke="currentColor" stroke-width="1.5"
+     marker-end="url(#arrow-health-model)">
+    <path d="M171 101.7 L237 101.4"/>
+    <path d="M392 100.7 L459 100.4"/>
+  </g>
+
+  <!-- State labels -->
+  <g fill="currentColor" font-family="serif" font-size="18"
+     text-anchor="middle">
+    <text x="94.62" y="105">Well: <tspan font-style="italic">w</tspan></text>
+    <text x="316.28" y="105">Ill: <tspan font-style="italic">i</tspan></text>
+    <text x="537.28" y="104">Dead: <tspan font-style="italic">d</tspan></text>
+  </g>
+
+  <!-- Transition intensities -->
+  <g fill="currentColor" font-family="serif" font-size="19"
+     font-style="italic" text-anchor="middle">
+    <text x="201.37" y="83">σ</text>
+    <text x="426.03" y="82">μ</text>
+  </g>
+</svg>
+```
+
+
+
+State transitions in a terminal illness model.
+
+:::
+
+
+
+Explain why
+
+1. $p_{ww}(t)=\overline p_{ww}(t)$;
+2. $p_{ii}(t)=\overline p_{ii}(t)$.
+
+
+**Solution**
+
+**1. Probability of remaining Well**
+
+A transition from Ill to Well is impossible. Once the process leaves the Well state, it moves to the Ill state and cannot return.
+
+Therefore, being in the Well state at time $s+t$ is equivalent to having remained continuously in the Well state throughout the interval $[s,s+t]$.
+
+Hence,
+
+$$
+\boxed{
+p_{ww}(t)=\overline p_{ww}(t).
+}
+$$
+
+In particular, since the rate of leaving Well is $\sigma$,
+
+$$
+p_{ww}(t)=\overline p_{ww}(t)=e^{-\sigma t}.
+$$
+
+**2. Probability of remaining Ill**
+
+Similarly, once the process leaves the Ill state, it moves to the absorbing Dead state and cannot return to Ill.
+
+Thus, being in the Ill state at time $s+t$ is equivalent to having remained continuously in the Ill state throughout the interval.
+
+Therefore,
+
+$$
+\boxed{
+p_{ii}(t)=\overline p_{ii}(t).
+}
+$$
+
+Since the rate of leaving Ill is $\mu$,
+
+$$
+p_{ii}(t)=\overline p_{ii}(t)=e^{-\mu t}.
+$$
+
+
+:::{#exm-Working-Retiring-and-Dying}
+## Working, Retiring and Dying
+
+Consider a time-homogeneous three-state Markov jump model for an individual's working life. The possible states are:
+
+- Working ($w$);
+- Retired ($r$);
+- Dead ($d$).
+
+Assume that the transition rates are constant. An individual can move from Working to Retired at rate $\nu$, or from Working to Dead at rate $\mu$. Both Retired and Dead are absorbing states.
+
+The transition diagram is shown below.
+:::
+
+::: {#fig-markov-Working-Retiring-and-Dying}
+
+
+```{=latex}
+\begin{center}
+\resizebox{0.65\textwidth}{!}{%
+\begin{tikzpicture}[x=0.75pt,y=0.75pt,yscale=-1,xscale=1]
+\draw (201.57,60.47) -- (349.67,60.47) -- (349.67,141.67) -- (201.57,141.67) -- cycle;
+\draw (241.92,153.4) -- (200.02,189.36);
+\draw [shift={(198.5,190.67)}, rotate=319.36] [fill=black] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- cycle;
+\draw (318.23,200.97) -- (466.33,200.97) -- (466.33,282.17) -- (318.23,282.17) -- cycle;
+\draw (86.23,197.63) -- (234.33,197.63) -- (234.33,278.83) -- (86.23,278.83) -- cycle;
+\draw (326.92,156.4) -- (367.94,189.41);
+\draw [shift={(369.5,190.67)}, rotate=218.82] [fill=black] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- cycle;
+\draw (275.62,101.07) node [align=left] {{\fontfamily{ptm}\selectfont Working: $w$}};
+\draw (204.37,159.3) node {$\nu$};
+\draw (160.28,238.23) node [align=left] {{\fontfamily{ptm}\selectfont Retired: $r$}};
+\draw (392.28,241.57) node [align=left] {{\fontfamily{ptm}\selectfont Dead: $d$}};
+\draw (369.03,159.63) node {$\mu$};
+\end{tikzpicture}%
+}
+\end{center}
+```
+
+
+
+
+```{=html}
+<svg viewBox="0 0 560 330" width="100%" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arrow-employment" markerWidth="8" markerHeight="8"
+            refX="6" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L6,3 L0,6 Z" fill="currentColor"/>
+    </marker>
+  </defs>
+
+  <!-- State boxes -->
+  <g fill="none" stroke="currentColor" stroke-width="1.5">
+    <rect x="201.57" y="60.47" width="148.1" height="81.2"/>
+    <rect x="86.23" y="197.63" width="148.1" height="81.2"/>
+    <rect x="318.23" y="200.97" width="148.1" height="81.2"/>
+  </g>
+
+  <!-- Transition arrows -->
+  <g fill="none" stroke="currentColor" stroke-width="1.5"
+     marker-end="url(#arrow-employment)">
+    <!-- Working to Retired -->
+    <path d="M241.92 153.4 L200.02 189.36"/>
+    <!-- Working to Dead -->
+    <path d="M326.92 156.4 L367.94 189.41"/>
+  </g>
+
+  <!-- State labels -->
+  <g fill="currentColor" font-family="serif" font-size="18"
+     text-anchor="middle">
+    <text x="275.62" y="106">Working: <tspan font-style="italic">w</tspan></text>
+    <text x="160.28" y="244">Retired: <tspan font-style="italic">r</tspan></text>
+    <text x="392.28" y="248">Dead: <tspan font-style="italic">d</tspan></text>
+  </g>
+
+  <!-- Transition intensities -->
+  <g fill="currentColor" font-family="serif" font-size="19"
+     font-style="italic" text-anchor="middle">
+    <text x="204.37" y="163">ν</text>
+    <text x="369.03" y="164">μ</text>
+  </g>
+</svg>
+```
+
+
+State-transition diagram of the three-state Markov jump model for working, retirement, and mortality.
+
+:::
+
+
+
+Answer the following questions:
+
+1. Explain why $p_{ww}(t)=\overline p_{ww}(t)$.
+2. Write down the forward differential equations for $p_{wd}(t)$, $p_{wr}(t)$ and $p_{ww}(t)$.
+3. Solve the forward differential equation for $p_{ww}(t)$.
+4. Show that
+
+$$
+\begin{aligned}
+p_{wd}(t)
+&=\frac{\mu}{\mu+\nu}
+\left(1-e^{-(\mu+\nu)t}\right),\\
+p_{wr}(t)
+&=\frac{\nu}{\mu+\nu}
+\left(1-e^{-(\mu+\nu)t}\right).
+\end{aligned}
+$$
+
+5. Verify that
+
+$$
+p_{wd}(t)+p_{wr}(t)+p_{ww}(t)=1.
+$$
+
+
+**Solution**
+
+**1. Interpretation of the transition probabilities**
+
+Since returning to the Working state is impossible, being in the Working state at time $s+t$ is equivalent to having remained continuously in that state throughout the interval $[s,s+t]$.
+
+Therefore,
+
+$$
+\boxed{
+p_{ww}(t)=\overline p_{ww}(t).
+}
+$$
+
+**2. Forward differential equations**
+
+Using the state ordering $(w,r,d)$, the transition rate matrix is
+
+$$
+Q=
+\begin{pmatrix}
+-(\nu+\mu) & \nu & \mu\\
+0 & 0 & 0\\
+0 & 0 & 0
+\end{pmatrix}.
+$$
+
+The forward equations are obtained from
+
+$$
+P'(t)=P(t)Q.
+$$
+
+Starting from the Working state, the relevant equations are
+
+$$
+\begin{aligned}
+p_{ww}'(t)
+&=-(\nu+\mu)p_{ww}(t),\\
+p_{wr}'(t)
+&=\nu p_{ww}(t),\\
+p_{wd}'(t)
+&=\mu p_{ww}(t).
+\end{aligned}
+$$
+
+The initial conditions are
+
+$$
+p_{ww}(0)=1,
+\qquad
+p_{wr}(0)=p_{wd}(0)=0.
+$$
+
+**3. Probability of remaining Working**
+
+The differential equation for $p_{ww}(t)$ is
+
+$$
+p_{ww}'(t)=-(\nu+\mu)p_{ww}(t).
+$$
+
+Solving this equation with $p_{ww}(0)=1$ gives
+
+$$
+\boxed{
+p_{ww}(t)=e^{-(\mu+\nu)t}.
+}
+$$
+
+Since $p_{ww}(t)=\overline p_{ww}(t)$, this is also the probability of remaining continuously in the Working state throughout the interval.
+
+**4. Probabilities of retirement and death**
+
+From the forward equation for $p_{wd}(t)$,
+
+$$
+p_{wd}'(t)=\mu e^{-(\mu+\nu)t}.
+$$
+
+Integrating from $0$ to $t$, and using $p_{wd}(0)=0$, gives
+
+$$
+\begin{aligned}
+p_{wd}(t)
+&=\int_0^t\mu e^{-(\mu+\nu)s}\,ds\\
+&=\boxed{
+\frac{\mu}{\mu+\nu}
+\left(1-e^{-(\mu+\nu)t}\right).
+}
+\end{aligned}
+$$
+
+Similarly,
+
+$$
+p_{wr}'(t)=\nu e^{-(\mu+\nu)t}.
+$$
+
+Integrating and using $p_{wr}(0)=0$ gives
+
+$$
+\boxed{
+p_{wr}(t)
+=
+\frac{\nu}{\mu+\nu}
+\left(1-e^{-(\mu+\nu)t}\right).
+}
+$$
+
+**5. Verification of the total probability**
+
+Adding the three transition probabilities gives
+
+$$
+\begin{aligned}
+&p_{ww}(t)+p_{wr}(t)+p_{wd}(t)\\
+&=e^{-(\mu+\nu)t}\\
+&\quad+\frac{\nu}{\mu+\nu}
+\left(1-e^{-(\mu+\nu)t}\right)\\
+&\quad+\frac{\mu}{\mu+\nu}
+\left(1-e^{-(\mu+\nu)t}\right)\\
+&=e^{-(\mu+\nu)t}
++1-e^{-(\mu+\nu)t}\\
+&=\boxed{1}.
+\end{aligned}
+$$
+
+This is consistent with the fact that an individual starting in the Working state must be in exactly one of the three states at time $t$.
+
+
+
+
+
+
+## Holding Times and Occupancy Probabilities
+
+### Holding Times in a Markov Jump Process
+
+In a Markov jump process, the time spent in a state before the next transition is called the *holding time* in that state. Unlike a discrete-time Markov chain, where transitions occur at fixed time steps, a Markov jump process allows transitions to occur at random times.
+
+The holding time depends on the transition rates out of the current state. To see this, consider a time-homogeneous Markov jump process $\{X(t):t\geq 0\}$ with infinitesimal generator $Q=(q_{ij})$. Suppose that the process starts in state $i$, so that $X(0)=i$.
+
+The first holding time is defined by
+
+$$
+T_0=\inf\{t>0:X(t)\neq X(0)\}.
+$$
+
+Thus, $T_0$ is the time elapsed before the process first leaves its initial state.
+
+Recall that, for a sufficiently small time interval $h$, the probability of moving from state $i$ to a different state $j$ is
+
+$$
+\Pr(X(h)=j\mid X(0)=i)
+=q_{ij}h+o(h), \qquad j\neq i.
+$$
+
+Consequently, the total probability of leaving state $i$ during this interval is
+
+$$
+\begin{aligned}
+\Pr(X(h)\neq i\mid X(0)=i)
+&=\sum_{j\neq i}q_{ij}h+o(h)\\
+&=\lambda_i h+o(h),
+\end{aligned}
+$$
+
+where
+
+$$
+\lambda_i=\sum_{j\neq i}q_{ij}=-q_{ii}
+$$
+
+is the total transition rate out of state $i$.
+
+The probability of remaining in state $i$ over a short interval is therefore
+
+$$
+\Pr(X(h)=i\mid X(0)=i)
+=1-\lambda_i h+o(h).
+$$
+
+Since the process is time-homogeneous and satisfies the Markov property, the probability of remaining in state $i$ throughout an interval of length $t$ satisfies
+
+$$
+\overline p_{ii}(t+h)
+=
+\overline p_{ii}(t)
+\left(1-\lambda_i h+o(h)\right).
+$$
+
+Taking the limit as $h\to 0$ gives the differential equation
+
+$$
+\frac{d}{dt}\overline p_{ii}(t)
+=-\lambda_i\overline p_{ii}(t),
+\qquad
+\overline p_{ii}(0)=1.
+$$
+
+Solving this equation gives the holding-time survival function.
+
+**Theorem.** If $\lambda_i>0$, the first holding time, conditional on starting in state $i$, has an exponential distribution with parameter $\lambda_i$. In particular,
+
+$$
+\boxed{
+\Pr(T_0>t\mid X(0)=i)
+=e^{-\lambda_i t}
+=e^{q_{ii}t},\qquad t\geq 0.
+}
+$$
+
+Its probability density function is
+
+$$
+f_{T_0\mid X(0)=i}(t)
+=\lambda_i e^{-\lambda_i t},
+\qquad t\geq 0.
+$$
+
+The corresponding expected holding time is
+
+$$
+\boxed{
+\operatorname{E}[T_0\mid X(0)=i]
+=\frac{1}{\lambda_i}
+=\frac{1}{-q_{ii}}.
+}
+$$
+
+Thus, the total transition rate determines the expected duration of a visit to a state. A larger value of $\lambda_i$ implies a shorter expected holding time. For example, if the total transition rate out of a state is $0.2$ per year, the expected time spent in that state before the next transition is five years.
+
+If $\lambda_i=0$, all transition rates out of state $i$ are zero. The state is then absorbing, and the holding time is infinite.
+
+### Properties of Holding Times
+
+The exponential distribution has the *memoryless property*. In the context of a Markov jump process, this means that the remaining time until the next transition does not depend on how long the process has already been in its current state.
+
+More precisely, for $s,t\geq 0$,
+
+$$
+\begin{aligned}
+&\Pr(T_0>s+t\mid T_0>s,\ X(0)=i)\\
+&\qquad =
+\frac{\Pr(T_0>s+t\mid X(0)=i)}
+{\Pr(T_0>s\mid X(0)=i)}\\
+&\qquad =
+\frac{e^{-\lambda_i(s+t)}}{e^{-\lambda_i s}}\\
+&\qquad =e^{-\lambda_i t}.
+\end{aligned}
+$$
+
+Therefore,
+
+$$
+\boxed{
+\Pr(T_0>s+t\mid T_0>s,\ X(0)=i)
+=
+\Pr(T_0>t\mid X(0)=i).
+}
+$$
+
+This property is closely related to the exponential inter-arrival times of a Poisson process. The main difference is that, in a Poisson process, the event rate is constant, whereas in a general Markov jump process, the total transition rate depends on the state currently occupied.
+
+It is also useful to distinguish the holding time from the destination of the next transition. Conditional on leaving state $i$, the probability that the next state is $j$ is
+
+$$
+\boxed{
+\Pr(\text{next state is }j\mid
+\text{current state is }i)
+=
+\frac{q_{ij}}{\lambda_i},
+\qquad j\neq i.
+}
+$$
+
+Thus, the next transition can be described in two stages:
+
+1. The process remains in state $i$ for an exponentially distributed time with parameter $\lambda_i$.
+2. It moves to state $j$ with probability $q_{ij}/\lambda_i$.
+
+The holding time determines *when* the next transition occurs, while the transition rates determine *which state* the process enters.
+
+<!-- ### Continuous Occupancy and Transition Probabilities -->
+
+<!-- The holding-time distribution gives the probability that the process remains continuously in its initial state throughout an interval. This probability should be distinguished from the transition probability of being in that state at the end of the interval. -->
+
+<!-- Suppose that $X(0)=i$. The probability of remaining continuously in state $i$ throughout $[0,t]$ is -->
+
+<!-- $$ -->
+<!-- \overline p_{ii}(t) -->
+<!-- = -->
+<!-- \Pr\bigl(X(u)=i\text{ for all }0\leq u\leq t -->
+<!-- \mid X(0)=i\bigr). -->
+<!-- $$ -->
+
+<!-- From the holding-time distribution, -->
+
+<!-- $$ -->
+<!-- \boxed{ -->
+<!-- \overline p_{ii}(t)=e^{-\lambda_i t}. -->
+<!-- } -->
+<!-- $$ -->
+
+<!-- In contrast, the transition probability -->
+
+<!-- $$ -->
+<!-- p_{ii}(t)=\Pr(X(t)=i\mid X(0)=i) -->
+<!-- $$ -->
+
+<!-- is the probability that the process occupies state $i$ at time $t$, regardless of its path between times $0$ and $t$. -->
+
+<!-- In particular, the process may leave state $i$, visit another state, and subsequently return to state $i$ before time $t$. Such a path contributes to $p_{ii}(t)$ but not to $\overline p_{ii}(t)$. -->
+
+<!-- It follows that -->
+
+<!-- $$ -->
+<!-- \boxed{ -->
+<!-- \overline p_{ii}(t)\leq p_{ii}(t). -->
+<!-- } -->
+<!-- $$ -->
+
+<!-- Equality holds when the process cannot return to state $i$ after leaving it. For example, this occurs when all possible transitions out of state $i$ lead directly to absorbing states. -->
+
+<!-- This distinction is important in applications. The continuous occupancy probability measures the probability of an uninterrupted stay in a state, whereas the transition probability measures the probability of occupying the state at a specified future time. -->
+
+### Expected Occupation Times
+
+Transition probabilities can also be used to calculate the expected total time that a Markov jump process spends in a particular state over a given time interval.
+
+Let $I_j(s)$ denote the indicator function of the event that the process occupies state $j$ at time $s$:
+
+$$
+I_j(s)=
+\begin{cases}
+1, & X(s)=j,\\
+0, & X(s)\neq j.
+\end{cases}
+$$
+
+The total time spent in state $j$ during $[0,t]$ is therefore
+
+$$
+A_j(t)=\int_0^t I_j(s)\,ds.
+$$
+
+Suppose that the process starts in state $i$. Since
+
+$$
+\operatorname{E}_i[I_j(s)]
+=\Pr(X(s)=j\mid X(0)=i)
+=p_{ij}(s),
+$$
+
+taking expectations and interchanging expectation and integration gives
+
+$$
+\begin{aligned}
+\operatorname{E}_i[A_j(t)]
+&=\operatorname{E}_i\left[
+\int_0^t I_j(s)\,ds
+\right]\\
+&=\int_0^t\operatorname{E}_i[I_j(s)]\,ds\\
+&=\int_0^t p_{ij}(s)\,ds.
+\end{aligned}
+$$
+
+Hence, the expected total time spent in state $j$ over $[0,t]$, starting from state $i$, is
+
+$$
+\boxed{
+\operatorname{E}_i[A_j(t)]
+=
+\int_0^t p_{ij}(s)\,ds.
+}
+$$
+
+This quantity is called the *expected occupation time* of state $j$ over the interval $[0,t]$.
+
+Unlike the continuous occupancy probability, the expected occupation time accounts for every period during which the process occupies state $j$. The process may enter and leave the state several times, and all these visits contribute to the total occupation time.
+
+For a process with a finite state space, the expected occupation times can be calculated for all states by integrating the transition probability matrix:
+
+$$
+\boxed{
+\int_0^t P(s)\,ds.
+}
+$$
+
+The $(i,j)$ entry of this matrix gives the expected time spent in state $j$ during $[0,t]$, conditional on starting in state $i$.
+
+
+
+
+
+<!-- ## Holding Times and Occupancy Probabilities -->
+
+<!-- ### Holding Times in a Markov Jump Process -->
+
+<!-- A Poisson process moves from state $i$ to state $i+1$ at each event. In a general Markov jump process, however, the process can move from its current state to any other state connected to it by a possible transition. -->
+
+<!-- The timing of these transitions has a feature in common with the Poisson process: the holding time in a given state has an exponential distribution. Unlike the Poisson process, however, the parameter of this exponential distribution generally depends on the current state. -->
+
+<!-- Let $X(t)$ be a time-homogeneous Markov jump process. Define the first holding time by -->
+
+<!-- $$ -->
+<!-- T_0=\inf\{t>0:X(t)\neq X(0)\}. -->
+<!-- $$ -->
+
+<!-- Thus, $T_0$ is the time from the initial observation until the process first leaves its initial state. -->
+
+<!-- ### Distribution of the First Holding Time -->
+
+<!-- Suppose that the process starts in state $i$, so that $X(0)=i$. -->
+
+<!-- The total transition rate out of state $i$ is -->
+
+<!-- $$ -->
+<!-- \lambda_i=\sum_{j\neq i}q_{ij}=-q_{ii}. -->
+<!-- $$ -->
+
+<!-- **Theorem.** Conditional on $X(0)=i$, the first holding time $T_0$ has an exponential distribution with parameter $\lambda_i$, provided that $\lambda_i>0$. -->
+
+<!-- In particular, -->
+
+<!-- $$ -->
+<!-- \boxed{ -->
+<!-- \Pr(T_0>t\mid X(0)=i) -->
+<!-- =e^{-\lambda_i t} -->
+<!-- =e^{q_{ii}t}, -->
+<!-- \qquad t\geq 0. -->
+<!-- } -->
+<!-- $$ -->
+
+<!-- The corresponding probability density function is -->
+
+<!-- $$ -->
+<!-- f_{T_0\mid X(0)=i}(t) -->
+<!-- = -->
+<!-- \lambda_i e^{-\lambda_i t}, -->
+<!-- \qquad t\geq 0. -->
+<!-- $$ -->
+
+<!-- If $\lambda_i=0$, state $i$ is absorbing and the process never leaves it. In this case, $T_0=\infty$. -->
+
+<!-- ### Interpreting the Holding-Time Distribution -->
+
+<!-- The parameter $\lambda_i$ is the **total rate of leaving state $i$**. It is obtained by adding the rates of all possible transitions out of that state. -->
+
+<!-- The probability that the process remains in state $i$ for at least $t$ time units is -->
+
+<!-- $$ -->
+<!-- \boxed{ -->
+<!-- \overline p_{ii}(t) -->
+<!-- = -->
+<!-- \Pr(T_0>t\mid X(0)=i) -->
+<!-- = -->
+<!-- e^{-\lambda_i t}. -->
+<!-- } -->
+<!-- $$ -->
+
+<!-- The expected holding time in state $i$ is therefore -->
+
+<!-- $$ -->
+<!-- \boxed{ -->
+<!-- \operatorname{E}[T_0\mid X(0)=i] -->
+<!-- = -->
+<!-- \frac{1}{\lambda_i} -->
+<!-- = -->
+<!-- \frac{1}{-q_{ii}}. -->
+<!-- } -->
+<!-- $$ -->
+
+<!-- A larger total transition rate means a shorter expected holding time. For example, if the total rate of leaving a state is $0.2$ per year, the expected holding time in that state is five years. -->
+
+<!-- If state $i$ is absorbing, its holding time is infinite. -->
+
+<!-- ### Holding Times and the Poisson Process -->
+
+<!-- The exponential distribution has the memoryless property. Consequently, for $s,t\geq 0$, -->
+
+<!-- $$ -->
+<!-- \Pr(T_0>s+t\mid T_0>s,\ X(0)=i) -->
+<!-- = -->
+<!-- \Pr(T_0>t\mid X(0)=i). -->
+<!-- $$ -->
+
+<!-- Thus, conditional on the process still being in state $i$, the remaining time until the next transition has the same exponential distribution as the original holding time. -->
+
+<!-- This is similar to the inter-arrival times of a Poisson process. The difference is that the rate of leaving a state in a general Markov jump process depends on the state currently occupied. -->
+
+<!-- ### Continuous Occupancy and Transition Probabilities -->
+
+<!-- Two probabilities concerning state $i$ must be distinguished. -->
+
+<!-- **Continuous occupancy probability** -->
+
+<!-- Define -->
+
+<!-- $$ -->
+<!-- \overline p_{ii}(t) -->
+<!-- = -->
+<!-- \Pr\bigl(X(u)=i\text{ for all }0\leq u\leq t -->
+<!-- \mid X(0)=i\bigr). -->
+<!-- $$ -->
+
+<!-- This is the probability that the process remains continuously in state $i$ throughout the entire interval $[0,t]$. From the holding-time distribution, -->
+
+<!-- $$ -->
+<!-- \overline p_{ii}(t)=e^{-\lambda_i t}. -->
+<!-- $$ -->
+
+<!-- **Transition probability** -->
+
+<!-- Recall that -->
+
+<!-- $$ -->
+<!-- p_{ii}(t) -->
+<!-- = -->
+<!-- \Pr(X(t)=i\mid X(0)=i). -->
+<!-- $$ -->
+
+<!-- This is the probability that the process is in state $i$ at time $t$. The process may have left state $i$ and subsequently returned. -->
+
+<!-- Therefore, -->
+
+<!-- $$ -->
+<!-- \boxed{ -->
+<!-- \overline p_{ii}(t)\leq p_{ii}(t). -->
+<!-- } -->
+<!-- $$ -->
+
+<!-- Equality holds when the process cannot return to state $i$ after leaving it. For example, this is the case when state $i$ can only lead to absorbing states. -->
+
+<!-- The distinction is important because $p_{ii}(t)$ describes the state occupied at a particular time, whereas $\overline p_{ii}(t)$ describes continuous residence in the state throughout an interval. -->
+
+<!-- ### Expected Time Spent in a State -->
+
+<!-- The transition probabilities can also be used to calculate the expected total time spent in a particular state. -->
+
+<!-- Let $I_j(s)$ be the indicator function of the event that the process is in state $j$ at time $s$: -->
+
+<!-- $$ -->
+<!-- I_j(s)= -->
+<!-- \begin{cases} -->
+<!-- 1, & X(s)=j,\\ -->
+<!-- 0, & X(s)\neq j. -->
+<!-- \end{cases} -->
+<!-- $$ -->
+
+<!-- The total time spent in state $j$ during the interval $[0,t]$ is -->
+
+<!-- $$ -->
+<!-- \int_0^t I_j(s)\,ds. -->
+<!-- $$ -->
+
+<!-- If the process starts in state $i$, its expected time spent in state $j$ is -->
+
+<!-- $$ -->
+<!-- \begin{aligned} -->
+<!-- \operatorname{E}_i\left[ -->
+<!-- \int_0^t I_j(s)\,ds -->
+<!-- \right] -->
+<!-- &= -->
+<!-- \int_0^t \operatorname{E}_i[I_j(s)]\,ds\\ -->
+<!-- &= -->
+<!-- \int_0^t p_{ij}(s)\,ds. -->
+<!-- \end{aligned} -->
+<!-- $$ -->
+
+<!-- Hence, -->
+
+<!-- $$ -->
+<!-- \boxed{ -->
+<!-- \operatorname{E}_i\left[ -->
+<!-- \text{total time spent in state }j -->
+<!-- \text{ during }[0,t] -->
+<!-- \right] -->
+<!-- = -->
+<!-- \int_0^t p_{ij}(s)\,ds. -->
+<!-- } -->
+<!-- $$ -->
+
+<!-- This quantity is called the **expected occupation time** of state $j$ over $[0,t]$, starting from state $i$. -->
+
+<!-- It is different from the probability of remaining continuously in a state. The expected occupation time accounts for all periods spent in state $j$, including periods after the process has left and subsequently returned. -->
+
+<!-- --- -->
+
+
+
+:::{#exm-four-state-health-model}
+## A Four-State Health Model
+
+Consider a continuous-time Markov model for the health status of an individual, consisting of the following four states:
+
+- Healthy ($H$);
+- Sick ($S$);
+- Terminally Ill ($T$);
+- Dead ($D$), an absorbing state.
+
+The possible transitions between states and their corresponding transition intensities are shown in the transition-rate diagram below. All transition intensities are expressed on a yearly basis.
+:::
+
+
+::: {#fig-markov-HSTD}
+
+
+```{=latex}
+
+
+\begin{center}
+\begin{tikzpicture}[x=0.75pt,y=0.75pt,yscale=-1,xscale=1]
+
+% --- TOP ROW: HEALTHY (H), SICK (S), TERMINALLY ILL (T) ---
+
+% Shape: Rectangle (Healthy - H)
+\draw   (20,40) -- (150,40) -- (150,110) -- (20,110) -- cycle ;
+% Text Node (H)
+\draw (85,75) node  [align=center] {{\fontfamily{ptm}\selectfont Healthy (H)}};
+
+% Shape: Rectangle (Sick - S)
+\draw   (220,40) -- (350,40) -- (350,110) -- (220,110) -- cycle ;
+% Text Node (S)
+\draw (285,75) node  [align=center] {{\fontfamily{ptm}\selectfont Sick (S)}};
+
+% Shape: Rectangle (Terminally Ill - T)
+\draw   (420,40) -- (550,40) -- (550,110) -- (420,110) -- cycle ;
+% Text Node (T)
+\draw (485,75) node  [align=center] {{\fontfamily{ptm}\selectfont Terminally Ill (T)}};
+
+
+% --- SECOND ROW: DEAD (D) ---
+
+% Shape: Rectangle (Dead - D)
+\draw   (220,180) -- (350,180) -- (350,250) -- (220,250) -- cycle ;
+% Text Node (D)
+\draw (285,215) node  [align=center] {{\fontfamily{ptm}\selectfont Dead (D)}};
+
+
+% --- HORIZONTAL TRANSITIONS (TOP ROW) ---
+
+% Arrow: H -> S
+\draw    (150,60) -- (218,60) ;
+\draw [shift={(220,60)}, rotate = 180] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]  [draw opacity=0] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- cycle    ;
+\draw (185,48) node   {$\lambda_{HS}$};
+
+% Arrow: S -> H (Recovery)
+\draw    (220,90) -- (152,90) ;
+\draw [shift={(150,90)}, rotate = 0] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]  [draw opacity=0] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- cycle    ;
+\draw (185,103) node   {$\lambda_{SH}$};
+
+% Arrow: S -> T
+\draw    (350,60) -- (418,60) ;
+\draw [shift={(420,60)}, rotate = 180] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]  [draw opacity=0] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- cycle    ;
+\draw (385,48) node   {$\lambda_{ST}$};
+
+% Arrow: T -> S (Optional: remove if T -> S recovery is not allowed)
+%\draw    (420,90) -- (352,90) ;
+%\draw [shift={(350,90)}, rotate = 0] [fill={rgb, 255:red, %0; green, 0; blue, 0 }  ][line width=0.75]  [draw %opacity=0] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- cycle    ;
+%\draw (385,103) node   {$\lambda_{TS}$};
+
+
+% --- TRANSITIONS TO DEAD (D) ---
+
+% Arrow: H -> D
+\draw    (85,110) -- (218.2,213.77) ;
+\draw [shift={(220,215)}, rotate = 217.87] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]  [draw opacity=0] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- cycle    ;
+\draw (140,175) node   {$\mu_{H}$};
+
+% Arrow: S -> D
+\draw    (285,110) -- (285,178) ;
+\draw [shift={(285,180)}, rotate = 270] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]  [draw opacity=0] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- cycle    ;
+\draw (298,145) node   {$\mu_{S}$};
+
+% Arrow: T -> D
+\draw    (485,110) -- (351.8,213.77) ;
+\draw [shift={(350,215)}, rotate = 322.13] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]  [draw opacity=0] (8.93,-4.29) -- (0,0) -- (8.93,4.29) -- cycle    ;
+\draw (430,175) node   {$\mu_{T}$};
+
+\end{tikzpicture}
+\end{center}
+
+```
+
+
+
+
+```{=html}
+<svg viewBox="0 0 600 290" width="100%" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arrow-health-four" markerWidth="8" markerHeight="8"
+            refX="6" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L6,3 L0,6 Z" fill="currentColor"/>
+    </marker>
+  </defs>
+
+  <!-- State boxes -->
+  <g fill="none" stroke="currentColor" stroke-width="1.5">
+    <rect x="20" y="40" width="130" height="70"/>
+    <rect x="220" y="40" width="130" height="70"/>
+    <rect x="420" y="40" width="130" height="70"/>
+    <rect x="220" y="180" width="130" height="70"/>
+  </g>
+
+  <!-- State labels -->
+  <g fill="currentColor" font-family="serif" font-size="17"
+     text-anchor="middle" dominant-baseline="middle">
+    <text x="85" y="75">Healthy (H)</text>
+    <text x="285" y="75">Sick (S)</text>
+    <text x="485" y="75">Terminally Ill (T)</text>
+    <text x="285" y="215">Dead (D)</text>
+  </g>
+
+  <!-- Transition arrows -->
+  <g fill="none" stroke="currentColor" stroke-width="1.5"
+     marker-end="url(#arrow-health-four)">
+    <!-- H to S -->
+    <path d="M152 60 H217"/>
+    <!-- S to H -->
+    <path d="M218 90 H153"/>
+    <!-- S to T -->
+    <path d="M352 60 H417"/>
+    <!-- H to D -->
+    <path d="M87 112 L217 213"/>
+    <!-- S to D -->
+    <path d="M285 112 V177"/>
+    <!-- T to D -->
+    <path d="M483 112 L353 213"/>
+  </g>
+
+  <!-- Transition intensities -->
+  <g fill="currentColor" font-family="serif" font-size="17"
+     font-style="italic" text-anchor="middle">
+    <text x="185" y="43">λ<tspan baseline-shift="sub" font-size="12">HS</tspan></text>
+    <text x="185" y="111">λ<tspan baseline-shift="sub" font-size="12">SH</tspan></text>
+    <text x="385" y="43">λ<tspan baseline-shift="sub" font-size="12">ST</tspan></text>
+    <text x="140" y="172">μ<tspan baseline-shift="sub" font-size="12">H</tspan></text>
+    <text x="307" y="148">μ<tspan baseline-shift="sub" font-size="12">S</tspan></text>
+    <text x="430" y="172">μ<tspan baseline-shift="sub" font-size="12">T</tspan></text>
+  </g>
+</svg>
+```
+
+
+
+
+State transitions in a Health–Sickness–Terminally Ill–Death (H–S–T–D) multi-statemodel.
+
+:::
+
+
+
+**Questions**
+
+1. Write down the generator matrix $Q$ for this four-state continuous-time Markov model.
+2. Calculate the expected holding time in state $H$.
+3. Calculate the probability that an individual in state $S$ moves directly to state $D$ when leaving state $S$.
+4. Calculate the expected future lifetime of an individual who is initially in state $H$.
+
+
+
+**Solution**
+
+**1. Generator Matrix**
+
+The generator matrix $Q$ contains the transition intensities between states. Its off-diagonal elements are the transition intensities, while each diagonal element is the negative sum of the transition intensities out of that state.
+
+Using the state ordering $(H,S,T,D)$, we obtain
+
+$$
+Q=
+\begin{pmatrix}
+-(\lambda_{HS}+\mu_H) & \lambda_{HS} & 0 & \mu_H\\
+\lambda_{SH} & -(\lambda_{SH}+\lambda_{ST}+\mu_S) & \lambda_{ST} & \mu_S\\
+0 & 0 & -\mu_T & \mu_T\\
+0 & 0 & 0 & 0
+\end{pmatrix}.
+$$
+
+The last row consists entirely of zeros because Death is an absorbing state.
+
+**2. Expected Holding Time in State H**
+
+The holding time in a state follows an exponential distribution, with parameter equal to the total transition intensity out of that state.
+
+For state $H$, the total transition intensity is
+
+$$
+\lambda_H=\lambda_{HS}+\mu_H.
+$$
+
+Therefore, the expected holding time in state $H$ is
+
+$$
+\boxed{
+\mathrm{E}[T_H]
+=\frac{1}{\lambda_{HS}+\mu_H}.
+}
+$$
+
+**3. Probability of Moving from S to D**
+
+When an individual leaves state $S$, the probability of moving to a particular state is proportional to the transition intensity to that state.
+
+The total transition intensity out of state $S$ is
+
+$$
+\lambda_S=\lambda_{SH}+\lambda_{ST}+\mu_S.
+$$
+
+Hence, the probability that an individual moves directly from $S$ to $D$ when leaving $S$ is
+
+$$
+\boxed{
+p_{SD}^*
+=
+\frac{\mu_S}
+{\lambda_{SH}+\lambda_{ST}+\mu_S}.
+}
+$$
+
+**4. Expected Future Lifetime of a Healthy Individual**
+
+Let $m_H$, $m_S$ and $m_T$ denote the expected future lifetimes of individuals currently in states $H$, $S$ and $T$, respectively.
+
+Since Death is the absorbing state,
+
+$$
+m_D=0.
+$$
+
+Using the first-step recursion, the expected future lifetime from each non-absorbing state is the expected holding time in that state plus the expected future lifetime after the next transition.
+
+For state $H$,
+
+$$
+m_H
+=
+\frac{1}{\lambda_{HS}+\mu_H}
++
+\frac{\lambda_{HS}}{\lambda_{HS}+\mu_H}m_S.
+$$
+
+For state $S$,
+
+$$
+\begin{aligned}
+m_S
+={}&
+\frac{1}{\lambda_{SH}+\lambda_{ST}+\mu_S}\\
+&+
+\frac{\lambda_{SH}}{\lambda_{SH}+\lambda_{ST}+\mu_S}m_H\\
+&+
+\frac{\lambda_{ST}}{\lambda_{SH}+\lambda_{ST}+\mu_S}m_T.
+\end{aligned}
+$$
+
+For state $T$, the only possible transition is to Death. Therefore,
+
+$$
+m_T=\frac{1}{\mu_T}.
+$$
+
+Solving these three simultaneous equations gives the expected future lifetime of an individual initially in state $H$, denoted by $m_H$.
+
+
+
+
+## Observing a Markov Jump Process at an Arbitrary Time
+
+So far, we have considered the first holding time when the initial state $X(0)$ is given. We now extend the results to a process observed at an arbitrary time $s>0$.
+
+The key question is whether the remaining time until the next transition depends on how long the process has already spent in its current state.
+
+### Residual Holding Time
+
+Suppose that the process is observed in state $i$ at time $s$. Define the residual holding time by
+
+$$
+T_s=\inf\{t>0:X(s+t)\neq X(s)\}.
+$$
+
+Thus, $T_s$ is the additional time from the observation time $s$ until the process next leaves its current state.
+
+For a time-homogeneous Markov jump process, the Markov property implies that the future evolution, conditional on the current state, does not depend on the past. Therefore, conditional on $X(s)=i$, the residual holding time has the same distribution as the first holding time when the process starts in state $i$.
+
+**Theorem.** Conditional on $X(s)=i$, the residual holding time has an exponential distribution with parameter $\lambda_i$, provided that $\lambda_i>0$.
+
+In particular,
+
+$$
+\boxed{
+\Pr(T_s>t\mid X(s)=i)
+=
+e^{-\lambda_i t},
+\qquad t\geq 0.
+}
+$$
+
+The corresponding density is
+
+$$
+f_{T_s\mid X(s)=i}(t)
+=
+\lambda_i e^{-\lambda_i t},
+\qquad t\geq 0.
+$$
+
+The expected residual holding time is
+
+$$
+\boxed{
+\operatorname{E}[T_s\mid X(s)=i]
+=
+\frac{1}{\lambda_i}.
+}
+$$
+
+The remaining time in state $i$ has the same exponential distribution, regardless of how long the process has already spent in that state.
+
+### Distribution of the Next State at an Arbitrary Observation Time
+
+Suppose that the process is observed in state $i$ at time $s$, where $\lambda_i>0$.
+
+The next transition can be to any state $j\neq i$. The probability that the next transition is to state $j$ is
+
+$$
+\boxed{
+\Pr(X(s+T_s)=j\mid X(s)=i)
+=
+\frac{q_{ij}}{\lambda_i},
+\qquad j\neq i.
+}
+$$
+
+This probability depends on the relative transition rates out of state $i$, but it does not depend on the observation time $s$.
+
+Furthermore, conditional on $X(s)=i$, the residual holding time $T_s$ and the destination of the next transition are independent.
+
+To see the role of the transition rates, consider the probability that the next transition occurs within a short interval of length $h$ and is to state $j$. For $j\neq i$,
+
+$$
+\Pr\bigl(X(s+h)=j
+\text{ and the next transition is to }j
+\mid X(s)=i\bigr)
+=
+q_{ij}h+o(h).
+$$
+
+The probability of leaving state $i$ during this interval is
+
+$$
+\Pr(T_s\leq h\mid X(s)=i)
+=
+\lambda_i h+o(h).
+$$
+
+Taking the ratio and letting $h\rightarrow 0$ gives
+
+$$
+\Pr(\text{next state}=j\mid X(s)=i)
+=
+\frac{q_{ij}}{\lambda_i}.
+$$
+
+Thus, the destination probabilities are determined by the relative sizes of the transition rates.
+
+### Connection with the Results at Time 0
+
+The results obtained at time 0 extend directly to an arbitrary observation time $s>0$.
+
+Conditional on the current state being $i$, the following properties hold:
+
+1. **Holding-time distribution**
+
+   The first holding time and the residual holding time have the same exponential distribution:
+
+   $$
+   T_0\mid X(0)=i
+   \sim\operatorname{Exp}(\lambda_i),
+   $$
+
+   and
+
+   $$
+   T_s\mid X(s)=i
+   \sim\operatorname{Exp}(\lambda_i).
+   $$
+
+2. **Distribution of the next state**
+
+   In both cases, the probability that the next transition is to state $j$ is
+
+   $$
+   \frac{q_{ij}}{\lambda_i},
+   \qquad j\neq i.
+   $$
+
+3. **Independence of holding time and destination**
+
+   Conditional on the current state, the holding time until the next transition is independent of the destination of that transition.
+
+Therefore, the same distributions describe **when** the next transition occurs and **where** the process moves, whether the process is observed at time $0$ or at a later time.
+
+These results provide the basis for describing the sequence of states visited at successive jumps, which leads to the definition of the **jump chain**.
+
+
+
+
+
+
+
+## The Jump Chain
+
+A Markov jump process describes two aspects of the evolution of a system:
+
+- **The sequence of states visited:** the states to which the process moves at successive transitions.
+- **The timing of transitions:** the time spent in each state before moving to another state.
+
+The previous section showed that the time spent in state $i$ has an exponential distribution with parameter $\lambda_i$, while the destination of the next transition is determined by the transition rates out of that state.
+
+We can separate these two aspects by considering the sequence of states visited at successive jumps, without recording the times at which the jumps occur. This sequence forms a discrete-time Markov chain, called the **jump chain** (or *embedded Markov chain*).
+
+### Definition of the Jump Chain
+
+Let $X(t)$ be a time-homogeneous Markov jump process with state space $S$.
+
+Define the successive jump times by
+
+$$
+S_0=0,
+\qquad
+S_n=\inf\{t>S_{n-1}:X(t)\neq X(S_{n-1})\},
+\quad n\geq 1.
+$$
+
+Thus, $S_n$ is the time of the $n$th jump, provided that the process makes at least $n$ jumps.
+
+The sequence of states visited at these jump times is
+
+$$
+Y_n=X(S_n),\qquad n=0,1,2,\ldots.
+$$
+
+The discrete-time process $\{Y_n\}$ is called the **jump chain** associated with $X(t)$.
+
+In particular,
+
+$$
+Y_0=X(0),\quad
+Y_1=X(S_1),\quad
+Y_2=X(S_2),\quad\ldots
+$$
+
+The jump chain records the states visited by the original process but does not record the holding times between successive jumps.
+
+### Transition Probabilities of the Jump Chain
+
+Suppose the original Markov jump process is currently in state $i$, where the total rate of leaving that state is
+
+$$
+\lambda_i=\sum_{j\neq i}q_{ij}=-q_{ii}>0.
+$$
+
+From the results in the previous section, the probability that the next transition is to state $j$ is
+
+$$
+\Pr(Y_{n+1}=j\mid Y_n=i)
+=
+\frac{q_{ij}}{\lambda_i},
+\qquad j\neq i.
+$$
+
+Therefore, the one-step transition probabilities of the jump chain are
+
+$$
+\boxed{
+r_{ij}=
+\begin{cases}
+\dfrac{q_{ij}}{\lambda_i}, & i\neq j,\ \lambda_i>0,\\[6pt]
+0, & i=j,\ \lambda_i>0.
+\end{cases}
+}
+$$
+
+Here, $r_{ij}$ denotes the probability that the next state visited by the process is $j$, given that its current state is $i$.
+
+For a state $i$ with $\lambda_i>0$, these probabilities satisfy
+
+$$
+\sum_{j\in S}r_{ij}
+=
+\sum_{j\neq i}\frac{q_{ij}}{\lambda_i}
+=
+1.
+$$
+
+Hence, the jump chain is a discrete-time Markov chain with transition probability matrix
+
+$$
+R=(r_{ij}).
+$$
+
+The transition probabilities of the jump chain depend on the relative sizes of the transition rates out of each state. A larger transition rate $q_{ij}$, relative to the total rate $\lambda_i$, gives a greater probability of moving from state $i$ to state $j$ at the next jump.
+
+### Relationship Between the Generator and the Jump Chain
+
+The generator matrix $Q=(q_{ij})$ describes the transition rates of the continuous-time Markov jump process, while the transition matrix $R=(r_{ij})$ describes the probabilities of the next state visited.
+
+For $i\neq j$,
+
+$$
+q_{ij}=\lambda_i r_{ij}.
+$$
+
+Since $q_{ii}=-\lambda_i$, the generator can be recovered from the jump-chain transition probabilities and the total exit rates:
+
+$$
+\boxed{
+q_{ij}=
+\begin{cases}
+\lambda_i r_{ij}, & i\neq j,\\
+-\lambda_i, & i=j.
+\end{cases}
+}
+$$
+
+Thus, the continuous-time process can be described through two components:
+
+1. The jump chain, which determines the sequence of states visited.
+2. The holding-time distributions, which determine how long the process remains in each state.
+
+Together, these components describe the evolution of the Markov jump process.
+
+### Absorbing States
+
+A state $i$ is absorbing if the process cannot leave it. In terms of the generator matrix,
+
+$$
+q_{ij}=0,\qquad j\neq i,
+$$
+
+and consequently,
+
+$$
+\lambda_i=0.
+$$
+
+The holding time in an absorbing state is infinite, so the process makes no further jumps after entering that state.
+
+The formula $r_{ij}=q_{ij}/\lambda_i$ is therefore not defined for an absorbing state. For convenience, we may define
+
+$$
+r_{ii}=1
+$$
+
+for an absorbing state. This is a conventional way of representing absorption in the jump chain: once the process enters that state, it remains there.
+
+This convention does not mean that the original continuous-time process makes another jump while in the absorbing state. It simply allows the jump chain to be represented by a stochastic transition matrix, including absorbing states.
+
+### Summary
+
+The jump chain provides a discrete-time representation of the sequence of states visited by a Markov jump process.
+
+For a non-absorbing state $i$, its transition probabilities are
+
+$$
+r_{ij}=\frac{q_{ij}}{\lambda_i},
+\qquad j\neq i,
+$$
+
+where
+
+$$
+\lambda_i=\sum_{j\neq i}q_{ij}.
+$$
+
+The jump chain describes **where the process moves**, while the holding-time distributions describe **when the transitions occur**.
+
+This separation is useful when studying questions about the sequence of states visited, the probability of reaching a particular state, and the expected time required to reach that state.
+
+
+
+
+
+
+:::{#exm-jump-chain}
+## The Jump Chain of a Four-State Health Model
+
+Consider the four-state Health–Sickness–Terminally Ill–Death (H–S–T–D) model introduced in Worked Example 1.
+
+Using the given transition intensities:
+
+1. Write down the generator matrix $Q$ for the four-state continuous-time Markov model.
+2. Obtain the transition matrix $P^*$ of the associated jump chain, using
+
+   $$
+   p_{ij}^*=\frac{q_{ij}}{-q_{ii}},
+   \qquad i\neq j.
+   $$
+
+3. Calculate the probability that an individual in state $S$ moves directly to state $D$ when leaving state $S$.
+4. Determine the probability that an individual starting in state $S$ reaches Death before returning to Healthy.
+
+**Hint for Question 4**
+
+Let $h_i$ denote the probability of reaching Death before Healthy, starting from state $i$.
+
+The boundary conditions are
+
+$$
+h_H=0,\qquad h_D=1.
+$$
+
+For the other states, use the first-step equations
+
+$$
+h_i=\sum_j p_{ij}^*h_j.
+$$
+
+Solve the resulting equations to obtain $h_S$.
+
+:::
+
+
+**Solution**
+
+**1. Generator Matrix**
+
+Using the state ordering $(H,S,T,D)$, the generator matrix is
+
+$$
+Q=
+\begin{pmatrix}
+-(\lambda_{HS}+\mu_H) & \lambda_{HS} & 0 & \mu_H\\
+\lambda_{SH} & -(\lambda_{SH}+\lambda_{ST}+\mu_S) & \lambda_{ST} & \mu_S\\
+0 & 0 & -\mu_T & \mu_T\\
+0 & 0 & 0 & 0
+\end{pmatrix}.
+$$
+
+The diagonal elements are the negatives of the total transition intensities out of the corresponding states.
+
+**2. Transition Matrix of the Associated Jump Chain**
+
+The transition probabilities of the associated jump chain are obtained by dividing each off-diagonal transition intensity by the total transition intensity out of the current state:
+
+$$
+p_{ij}^*=\frac{q_{ij}}{-q_{ii}},
+\qquad i\neq j.
+$$
+
+For state $H$, the total transition intensity is
+
+$$
+\lambda_H=\lambda_{HS}+\mu_H.
+$$
+
+Hence,
+
+$$
+p_{HS}^*=\frac{\lambda_{HS}}{\lambda_{HS}+\mu_H},
+\qquad
+p_{HD}^*=\frac{\mu_H}{\lambda_{HS}+\mu_H}.
+$$
+
+For state $S$, the total transition intensity is
+
+$$
+\lambda_S=\lambda_{SH}+\lambda_{ST}+\mu_S.
+$$
+
+Hence,
+
+$$
+\begin{aligned}
+p_{SH}^*&=\frac{\lambda_{SH}}{\lambda_{SH}+\lambda_{ST}+\mu_S},\\
+p_{ST}^*&=\frac{\lambda_{ST}}{\lambda_{SH}+\lambda_{ST}+\mu_S},\\
+p_{SD}^*&=\frac{\mu_S}{\lambda_{SH}+\lambda_{ST}+\mu_S}.
+\end{aligned}
+$$
+
+For state $T$, the only possible transition is to Death. Therefore,
+
+$$
+p_{TD}^*=1.
+$$
+
+Since Death is an absorbing state, we adopt the convention that the jump chain remains in $D$ once it reaches $D$:
+
+$$
+p_{DD}^*=1.
+$$
+
+Thus, the transition matrix of the associated jump chain is
+
+$$
+\boxed{
+P^*=
+\begin{pmatrix}
+0 &
+\displaystyle\frac{\lambda_{HS}}{\lambda_{HS}+\mu_H} &
+0 &
+\displaystyle\frac{\mu_H}{\lambda_{HS}+\mu_H}
+\\[12pt]
+\displaystyle\frac{\lambda_{SH}}{\lambda_{SH}+\lambda_{ST}+\mu_S} &
+0 &
+\displaystyle\frac{\lambda_{ST}}{\lambda_{SH}+\lambda_{ST}+\mu_S} &
+\displaystyle\frac{\mu_S}{\lambda_{SH}+\lambda_{ST}+\mu_S}
+\\[12pt]
+0 & 0 & 0 & 1\\
+0 & 0 & 0 & 1
+\end{pmatrix}.
+}
+$$
+
+**3. Probability of a Direct Transition from S to D**
+
+When an individual leaves state $S$, the probability of moving directly to state $D$ is
+
+$$
+\begin{aligned}
+p_{SD}^*
+&=\frac{\mu_S}{\lambda_{SH}+\lambda_{ST}+\mu_S}.
+\end{aligned}
+$$
+
+Therefore,
+
+$$
+\boxed{
+\Pr(\text{next state is D}\mid X_0=S)
+=
+\frac{\mu_S}{\lambda_{SH}+\lambda_{ST}+\mu_S}.
+}
+$$
+
+This probability considers only the next transition out of state $S$.
+
+**4. Probability of Reaching Death Before Returning to Healthy**
+
+Let $h_i$ denote the probability that an individual starting in state $i$ reaches Death before returning to Healthy.
+
+Since Healthy and Death are the two target states, the boundary conditions are
+
+$$
+h_H=0,\qquad h_D=1.
+$$
+
+For state $T$, the only possible transition is to Death. Hence,
+
+$$
+h_T=1.
+$$
+
+Using the first-step argument for an individual currently in state $S$, we obtain
+
+$$
+h_S
+=
+p_{SH}^*h_H
++
+p_{ST}^*h_T
++
+p_{SD}^*h_D.
+$$
+
+Substituting the boundary conditions gives
+
+$$
+\begin{aligned}
+h_S
+&=p_{SH}^*(0)+p_{ST}^*(1)+p_{SD}^*(1)\\
+&=p_{ST}^*+p_{SD}^*.
+\end{aligned}
+$$
+
+Substituting the transition probabilities,
+
+$$
+\begin{aligned}
+h_S
+&=
+\frac{\lambda_{ST}}{\lambda_{SH}+\lambda_{ST}+\mu_S}
++
+\frac{\mu_S}{\lambda_{SH}+\lambda_{ST}+\mu_S}\\[5pt]
+&=
+\boxed{
+\frac{\lambda_{ST}+\mu_S}
+{\lambda_{SH}+\lambda_{ST}+\mu_S}.
+}
+\end{aligned}
+$$
+
+Therefore, the probability that an individual starting in state $S$ reaches Death before returning to Healthy is
+
+$$
+\boxed{
+\Pr(\text{reach D before returning to H}\mid X_0=S)
+=
+\frac{\lambda_{ST}+\mu_S}
+{\lambda_{SH}+\lambda_{ST}+\mu_S}.
+}
+$$
+
+**Remark: Direct Transition Probability versus Hitting Probability**
+
+It is important to distinguish between the probability of making a direct transition from $S$ to $D$ and the probability of reaching $D$ before returning to $H$.
+
+The direct transition probability considers only the next jump:
+
+$$
+\boxed{
+p_{SD}^*
+=
+\frac{\mu_S}
+{\lambda_{SH}+\lambda_{ST}+\mu_S}.
+}
+$$
+
+In contrast, the hitting probability considers all possible paths that reach $D$ before returning to $H$. In this model, there are two possible paths:
+
+$$
+S\longrightarrow D
+$$
+
+and
+
+$$
+S\longrightarrow T\longrightarrow D.
+$$
+
+Consequently,
+
+$$
+\boxed{
+\Pr(\text{reach D before returning to H}\mid X_0=S)
+=
+p_{SD}^*+p_{ST}^*.
+}
+$$
+
+The hitting probability is therefore greater than or equal to the direct transition probability. The difference is the probability of following the path $S\rightarrow T\rightarrow D$.
+
+This distinction illustrates the difference between considering only the next transition and considering all possible paths to a specified target state.
+
+
+
+
+
+
+## Expected Time to Reach a Given State
+
+In some applications of Markov jump processes, we are interested in the expected time required for the process to reach a particular state for the first time. This quantity is called the *expected hitting time* of the target state.
+
+For example, an insurance company may wish to determine the expected remaining lifetime of a policyholder, given their current health condition. Similarly, a financial institution may be interested in the expected time until a company enters default.
+
+Let $k$ denote the target state, and define
+
+$$
+m_i = \operatorname{E}[T_k\mid X(0)=i],
+$$
+
+where $T_k$ is the first time at which the process enters state $k$:
+
+$$
+T_k=\inf\{t\geq 0:X(t)=k\}.
+$$
+
+Thus, $m_i$ is the expected time to reach state $k$, given that the process starts in state $i$. Since the process has already reached the target state when it starts there,
+
+$$
+m_k=0.
+$$
+
+### First-Step Analysis
+
+Consider a time-homogeneous Markov jump process starting in a state $i\neq k$. Let
+
+$$
+\lambda_i=-q_{ii}
+=\sum_{j\neq i}q_{ij}
+$$
+
+denote the total transition rate out of state $i$.
+
+The process remains in state $i$ for a holding time that follows an exponential distribution with parameter $\lambda_i$. Its expected holding time is therefore
+
+$$
+\operatorname{E}[H_i]=\frac{1}{\lambda_i}.
+$$
+
+After leaving state $i$, the process moves to state $j$ with probability
+
+$$
+p_{ij}^*=\frac{q_{ij}}{\lambda_i},
+\qquad j\neq i,
+$$
+
+where $p_{ij}^*$ is the corresponding transition probability of the jump chain.
+
+If the next state is $j$, the expected additional time required to reach the target state is $m_j$. Applying the law of total expectation gives
+
+$$
+m_i
+=
+\frac{1}{\lambda_i}
++
+\sum_{j\neq i}p_{ij}^*m_j.
+$$
+
+Substituting the transition probabilities of the jump chain gives the recursive equations
+
+$$
+\boxed{
+m_i
+=
+\frac{1}{\lambda_i}
++
+\sum_{\substack{j\neq i\\j\neq k}}
+\frac{q_{ij}}{\lambda_i}m_j,
+\qquad i\neq k.
+}
+$$
+
+The term corresponding to the target state is omitted because $m_k=0$.
+
+These equations have a direct interpretation. The expected time to reach the target state consists of the expected time spent in the current state and the expected remaining time after the next jump. The latter is averaged over all possible destination states, using the transition probabilities of the jump chain.
+
+The equations are solved simultaneously for all states other than the target state. If the target state is reached with probability one and the expected hitting time is finite, this system determines the expected hitting times.
+
+If the target state cannot be reached with probability one, the expected hitting time may be infinite. For example, if the process enters an absorbing state other than the target state, it can no longer reach the target.
+
+
+:::{#exm-expected-future-lifetime-HSTD}
+**Expected Future Lifetime in a Four-State Health Model**
+
+Consider the four-state Health–Sickness–Terminally Ill–Death (H–S–T–D) model introduced earlier.
+
+Let $m_i$ denote the expected future lifetime of an individual who is initially in state $i$.
+
+Using the first-step recursion, derive expressions for the expected future lifetime from each of the four initial states, namely $H$, $S$, $T$ and $D$.
+:::
+
+**Solution**
+
+Since Death is an absorbing state, the expected future lifetime of an individual initially in state $D$ is
+
+$$
+m_D=0.
+$$
+
+For the other three states, the expected future lifetime is the expected holding time in the current state plus the expected future lifetime after the next transition.
+
+For an individual initially in state $H$,
+
+$$
+m_H
+=
+\frac{1}{\lambda_{HS}+\mu_H}
++
+\frac{\lambda_{HS}}{\lambda_{HS}+\mu_H}m_S.
+$$
+
+For an individual initially in state $S$,
+
+$$
+\begin{aligned}
+m_S
+={}&
+\frac{1}{\lambda_{SH}+\lambda_{ST}+\mu_S}\\
+&+
+\frac{\lambda_{SH}}{\lambda_{SH}+\lambda_{ST}+\mu_S}m_H\\
+&+
+\frac{\lambda_{ST}}{\lambda_{SH}+\lambda_{ST}+\mu_S}m_T.
+\end{aligned}
+$$
+
+For an individual initially in state $T$, the only possible transition is to Death. Therefore,
+
+$$
+m_T=\frac{1}{\mu_T}.
+$$
+
+Thus, the expected future lifetimes from all four initial states are determined by the system
+
+$$
+\boxed{
+\begin{cases}
+\displaystyle
+m_H=
+\frac{1}{\lambda_{HS}+\mu_H}
++
+\frac{\lambda_{HS}}{\lambda_{HS}+\mu_H}m_S,\\[12pt]
+\displaystyle
+m_S=
+\frac{1}{\lambda_{SH}+\lambda_{ST}+\mu_S}
++
+\frac{\lambda_{SH}}{\lambda_{SH}+\lambda_{ST}+\mu_S}m_H
++
+\frac{\lambda_{ST}}{\lambda_{SH}+\lambda_{ST}+\mu_S}m_T,\\[12pt]
+\displaystyle
+m_T=\frac{1}{\mu_T},\\[8pt]
+m_D=0.
+\end{cases}
+}
+$$
+
+Solving this system gives the expected future lifetime for each possible initial health state.
+
+
+
+
+
+
+
+
+
+:::{#exm-numerical-future-lifetime-hstd}
+**Numerical Illustration: Expected Future Lifetime in a Four-State Health Model**
+
+Consider the four-state Health–Sickness–Terminally Ill–Death (H–S–T–D) model introduced earlier. Suppose the transition intensities are given as follows:
+
+| Transition | Intensity (per year) |
+|:---|---:|
+| H $\rightarrow$ S | 0.10 |
+| S $\rightarrow$ H | 0.90 |
+| H $\rightarrow$ D | 0.01 |
+| S $\rightarrow$ T | 0.18 |
+| S $\rightarrow$ D | 0.06 |
+| T $\rightarrow$ D | 0.50 |
+
+Using these transition intensities, answer the following questions:
+
+1. Construct the generator matrix $Q$.
+2. Calculate the expected holding time in state $H$.
+3. Calculate the probability that an individual in state $S$ moves directly to state $D$ when leaving state $S$.
+4. Calculate the expected future lifetime for an individual initially in each of the four states $H$, $S$, $T$ and $D$.
+
+We use R to construct the generator matrix and calculate the required quantities.
+
+```{r}
+#| echo: false
+
+# Transition intensities
+rate_HS <- 0.10
+rate_SH <- 0.90
+rate_HD <- 0.01
+rate_ST <- 0.18
+rate_SD <- 0.06
+rate_TD <- 0.50
+
+# Generator matrix: state ordering H, S, T, D
+Q <- matrix(c(
+  -(rate_HS + rate_HD), rate_HS, 0, rate_HD,
+  rate_SH, -(rate_SH + rate_ST + rate_SD), rate_ST, rate_SD,
+  0, 0, -rate_TD, rate_TD,
+  0, 0, 0, 0
+), nrow = 4, byrow = TRUE)
+
+# Total transition intensities
+lambda <- -diag(Q)[1:3]
+
+# Expected holding time in state H
+holding_H <- 1 / lambda[1]
+
+# Probability of moving from S to D
+prob_SD <- rate_SD / lambda[2]
+
+# Transition matrix of the jump chain
+P_star <- matrix(0, nrow = 4, ncol = 4)
+
+for (i in 1:3) {
+  P_star[i, ] <- Q[i, ] / lambda[i]
+  P_star[i, i] <- 0
+}
+P_star[4, 4] <- 1
+
+# Expected future lifetimes
+P_transient <- P_star[1:3, 1:3]
+A <- diag(3) - P_transient
+m <- solve(A, 1 / lambda)
+
+m_H <- m[1]
+m_S <- m[2]
+m_T <- m[3]
+m_D <- 0
+```
+
+**Solution**
+
+**1. Generator Matrix**
+
+The generator matrix contains the transition intensities as its off-diagonal elements. Each diagonal element is the negative sum of the transition intensities out of the corresponding state.
+
+Using the state ordering $(H,S,T,D)$, we obtain
+
+$$
+Q=
+\begin{pmatrix}
+-0.11 & 0.10 & 0 & 0.01\\
+0.90 & -1.14 & 0.18 & 0.06\\
+0 & 0 & -0.50 & 0.50\\
+0 & 0 & 0 & 0
+\end{pmatrix}.
+$$
+
+The last row consists entirely of zeros because Death is an absorbing state.
+
+**2. Expected Holding Time in State H**
+
+The total transition intensity out of state $H$ is
+
+$$
+\lambda_H=0.10+0.01=0.11.
+$$
+
+The holding time in state $H$ follows an exponential distribution with parameter $\lambda_H$. Therefore,
+
+$$
+\begin{aligned}
+\mathrm{E}[T_H]
+&=\frac{1}{\lambda_H}\\
+&=\frac{1}{0.11}\\
+&=\texttt{`r round(holding_H, 4)`}\text{ years}.
+\end{aligned}
+$$
+
+**3. Probability of Moving Directly from S to D**
+
+The total transition intensity out of state $S$ is
+
+$$
+\lambda_S=0.90+0.18+0.06=1.14.
+$$
+
+Therefore, the probability that an individual moves directly from $S$ to $D$ when leaving $S$ is
+
+$$
+\begin{aligned}
+p_{SD}^*
+&=\frac{\mu_S}{\lambda_S}\\
+&=\frac{0.06}{1.14}\\
+&=\texttt{`r round(prob_SD, 4)`}.
+\end{aligned}
+$$
+
+Thus, the probability is approximately $5.26\%$.
+
+**4. Expected Future Lifetime from Each Initial State**
+
+Let $m_H$, $m_S$, $m_T$ and $m_D$ denote the expected future lifetimes of individuals currently in states $H$, $S$, $T$ and $D$, respectively.
+
+Since Death is an absorbing state,
+
+$$
+m_D=0.
+$$
+
+Using the first-step recursion developed earlier, we obtain
+
+$$
+\begin{aligned}
+m_H
+&=\frac{1}{0.11}+\frac{0.10}{0.11}m_S,\\[5pt]
+m_S
+&=\frac{1}{1.14}
++\frac{0.90}{1.14}m_H
++\frac{0.18}{1.14}m_T,\\[5pt]
+m_T&=\frac{1}{0.50}.
+\end{aligned}
+$$
+
+Solving these simultaneous equations gives the expected future lifetime from each initial state:
+
+$$
+\begin{aligned}
+m_H&=\texttt{`r round(m_H, 4)`}\text{ years},\\
+m_S&=\texttt{`r round(m_S, 4)`}\text{ years},\\
+m_T&=\texttt{`r round(m_T, 4)`}\text{ years},\\
+m_D&=0\text{ years}.
+\end{aligned}
+$$
+
+Therefore, the expected future lifetime depends on the individual's initial health state.
+
+**Remark: Expected Holding Time versus Expected Future Lifetime**
+
+The expected holding time in state $H$ is the expected duration of a single stay in the Healthy state before the individual makes the next transition.
+
+In contrast, the expected future lifetime from state $H$, denoted by $m_H$, is the expected total time until Death, starting from $H$.
+
+After leaving state $H$, an individual may move to state $S$ and subsequently recover to state $H$. This process may occur several times before the individual eventually reaches Death.
+
+Therefore:
+
+- The **expected holding time in state H** considers only the duration until the first transition out of $H$.
+- The **expected future lifetime from state H** accounts for the entire future path of the individual, including all possible transitions and repeated returns to $H$, until Death occurs.
+
+Consequently, the expected future lifetime from $H$ is generally different from the expected holding time in $H$.
+:::
+
+
+
+<!-- ### Worked Example: Expected Future Lifetime in the HSTD Model -->
+
+<!-- Consider the four-state Health–Sickness–Terminally Ill–Death (HSTD) model, with states: -->
+
+<!-- - $H$: Healthy; -->
+<!-- - $S$: Sick; -->
+<!-- - $T$: Terminally ill; -->
+<!-- - $D$: Dead. -->
+
+<!-- The possible transitions and their rates, measured per year, are -->
+
+<!-- $$ -->
+<!-- \begin{aligned} -->
+<!-- q_{HS}&=0.10, & q_{HD}&=0.01,\\ -->
+<!-- q_{SH}&=0.90, & q_{ST}&=0.18, & q_{SD}&=0.06,\\ -->
+<!-- q_{TD}&=0.50. -->
+<!-- \end{aligned} -->
+<!-- $$ -->
+
+<!-- Death is an absorbing state. We are interested in the expected future lifetime of an individual, given their current health state. -->
+
+<!-- Let $m_H$, $m_S$ and $m_T$ denote the expected times to reach state $D$, starting from states $H$, $S$ and $T$, respectively. Since death is the target state, -->
+
+<!-- $$ -->
+<!-- m_D=0. -->
+<!-- $$ -->
+
+<!-- **(i) Formulate the recursive equations** -->
+
+<!-- Starting from state $H$, the total transition rate is -->
+
+<!-- $$ -->
+<!-- \lambda_H=0.10+0.01=0.11. -->
+<!-- $$ -->
+
+<!-- The individual moves to state $S$ with probability $0.10/0.11$ or to state $D$ with probability $0.01/0.11$. Hence, -->
+
+<!-- $$ -->
+<!-- m_H -->
+<!-- = -->
+<!-- \frac{1}{0.11} -->
+<!-- + -->
+<!-- \frac{0.10}{0.11}m_S. -->
+<!-- $$ -->
+
+<!-- Similarly, the total transition rate out of state $S$ is -->
+
+<!-- $$ -->
+<!-- \lambda_S=0.90+0.18+0.06=1.14. -->
+<!-- $$ -->
+
+<!-- The possible destinations are $H$, $T$ and $D$. Therefore, -->
+
+<!-- $$ -->
+<!-- m_S -->
+<!-- = -->
+<!-- \frac{1}{1.14} -->
+<!-- + -->
+<!-- \frac{0.90}{1.14}m_H -->
+<!-- + -->
+<!-- \frac{0.18}{1.14}m_T. -->
+<!-- $$ -->
+
+<!-- Finally, an individual in state $T$ can only move to state $D$. Thus, -->
+
+<!-- $$ -->
+<!-- m_T=\frac{1}{0.50}=2. -->
+<!-- $$ -->
+
+<!-- The required system of equations is -->
+
+<!-- $$ -->
+<!-- \boxed{ -->
+<!-- \begin{aligned} -->
+<!-- m_H&=\frac{1}{0.11}+\frac{0.10}{0.11}m_S,\\ -->
+<!-- m_S&=\frac{1}{1.14}+\frac{0.90}{1.14}m_H -->
+<!-- +\frac{0.18}{1.14}m_T,\\ -->
+<!-- m_T&=2. -->
+<!-- \end{aligned} -->
+<!-- } -->
+<!-- $$ -->
+
+<!-- **(ii) Calculate the expected future lifetime of a healthy individual** -->
+
+<!-- Substituting $m_T=2$ into the second equation gives -->
+
+<!-- $$ -->
+<!-- m_S -->
+<!-- = -->
+<!-- \frac{1}{1.14} -->
+<!-- +\frac{0.90}{1.14}m_H -->
+<!-- +\frac{0.18}{1.14}(2). -->
+<!-- $$ -->
+
+<!-- Solving the resulting two simultaneous equations gives -->
+
+<!-- $$ -->
+<!-- \begin{aligned} -->
+<!-- m_H&\approx 36.0452,\\ -->
+<!-- m_S&\approx 29.6497. -->
+<!-- \end{aligned} -->
+<!-- $$ -->
+
+<!-- Therefore, the expected future lifetime of an individual who is initially healthy is approximately -->
+
+<!-- $$ -->
+<!-- \boxed{m_H=36.05\text{ years}.} -->
+<!-- $$ -->
+
+<!-- This result accounts for the possibility that an individual may move between the healthy and sick states several times before eventually reaching the death state. The expected future lifetime is therefore not simply the expected holding time in the initial state, but includes the expected time spent in all subsequent states before death. -->
+
+
+
+
+
+
+
+
+
+## Estimation of Transition Rates
+
+In practical applications, the transition rates of a Markov jump process are usually unknown and must be estimated from observed data. For example, an insurance company may use data on policyholders moving between different health states to estimate the rates of becoming ill or dying.
+
+This section introduces the basic idea of estimating transition rates using the number of observed transitions and the total time spent in each state. The treatment is introductory and does not develop the full likelihood theory or estimation procedures, which are covered in greater detail in the Survival Analysis course.
+
+The basic idea is to compare the number of observed transitions with the total time spent in the state from which those transitions occur.
+
+### Estimating a Transition Rate
+
+Consider a time-homogeneous Markov jump process with transition rate \(q_{ij}\) from state \(i\) to state \(j\), where \(i\neq j\).
+
+Suppose that observations are collected over a specified period. Define:
+
+- \(N_{ij}\) as the total number of observed transitions from state \(i\) to state \(j\);
+- \(T_i\) as the total time spent in state \(i\) by all individuals under observation.
+
+An intuitive estimator of the transition rate is
+
+$$
+\boxed{
+\widehat{q}_{ij}=\frac{N_{ij}}{T_i}.
+}
+$$
+
+Thus, the estimated transition rate is the number of observed transitions from state \(i\) to state \(j\) divided by the total time spent in state \(i\).
+
+The denominator is often called the *exposure time* in state \(i\). It measures the total time during which individuals were at risk of making a transition from that state.
+
+The total rate of leaving state \(i\) is
+
+$$
+\nu_i=\sum_{j\neq i}q_{ij}.
+$$
+
+Since every departure from state \(i\) must be a transition to one of the other states, the estimated total exit rate is
+
+$$
+\widehat{\nu}_i
+=
+\frac{\displaystyle\sum_{j\neq i}N_{ij}}{T_i}.
+$$
+
+These estimators are the maximum likelihood estimators under the usual time-homogeneous Markov jump model, when the transition histories and time spent in each state are observed.
+
+### Worked Example: Estimating a Mortality Rate
+
+Consider a simple two-state model for the mortality of a group of insured lives:
+
+- State \(0\): Alive;
+- State \(1\): Dead.
+
+The only possible transition is from Alive to Dead, with constant transition rate \(\mu\). State 1 is absorbing.
+
+Suppose an insurance company observes the following data over a specified observation period:
+
+- 120 deaths;
+- a total exposure of 4,800 life-years.
+
+Estimate the force of mortality \(\mu\).
+
+**Solution**
+
+The observed number of transitions from Alive to Dead is
+
+$$
+N_{01}=120.
+$$
+
+The total exposure in the Alive state is
+
+$$
+T_0=4,800.
+$$
+
+Therefore, the estimated force of mortality is
+
+$$
+\widehat{\mu}
+=
+\frac{N_{01}}{T_0}
+=
+\frac{120}{4,800}
+=
+0.025.
+$$
+
+Hence, the estimated force of mortality is
+
+$$
+\boxed{\widehat{\mu}=0.025\text{ per annum}.}
+$$
+
+This estimate is based on the assumption that the force of mortality is constant over the observation period.
+
+### Practical Considerations
+
+The estimation formula assumes that the transition rates are constant over time. In practice, several issues may need to be considered:
+
+- **Censoring:** An individual may leave the study before experiencing a transition. The time observed before leaving the study still contributes to the exposure time.
+- **Incomplete observation:** Some transitions may not be observed exactly, requiring statistical methods that account for the available information.
+- **Time-varying rates:** Transition rates may depend on age, duration in a state, or other factors. In such cases, a constant-rate model may be inappropriate.
+
+The estimation of transition rates in more general settings involves likelihood methods, confidence intervals, and the treatment of censored observations. These topics are developed in greater detail in Survival Analysis.
+
+For the present chapter, the main principle is that transition rates can be estimated by relating the number of observed transitions to the total time spent in the state from which those transitions occur.
+
+
+
+## Summary and Further Considerations
+
+In this chapter, we have developed the theory of continuous-time Markov jump processes, focusing on models in which a system moves between a finite or countable collection of states over continuous time. These processes provide a useful framework for modelling systems that experience random changes at irregular time intervals, such as changes in health status, insurance policy conditions, and credit ratings.
+
+The main ideas developed in this chapter can be summarised as follows.
+
+- **Transition intensities:** The transition rates describe the instantaneous rates at which a process moves from one state to another. They are collected in the generator matrix, which provides a local description of the process.
+
+- **Holding times:** The time spent in a state before the next transition follows an exponential distribution under the time-homogeneous assumption. The total rate of leaving a state determines the distribution of its holding time, while the individual transition rates determine the destination state.
+
+- **Transition probabilities:** The transition probability matrix describes the probability distribution of the process after a given time interval. For a time-homogeneous process, these probabilities satisfy the Kolmogorov forward and backward differential equations and can be expressed in terms of the generator matrix.
+
+- **Occupancy probabilities:** The probability of occupying a particular state at a specified time is different from the probability of remaining continuously in that state throughout an interval. This distinction is important when interpreting the behaviour of a Markov jump process.
+
+- **Jump chains:** By observing the process only at its transition times, we obtain a discrete-time Markov chain that describes the sequence of visited states, independently of the time spent in each state.
+
+- **Expected time to reach a state:** The expected time required to reach a particular state can be determined using the transition intensities and the resulting system of equations for the expected hitting times.
+
+- **Estimation of transition rates:** Transition rates can be estimated by comparing the number of observed transitions out of a state with the total time spent in that state. A more complete statistical treatment of estimation is developed in Survival Analysis.
+
+### Time-Inhomogeneous Markov Jump Processes
+
+Throughout this chapter, we have mainly considered **time-homogeneous Markov jump processes**, for which the transition intensities are constant over time. In practice, however, transition rates may change with time.
+
+For example, the rate of becoming ill or dying generally depends on the age of an individual. Similarly, the rate at which an insurance policyholder changes status may depend on the duration of the policy or the time elapsed since entering a particular state.
+
+To accommodate such situations, we can extend the model by allowing the transition intensities to depend explicitly on time. In this case, we write
+
+$$
+q_{ij}(t), \qquad i\ne j,
+$$
+
+for the instantaneous transition intensity from state $i$ to state $j$ at time $t$. The diagonal elements of the generator matrix are defined by
+
+$$
+q_{ii}(t)=-\sum_{j\ne i}q_{ij}(t).
+$$
+
+The resulting generator matrix, denoted by $Q(t)$, is now a function of time rather than a constant matrix.
+
+The transition probabilities also depend on the starting time and the length of the observation interval. In general, we write
+
+$$
+p_{ij}(s,t)
+=
+\Pr(X(t)=j\mid X(s)=i),
+\qquad s\le t.
+$$
+
+Unlike the time-homogeneous case, these probabilities cannot generally be expressed as a function of the time difference $t-s$ alone.
+
+The time-inhomogeneous model provides a more flexible framework for applications in which transition rates vary over time. The time-homogeneous model developed in this chapter can be regarded as a special case in which
+
+$$
+Q(t)=Q
+$$
+
+for all $t$.
+
+These extensions are useful in more advanced applications, particularly in actuarial models where transition rates depend on age, calendar time, or duration in a particular state.

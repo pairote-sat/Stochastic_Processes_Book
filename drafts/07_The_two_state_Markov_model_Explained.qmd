@@ -1,0 +1,573 @@
+---
+title: "Explained: Two-State Markov Models"
+---
+
+
+## Summary of Probability Calculations for the Two-State Markov Model
+
+### 1. Basic survival and death probabilities
+
+Let $T_x$ denote the future lifetime of a life aged $x$.
+
+| Probability required | Formula |
+|---|---|
+| Survive for $t$ years | ${}_tp_x=P(T_x>t)$ |
+| Die within $t$ years | ${}_tq_x=P(T_x\leq t)=1-{}_tp_x$ |
+| Survive beyond $t$ years | ${}_tp_x=1-{}_tq_x$ |
+| Die after $t$ years | $P(T_x>t)={}_tp_x$ |
+
+The fundamental relationship is
+
+$$
+\boxed{{}_tp_x+{}_tq_x=1.}
+$$
+
+### 2. Probabilities involving two different time periods
+
+| Probability required | Formula |
+|---|---|
+| Survive for $s$ years, then survive for another $t$ years | ${}_sp_x\,{}_tp_{x+s}={}_{s+t}p_x$ |
+| Survive for $s$ years, then die within the following $t$ years | ${}_sp_x\,{}_tq_{x+s}$ |
+| Survive for $s$ years and die between $s$ and $s+t$ years | ${}_sp_x-{}_{s+t}p_x$ |
+| Die between $s$ and $s+t$ years, conditional on surviving $s$ years | ${}_tq_{x+s}$ |
+| Survive for another $t$ years, given survival for $s$ years | ${}_tp_{x+s}$ |
+| Die within the next $t$ years, given survival for $s$ years | ${}_tq_{x+s}$ |
+
+In particular,
+
+$$
+\boxed{
+{}_sp_x\,{}_tq_{x+s}
+={}_sp_x-{}_{s+t}p_x.
+}
+$$
+
+### 3. Probabilities involving several time intervals
+
+| Probability required | Formula |
+|---|---|
+| Survive successively for $t_1$ and $t_2$ years | ${}_{t_1}p_x\,{}_{t_2}p_{x+t_1}$ |
+| Survive successively for $t_1,\ldots,t_n$ years | $\displaystyle\prod_{i=1}^n {}_{t_i}p_{x+\sum_{j=1}^{i-1}t_j}$ |
+| Survive for $s$ years, then die within the following $t$ years | ${}_sp_x\,{}_tq_{x+s}$ |
+| Die within $t$ years | ${}_tq_x$ |
+
+### 4. Probabilities under different forces of mortality
+
+For a time-varying force of mortality $\mu_{x+t}$,
+
+$$
+{}_tp_x=
+\exp\left(-\int_0^t\mu_{x+s}\,ds\right),
+$$
+
+and
+
+$$
+{}_tq_x=1-{}_tp_x.
+$$
+
+For a constant force of mortality $\mu$,
+
+$$
+\boxed{
+{}_tp_x=e^{-\mu t},
+\qquad
+{}_tq_x=1-e^{-\mu t}.
+}
+$$
+
+For a piecewise constant force of mortality,
+
+$$
+{}_tp_x=
+\exp\left(-\sum_{i=1}^{n}\mu_i\Delta t_i\right),
+$$
+
+where $\mu_i$ is the force of mortality in the $i$th interval and $\Delta t_i$ is the time spent in that interval.
+
+### 5. Probabilities involving two independent lives
+
+Suppose lives A and B have independent future lifetimes.
+
+| Probability required | Formula |
+|---|---|
+| Both lives survive $t$ years | ${}_tp_A\,{}_tp_B$ |
+| Both lives die within $t$ years | ${}_tq_A\,{}_tq_B$ |
+| Exactly one life dies within $t$ years | ${}_tq_A\,{}_tp_B+{}_tp_A\,{}_tq_B$ |
+| At least one life dies within $t$ years | $1-{}_tp_A\,{}_tp_B$ |
+| At least one life survives $t$ years | $1-{}_tq_A\,{}_tq_B$ |
+| A dies and B survives | ${}_tq_A\,{}_tp_B$ |
+| A survives and B dies | ${}_tp_A\,{}_tq_B$ |
+
+For example,
+
+$$
+\boxed{
+P(A\text{ dies}\mid\text{at least one dies})
+=
+\frac{{}_tq_A}
+{1-{}_tp_A\,{}_tp_B}.
+}
+$$
+
+### 6. Summary of probability calculations in Worked Examples 1–10
+
+| Worked example | Probability calculation | Formula |
+|---|---|---|
+| 1 | Survive for 5 years | ${}_5p_{60}$ |
+| 1 | Die within 3 years | ${}_3q_{60}$ |
+| 1 | Survive another 3 years, given survival to age 65 | ${}_3p_{65}$ |
+| 1 | Survive 5 years, then die within 3 years | ${}_5p_{60}\,{}_3q_{65}$ |
+| 2 | Survive to age 55 | ${}_5p_{50}$ |
+| 2 | Survive to age 60 | ${}_{10}p_{50}$ |
+| 2 | Survive 5 years, then die within 5 years | ${}_5p_{50}\,{}_5q_{55}$ |
+| 2 | Survive another 3 years from age 57 | ${}_3p_{57}$ |
+| 3 | Survive from age 65 to 67 | ${}_2p_{65}$ |
+| 4 | Individual life dies within one year | ${}_1q_{70}$ |
+| 5 | Individual life dies within one year | ${}_1q_{75}$ |
+| 6 | Survive for 5 years under varying mortality | ${}_5p_{60}$ |
+| 6 | Survive 2 years, then die within 3 years | ${}_2p_{60}\,{}_3q_{62}$ |
+| 7 | Median future lifetime | Solve ${}_tp_{55}=0.5$ |
+| 7 | 90th percentile of future lifetime | Solve ${}_tp_{55}=0.1$ |
+| 7 | Die between 10 and 20 years | ${}_{10}p_{55}-{}_{20}p_{55}$ |
+| 8 | Death benefit paid within 10 years | ${}_{10}q_{50}$ |
+| 9 | Survive from age 60.5 to 62 | ${}_{1.5}p_{60.5}$ |
+| 10 | Both lives survive 5 years | ${}_5p_A\,{}_5p_B$ |
+| 10 | Exactly one life dies | ${}_5q_A\,{}_5p_B+{}_5p_A\,{}_5q_B$ |
+| 10 | At least one life dies | $1-{}_5p_A\,{}_5p_B$ |
+
+### 7. Key relationships for examination purposes
+
+**Complementary probabilities**
+
+$$
+{}_tp_x+{}_tq_x=1.
+$$
+
+**Survival over successive periods**
+
+$$
+{}_{s+t}p_x={}_sp_x\,{}_tp_{x+s}.
+$$
+
+**Conditional survival probability**
+
+$$
+P(T_x>s+t\mid T_x>s)
+={}_tp_{x+s}.
+$$
+
+**Survival followed by death**
+
+$$
+P(s<T_x\leq s+t)
+={}_sp_x\,{}_tq_{x+s}
+={}_sp_x-{}_{s+t}p_x.
+$$
+
+**Independent lives**
+
+$$
+P(\text{at least one survives})
+=1-{}_tq_A\,{}_tq_B.
+$$
+
+**Important examination reminder**
+
+Always distinguish between unconditional and conditional probabilities.
+
+- Probability of surviving 5 years and then dying within the next 3 years:
+
+$$
+{}_5p_x\,{}_3q_{x+5}.
+$$
+
+- Probability of dying within the next 3 years, given survival for the first 5 years:
+
+$$
+{}_3q_{x+5}.
+$$
+
+The first probability is measured from the original starting age, whereas the second is conditional on survival to the later age.
+
+
+---
+
+## Why Do We Define the Force of Mortality Using Probability Rather Than the Number of Deaths?
+
+An alternative way to define a rate is to consider the number of events occurring within a given period divided by the length of that period.
+
+For example, if 20 deaths occur in a population over one year, the crude death rate is
+
+$$
+\frac{\text{Number of deaths}}{\text{Observation time}}
+=
+\frac{20}{1}
+=
+20 \text{ deaths per year}.
+$$
+
+This approach is appropriate when we are interested in the total number of deaths in a population.
+
+However, in the two-state Markov model, we are interested in the mortality of an individual life. We want to describe the transition of that individual from the Alive state to the Dead state.
+
+For an individual life, the number of deaths within a short interval is not a useful quantity for defining the mortality rate. The individual either dies or survives during that interval. Consequently, the number of deaths is a random variable that can only take the values 0 or 1.
+
+We therefore describe the event using its probability.
+
+Suppose a person is alive at age \(x\). The probability of death within the next \(h\) years is
+
+$$
+{}_hq_x=\Pr(T_x\leq h).
+$$
+
+Dividing by the interval length gives
+
+$$
+\frac{{}_hq_x}{h}.
+$$
+
+Taking the limit as \(h\) approaches zero gives the force of mortality:
+
+$$
+\boxed{
+\mu_x=\lim_{h\to0^+}\frac{{}_hq_x}{h}.
+}
+$$
+
+### Connection with the Number of Deaths in a Population
+
+Suppose we observe \(n\) independent lives, all aged \(x\), over a short interval of length \(h\).
+
+Let \(D(h)\) denote the number of deaths during this interval. Under the same mortality assumption for all lives,
+
+$$
+D(h)\sim\operatorname{Binomial}(n,{}_hq_x).
+$$
+
+Hence,
+
+$$
+E[D(h)]=n\,{}_hq_x.
+$$
+
+The expected number of deaths per unit of time is therefore
+
+$$
+\frac{E[D(h)]}{h}
+=
+n\frac{{}_hq_x}{h}.
+$$
+
+As \(h\to0^+\),
+
+$$
+\lim_{h\to0^+}\frac{E[D(h)]}{h}
+=
+n\mu_x.
+$$
+
+Thus, the population-level expected death rate is \(n\mu_x\), while \(\mu_x\) is the mortality rate per individual life.
+
+**The distinction is important:**
+
+- The number of deaths per unit of time measures the frequency of deaths in a population.
+- The force of mortality measures the instantaneous mortality rate for an individual who is alive at the beginning of the interval.
+
+Both approaches are mathematically valid. They address different modelling objectives.
+
+
+
+---
+
+
+
+## Comparison with the Definition of a Poisson Process
+
+The definition of the force of mortality is closely related to the definition of a Poisson process. Both models describe the occurrence of events over a short time interval \(dt\).
+
+### 1. Poisson process: Counting the number of events
+
+Let \(N_t\) denote the number of events occurring up to time \(t\) in a Poisson process with constant intensity \(\lambda\).
+
+For a small time interval \(dt\), the probability of observing one event is
+
+$$
+\Pr(N_{t+dt}-N_t=1)
+=
+\lambda\,dt+o(dt).
+$$
+
+The probability of observing no events is
+
+$$
+\Pr(N_{t+dt}-N_t=0)
+=
+1-\lambda\,dt+o(dt),
+$$
+
+while the probability of observing two or more events is
+
+$$
+\Pr(N_{t+dt}-N_t\geq 2)
+=
+o(dt).
+$$
+
+Here, \(o(dt)\) denotes a quantity that becomes negligible relative to \(dt\) as \(dt\to0^+\).
+
+The parameter \(\lambda\) is the event rate per unit of time.
+
+### 2. Two-state Markov model: Describing the transition of an individual life
+
+In the two-state Markov model, an individual life can occupy either the Alive state or the Dead state.
+
+Suppose the individual is alive at age \(x+t\), and let \(\mu_{x+t}\) denote the force of mortality at that age.
+
+Over a small time interval \(dt\), the transition probabilities are
+
+$$
+\Pr(\text{Alive at }x+t+dt
+\mid \text{Alive at }x+t)
+=
+1-\mu_{x+t}dt+o(dt),
+$$
+
+and
+
+$$
+\Pr(\text{Dead at }x+t+dt
+\mid \text{Alive at }x+t)
+=
+\mu_{x+t}dt+o(dt).
+$$
+
+Since death is an absorbing state,
+
+$$
+\Pr(\text{Dead at }x+t+dt
+\mid \text{Dead at }x+t)=1.
+$$
+
+### 3. Comparison of the two models
+
+| Poisson process | Two-state Markov model |
+|---|---|
+| Counts the number of events | Describes the state of an individual life |
+| Event intensity: \(\lambda\) | Force of mortality: \(\mu_{x+t}\) |
+| One event: \(\lambda dt+o(dt)\) | Alive to Dead: \(\mu_{x+t}dt+o(dt)\) |
+| No event: \(1-\lambda dt+o(dt)\) | Remains Alive: \(1-\mu_{x+t}dt+o(dt)\) |
+| Two or more events: \(o(dt)\) | A second death is impossible |
+
+### 4. Why are the two definitions similar?
+
+The similarity arises because both models use an intensity to describe the instantaneous occurrence of an event.
+
+For a Poisson process, \(\lambda\) measures the instantaneous rate of event occurrence.
+
+For the two-state Markov model, \(\mu_{x+t}\) measures the instantaneous rate of transition from Alive to Dead, conditional on the individual being alive at that time.
+
+However, there is an important difference:
+
+- In a Poisson process, several events can occur over a sufficiently long period. The process continues after each event.
+- In the two-state mortality model, death can occur only once. Once the individual enters the Dead state, no further transition is possible.
+
+Therefore, the force of mortality can be interpreted as the transition intensity of a two-state Markov model, in much the same way that \(\lambda\) is the event intensity of a Poisson process.
+
+
+
+---
+
+
+## Derivation of the Fisher Information
+
+### 1. Statistical model
+
+Suppose we observe a group of lives under a constant force of mortality, denoted by \(\mu_0\).
+
+Let
+
+- \(D\) denote the total number of deaths observed;
+- \(V\) denote the total exposure to risk, measured in life-years;
+- \(\mu_0\) denote the constant force of mortality.
+
+Under the constant force of mortality assumption, the number of deaths, conditional on the total exposure \(V\), follows a Poisson distribution:
+
+$$
+D\mid V\sim\operatorname{Poisson}(\mu_0 V).
+$$
+
+Thus, the likelihood function is
+
+$$
+L(\mu_0)
+=
+\frac{(\mu_0 V)^D e^{-\mu_0 V}}{D!}.
+$$
+
+Taking logarithms gives the log-likelihood:
+
+$$
+\ell(\mu_0)
+=
+D\log\mu_0+D\log V-\mu_0 V-\log(D!).
+$$
+
+### 2. First derivative of the log-likelihood
+
+Differentiating with respect to \(\mu_0\),
+
+$$
+\frac{\partial\ell}{\partial\mu_0}
+=
+\frac{D}{\mu_0}-V.
+$$
+
+Setting this equal to zero gives the maximum likelihood estimator:
+
+$$
+\boxed{
+\widehat{\mu}_0=\frac{D}{V}.
+}
+$$
+
+### 3. Second derivative of the log-likelihood
+
+Differentiating again,
+
+$$
+\frac{\partial^2\ell}{\partial\mu_0^2}
+=
+-\frac{D}{\mu_0^2}.
+$$
+
+The Fisher information is defined as the negative expected value of the second derivative of the log-likelihood:
+
+$$
+I(\mu_0)
+=
+-\mathrm{E}\left[
+\frac{\partial^2\ell}{\partial\mu_0^2}
+\right].
+$$
+
+Substituting the second derivative gives
+
+$$
+\begin{aligned}
+I(\mu_0)
+&=
+-\mathrm{E}\left[-\frac{D}{\mu_0^2}\right]\\
+&=
+\frac{\mathrm{E}[D]}{\mu_0^2}.
+\end{aligned}
+$$
+
+Therefore,
+
+$$
+\boxed{
+I(\mu_0)=\frac{\mathrm{E}[D]}{\mu_0^2}.
+}
+$$
+
+### 4. Expressing the Fisher information in terms of exposure
+
+Under the assumed Poisson model,
+
+$$
+\mathrm{E}[D\mid V]=\mu_0 V.
+$$
+
+If \(V\) is fixed, this gives
+
+$$
+\mathrm{E}[D]=\mu_0 V.
+$$
+
+Consequently,
+
+$$
+I(\mu_0)
+=
+\frac{\mu_0 V}{\mu_0^2}
+=
+\boxed{\frac{V}{\mu_0}}.
+$$
+
+If \(V\) is random, taking expectations gives
+
+$$
+\mathrm{E}[D]=\mu_0\mathrm{E}[V],
+$$
+
+and hence
+
+$$
+\boxed{
+I(\mu_0)=\frac{\mathrm{E}[V]}{\mu_0}.
+}
+$$
+
+## 5. Connection with the Variance of the Estimator
+
+The Fisher information can be used to determine the lower bound for the variance of an unbiased estimator through the Cramér–Rao inequality.
+
+For an unbiased estimator \(\widehat{\mu}_0\), the Cramér–Rao lower bound states that
+
+$$
+\operatorname{Var}(\widehat{\mu}_0)
+\geq \frac{1}{I(\mu_0)}.
+$$
+
+For fixed total exposure \(V\), we have
+
+$$
+I(\mu_0)=\frac{V}{\mu_0}.
+$$
+
+Therefore,
+
+$$
+\boxed{
+\operatorname{Var}(\widehat{\mu}_0)
+\geq \frac{\mu_0}{V}.
+}
+$$
+
+In fact, under the Poisson model, the maximum likelihood estimator is
+
+$$
+\widehat{\mu}_0=\frac{D}{V}.
+$$
+
+Since \(D\sim\operatorname{Poisson}(\mu_0 V)\), we have
+
+$$
+\begin{aligned}
+\operatorname{E}[\widehat{\mu}_0]
+&=\frac{\operatorname{E}[D]}{V}\\
+&=\frac{\mu_0 V}{V}\\
+&=\mu_0,
+\end{aligned}
+$$
+
+so the estimator is unbiased.
+
+Its variance is
+
+$$
+\begin{aligned}
+\operatorname{Var}(\widehat{\mu}_0)
+&=\operatorname{Var}\left(\frac{D}{V}\right)\\
+&=\frac{\operatorname{Var}(D)}{V^2}\\
+&=\frac{\mu_0 V}{V^2}\\
+&=\boxed{\frac{\mu_0}{V}}.
+\end{aligned}
+$$
+
+Thus, the variance of the maximum likelihood estimator attains the Cramér–Rao lower bound.
+
+This means that \(\widehat{\mu}_0=D/V\) is an efficient estimator under the assumed Poisson model.
+
+**Interpretation:** The variance decreases as the total exposure \(V\) increases. Therefore, observing more life-years of exposure provides more information about the underlying force of mortality and leads to a more precise estimate.

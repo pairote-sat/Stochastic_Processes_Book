@@ -1,0 +1,506 @@
+---
+title: "07_Slides_The_Two_state_Markov_model_Solutions"
+---
+
+
+```{r}
+# Worked Example 1: Survival Probabilities
+mu <- 0.025
+
+ans1 <- exp(-mu * 5)
+ans2 <- 1 - exp(-mu * 3)
+ans3 <- exp(-mu * (8 - 5))
+ans4 <- exp(-mu * 5) - exp(-mu * 8)
+```
+
+## Worked Example 1: Survival Probabilities
+
+An insurance company models the mortality of a group of lives aged 60 using a two-state Markov model. The force of mortality is assumed to be constant at 0.025 per annum.
+
+Calculate:
+
+1. The probability that a life aged 60 survives for five years.
+2. The probability that the life dies within the next three years.
+3. The probability that a life aged 60 survives for eight years, given that the life has already survived for five years.
+4. The probability that the life dies between ages 65 and 68.
+
+
+## Solution: Worked Example 1
+
+Let $\mu=0.025$ denote the constant force of mortality.
+
+Under the two-state Markov model, the probability of surviving for $t$ years is
+
+$$
+{}_tp_{60}=e^{-\mu t}.
+$$
+
+**1.** The probability that a life aged 60 survives for five years is
+
+$$
+{}_5p_{60}=e^{-0.025(5)}
+=\texttt{`r round(ans1, 4)`}.
+$$
+
+**2.** The probability that the life dies within the next three years is
+
+$$
+{}_3q_{60}=1-{}_3p_{60}
+=1-e^{-0.025(3)}
+=\texttt{`r round(ans2, 4)`}.
+$$
+
+
+**3.** We want to calculate the probability that a life aged 60 survives for eight years, given that the life has already survived for five years.
+
+Let \(T_{60}\) denote the future lifetime of a life aged 60. The required conditional probability is
+
+$$
+P(T_{60}>8\mid T_{60}>5).
+$$
+
+Since survival to eight years implies survival to five years, we can write
+
+$$
+\begin{aligned}
+P(T_{60}>8\mid T_{60}>5)
+&=\frac{P(T_{60}>8)}{P(T_{60}>5)}\\
+&=\frac{{}_8p_{60}}{{}_5p_{60}}.
+\end{aligned}
+$$
+
+Alternatively, using the Markov property, conditional on the life being alive at age 65, its future survival probability depends only on its current state (Alive), rather than on its previous history.
+
+Thus, the required probability is the three-year transition probability from the Alive state to the Alive state:
+
+$$
+\begin{aligned}
+P(T_{60}>8\mid T_{60}>5)
+&=P(X(8)=1\mid X(5)=1)\\
+&=p_{11}(8-5)\\
+&={}_3p_{65}.
+\end{aligned}
+$$
+
+Under the constant force of mortality assumption,
+
+$$
+\begin{aligned}
+{}_3p_{65}
+&=e^{-0.025(3)}\\
+&=\texttt{`r round(ans3, 4)`}.
+\end{aligned}
+$$
+
+Hence, the probability that the life survives for eight years, given survival to age 65, is \(\texttt{`r round(ans3, 4)`}\).
+
+
+
+
+**3.** By the Markov property, the probability of surviving for another three years, given survival to age 65, is
+
+$$
+{}_3p_{65}=e^{-0.025(3)}
+=\texttt{`r round(ans3, 4)`}.
+$$
+
+**4.** The probability that the life dies between ages 65 and 68 is
+
+$$
+\begin{aligned}
+P(5<T_{60}\leq 8)
+&={}_5p_{60}-{}_8p_{60}\\
+&=e^{-0.025(5)}-e^{-0.025(8)}\\
+&=\texttt{`r round(ans4, 4)`}.
+\end{aligned}
+$$
+
+
+```{r}
+# Worked Example 2: Piecewise Constant Force of Mortality
+mu1 <- 0.01
+mu2 <- 0.02
+
+ans1 <- exp(-mu1 * 5)
+ans2 <- exp(-(mu1 * 5 + mu2 * 5))
+ans3 <- exp(-mu1 * 5) * (1 - exp(-mu2 * 5))
+ans4 <- exp(-mu2 * 3)
+```
+
+## Worked Example 2: Piecewise Constant Force of Mortality
+
+A life aged 50 is subject to the following forces of mortality:
+
+$$
+\mu_{50+t}=
+\begin{cases}
+0.01, & 0\leq t<5,\\
+0.02, & 5\leq t<10.
+\end{cases}
+$$
+
+Calculate:
+
+1. The probability that the life survives to age 55.
+2. The probability that the life survives to age 60.
+3. The probability that the life survives to age 55 and then dies within the following five years.
+4. The probability that the life survives for another three years, given that the life is currently aged 57.
+
+
+## Solution: Worked Example 2
+
+**1.** The probability that the life survives to age 55 is
+
+$$
+{}_5p_{50}
+=e^{-0.01(5)}
+=\texttt{`r round(ans1, 4)`}.
+$$
+
+**2.** The probability that the life survives to age 60 is
+
+$$
+\begin{aligned}
+{}_{10}p_{50}
+&=\exp\left[-\int_0^{10}\mu_{50+t}\,dt\right]\\
+&=e^{-[0.01(5)+0.02(5)]}\\
+&=\texttt{`r round(ans2, 4)`}.
+\end{aligned}
+$$
+
+**3.** The probability that the life survives to age 55 and then dies within the following five years is
+
+$$
+\begin{aligned}
+{}_5p_{50}\,{}_5q_{55}
+&=e^{-0.01(5)}\left(1-e^{-0.02(5)}\right)\\
+&=\texttt{`r round(ans3, 4)`}.
+\end{aligned}
+$$
+
+**4.** Given that the life is currently aged 57, the force of mortality remains constant at 0.02 per annum over the next three years. Hence, the probability of survival for another three years is
+
+$$
+{}_3p_{57}
+=e^{-0.02(3)}
+=\texttt{`r round(ans4, 4)`}.
+$$
+
+
+
+```{r}
+# Worked Example 3: Estimating the Force of Mortality
+
+l65 <- 10000
+l66 <- 9850
+l67 <- 9700
+
+ans1 <- -log(l66 / l65)
+ans2 <- -log(l67 / l66)
+
+ans3 <- 1 - l66 / l65
+ans4 <- 1 - l67 / l66
+
+ans5 <- l67 / l65
+```
+
+## Worked Example 3: Estimating the Force of Mortality
+
+A life office observes the following life-table values:
+
+| Age | Number alive |
+|---|---:|
+| 65 | 10,000 |
+| 66 | 9,850 |
+| 67 | 9,700 |
+
+Assume that the force of mortality is constant within each year of age.
+
+Calculate:
+
+1. The estimated force of mortality between ages 65 and 66.
+2. The estimated force of mortality between ages 66 and 67.
+3. The corresponding one-year probabilities of death.
+4. The probability that a life aged 65 survives to age 67.
+
+
+## Solution: Worked Example 3
+
+Under the constant-force assumption, the one-year survival probability is
+
+$$
+p_x=e^{-\mu_x}.
+$$
+
+Therefore, the force of mortality can be estimated using
+
+$$
+\mu_x=-\ln(p_x).
+$$
+
+**1.** The estimated force of mortality between ages 65 and 66 is
+
+$$
+\begin{aligned}
+\hat{\mu}_{65}
+&=-\ln\left(\frac{l_{66}}{l_{65}}\right)\\
+&=-\ln\left(\frac{9,850}{10,000}\right)\\
+&=\texttt{`r round(ans1, 4)`}.
+\end{aligned}
+$$
+
+**2.** The estimated force of mortality between ages 66 and 67 is
+
+$$
+\begin{aligned}
+\hat{\mu}_{66}
+&=-\ln\left(\frac{l_{67}}{l_{66}}\right)\\
+&=-\ln\left(\frac{9,700}{9,850}\right)\\
+&=\texttt{`r round(ans2, 4)`}.
+\end{aligned}
+$$
+
+**3.** The corresponding one-year probabilities of death are
+
+$$
+\begin{aligned}
+\hat{q}_{65}
+&=1-\frac{l_{66}}{l_{65}}\\
+&=1-\frac{9,850}{10,000}\\
+&=\texttt{`r round(ans3, 4)`},
+\end{aligned}
+$$
+
+and
+
+$$
+\begin{aligned}
+\hat{q}_{66}
+&=1-\frac{l_{67}}{l_{66}}\\
+&=1-\frac{9,700}{9,850}\\
+&=\texttt{`r round(ans4, 4)`}.
+\end{aligned}
+$$
+
+**4.** The probability that a life aged 65 survives to age 67 is
+
+$$
+\begin{aligned}
+{}_2p_{65}
+&={}_1p_{65}\times{}_1p_{66}\\
+&=\frac{l_{66}}{l_{65}}\times\frac{l_{67}}{l_{66}}\\
+&=\frac{9,700}{10,000}\\
+&=\texttt{`r round(ans5, 4)`}.
+\end{aligned}
+$$
+
+
+
+```{r}
+# Worked Example 4: Number of Deaths in a Portfolio
+
+n <- 500
+mu <- 0.02
+t <- 1
+
+# Probability of death during one year
+q <- 1 - exp(-mu * t)
+
+# Expected number of deaths
+ans1 <- n * q
+
+# Poisson approximation
+lambda <- n * q
+
+ans2 <- ppois(11, lambda, lower.tail = FALSE)
+ans3 <- ppois(8, lambda)
+```
+
+## Worked Example 4: Number of Deaths in a Portfolio
+
+An insurance company observes a portfolio of 500 independent lives, all aged 70, over a one-year period.
+
+Assume that each life is subject to a constant force of mortality of 0.02 per annum.
+
+Calculate:
+
+1. The probability that an individual life dies during the year.
+2. The expected number of deaths during the year.
+3. The approximate probability that at least 12 deaths occur during the year, using a Poisson approximation.
+4. The approximate probability that no more than 8 deaths occur during the year, using a Poisson approximation.
+
+
+## Solution: Worked Example 4
+
+**1.** The probability that an individual life dies during the year is
+
+$$
+\begin{aligned}
+q_{70}
+&=1-p_{70}\\
+&=1-e^{-0.02}\\
+&=\texttt{`r round(q, 4)`}.
+\end{aligned}
+$$
+
+**2.** Let $N$ denote the number of deaths during the year. Since the 500 lives are independent, $N$ follows a binomial distribution with parameters $n=500$ and $q_{70}$.
+
+The expected number of deaths is
+
+$$
+\begin{aligned}
+E[N]
+&=500q_{70}\\
+&=500(1-e^{-0.02})\\
+&=\texttt{`r round(ans1, 4)`}.
+\end{aligned}
+$$
+
+**3.** Using a Poisson approximation with parameter
+
+$$
+\lambda=500q_{70}=\texttt{`r round(lambda, 4)`},
+$$
+
+we obtain
+
+$$
+\begin{aligned}
+P(N\geq 12)
+&\approx 1-P(N\leq 11)\\
+&=1-\sum_{k=0}^{11}
+\frac{e^{-\lambda}\lambda^k}{k!}\\
+&=\texttt{`r round(ans2, 4)`}.
+\end{aligned}
+$$
+
+**4.** Similarly,
+
+$$
+\begin{aligned}
+P(N\leq 8)
+&\approx \sum_{k=0}^{8}
+\frac{e^{-\lambda}\lambda^k}{k!}\\
+&=\texttt{`r round(ans3, 4)`}.
+\end{aligned}
+$$
+
+
+```{r}
+# Worked Example 5: Maximum Likelihood Estimation
+n <- 200
+d <- 12
+t <- 1
+
+# Maximum likelihood estimate of the force of mortality
+mu_hat <- -log(1 - d / n)
+
+# Estimated survival probability over two years
+ans1 <- exp(-mu_hat * 2)
+
+# Estimated probability of death within six months
+ans2 <- 1 - exp(-mu_hat * 0.5)
+```
+
+## Worked Example 5: Maximum Likelihood Estimation of the Force of Mortality
+
+An insurance company observes 200 independent lives, all aged 75, over a period of one year. During this period, 12 lives die and the remaining lives survive to the end of the observation period.
+
+Assume that all lives are subject to the same constant force of mortality, $\mu$.
+
+Calculate:
+
+1. The likelihood function for $\mu$.
+2. The maximum likelihood estimator of $\mu$.
+3. The estimated probability that a life aged 75 survives for two years.
+4. The estimated probability that a life aged 75 dies within the next six months.
+
+
+## Solution: Worked Example 5
+
+Let $D$ denote the number of deaths during the one-year observation period.
+
+Under the two-state Markov model, the probability of death within one year is
+
+$$
+q_{75}=1-e^{-\mu}.
+$$
+
+Since the 200 lives are independent, $D$ follows a binomial distribution with parameters $n=200$ and $q_{75}$.
+
+**1.** The likelihood function is
+
+$$
+\begin{aligned}
+L(\mu)
+&=\binom{200}{12}
+(1-e^{-\mu})^{12}
+(e^{-\mu})^{188}\\
+&=\binom{200}{12}
+(1-e^{-\mu})^{12}
+e^{-188\mu}.
+\end{aligned}
+$$
+
+**2.** Taking logarithms, the log-likelihood function is
+
+$$
+\begin{aligned}
+\ell(\mu)
+&=\ln\binom{200}{12}
++12\ln(1-e^{-\mu})
+-188\mu.
+\end{aligned}
+$$
+
+Differentiating with respect to $\mu$ and equating to zero gives
+
+$$
+\begin{aligned}
+\frac{d\ell(\mu)}{d\mu}
+&=\frac{12e^{-\mu}}{1-e^{-\mu}}-188=0.
+\end{aligned}
+$$
+
+Rearranging,
+
+$$
+e^{-\hat{\mu}}=\frac{188}{200}.
+$$
+
+Hence, the maximum likelihood estimator is
+
+$$
+\begin{aligned}
+\hat{\mu}
+&=-\ln\left(\frac{188}{200}\right)\\
+&=\texttt{`r round(mu_hat, 4)`}.
+\end{aligned}
+$$
+
+
+
+
+
+**3.** Using the estimated force of mortality, the estimated probability that a life aged 75 survives for two years is
+
+$$
+\begin{aligned}
+{}_2\hat{p}_{75}
+&=e^{-2\hat{\mu}}\\
+&=\texttt{`r round(ans1, 4)`}.
+\end{aligned}
+$$
+
+**4.** The estimated probability that a life aged 75 dies within the next six months is
+
+$$
+\begin{aligned}
+{}_{0.5}\hat{q}_{75}
+&=1-e^{-0.5\hat{\mu}}\\
+&=\texttt{`r round(ans2, 4)`}.
+\end{aligned}
+$$
+
+
+

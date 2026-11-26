@@ -2,7 +2,7 @@
 title: "Chapter 3: Poisson Processes"
 ---
 
-## Chapter 3: Poisson Processes
+<!-- ## Chapter 3: Poisson Processes -->
 
 ### Learning Outcomes {.unnumbered}
 

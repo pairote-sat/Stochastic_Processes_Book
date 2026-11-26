@@ -1,0 +1,127 @@
+---
+title: "Untitled"
+---
+
+## The Jump Chain Associated with a Markov Jump Process
+
+A Markov jump process describes how a system moves between states over continuous time. It is useful to distinguish between two aspects of its behaviour:
+
+1. **The sequence of states visited:** which state the process moves to after each jump.
+2. **The time spent in each state:** how long the process remains in a state before moving to another state.
+
+The *jump chain* describes only the first aspect. It records the successive states visited by the Markov jump process, ignoring the time spent in each state.
+
+Let $X(t)$ be a Markov jump process, and define
+
+$$
+J_0=X(0), \qquad J_1, J_2,\ldots
+$$
+
+where $J_n$ denotes the state occupied immediately after the $n$-th jump. The sequence $\{J_n\}_{n\geq 0}$ is called the **jump chain**.
+
+### The special case of an absorbing state
+
+For an ordinary Markov chain, the chain evolves at discrete time steps. Even if it enters an absorbing state, the chain continues to be defined at subsequent time steps. It simply remains in that state.
+
+For example, suppose the state space is
+
+$$
+\mathcal{S}=\{1,2,3\},
+$$
+
+where state 3 is absorbing. A possible sequence of states is
+
+$$
+1\longrightarrow 2\longrightarrow 3.
+$$
+
+Once the chain enters state 3, it remains there. We can write its subsequent states as
+
+$$
+J_0=1,\quad J_1=2,\quad J_2=3,\quad
+J_3=3,\quad J_4=3,\ldots
+$$
+
+This is the usual way of representing an absorbing state in a discrete-time Markov chain.
+
+However, there is a subtle difference when we consider the jump chain associated with a continuous-time Markov jump process.
+
+Suppose the process enters state 3 at time $T$. Since state 3 is absorbing, the original Markov jump process remains there forever:
+
+$$
+X(t)=3,\qquad t\geq T.
+$$
+
+There are no further jumps. Consequently, there are no further actual transitions to record in the jump chain.
+
+In other words, the jump chain has no further steps after entering state 3. This is what the statement means by saying that **time stops for the jump chain**. It does not mean that calendar time stops or that the original process ceases to exist. It means that the jump counter no longer increases because no further jumps occur.
+
+### Why do we allow the jump chain to remain in the absorbing state?
+
+To work with the jump chain within the standard framework of discrete-time Markov chains, we adopt a convenient mathematical convention.
+
+After the jump chain enters an absorbing state, we define all its subsequent values to be equal to that state:
+
+$$
+J_n=3,\qquad n\geq 2.
+$$
+
+Equivalently, we assign the transition probability
+
+$$
+p_{33}=1.
+$$
+
+This means that the jump chain makes a transition from state 3 to state 3 at every subsequent discrete step.
+
+These are not actual jumps of the original continuous-time process. They are artificial self-transitions introduced solely to maintain the usual discrete-time Markov chain representation.
+
+Thus, the transition matrix of the jump chain can be written in the standard form, with each row summing to one, including rows corresponding to absorbing states.
+
+**Key distinction:** The original Markov jump process stops making jumps after entering an absorbing state, whereas its associated jump chain is conventionally allowed to remain in that state at all subsequent discrete steps. This convention does not change the behaviour of the original process.
+
+
+## Connection with First-Step Analysis for Absorption Probabilities in a DTMC
+
+Yes. The method is exactly the same as applying **first-step analysis to absorption probabilities in a discrete-time Markov chain (DTMC)**.
+
+The key point is that the jump chain of a Markov jump process is itself a DTMC. We can therefore use the familiar first-step analysis.
+
+For example, let $h_i$ be the probability of reaching Death before returning to Healthy, starting from state $i$. Conditioning on the first transition gives
+
+$$
+h_i=\sum_j p_{ij}^*h_j,
+$$
+
+where $p_{ij}^*$ is the transition probability of the jump chain.
+
+For the HSTD model, the boundary conditions are
+
+$$
+h_H=0,\qquad h_D=1.
+$$
+
+Since the only possible next state from T is D,
+
+$$
+h_T=1.
+$$
+
+Thus, applying first-step analysis in state S gives
+
+$$
+\begin{aligned}
+h_S
+&=p_{SH}^*h_H+p_{ST}^*h_T+p_{SD}^*h_D\\
+&=p_{ST}^*+p_{SD}^*.
+\end{aligned}
+$$
+
+This is precisely the same approach used to calculate absorption probabilities in a DTMC.
+
+### Difference in interpretation
+
+- In a DTMC, first-step analysis is applied directly to its one-step transition probabilities.
+- In a Markov jump process, we first construct the associated jump chain, whose transition probabilities describe the state reached at the next jump. We then apply the same DTMC techniques.
+
+The holding times do not enter this particular calculation because we are interested in *which state is reached first*, rather than *when it is reached*.

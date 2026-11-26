@@ -1,5 +1,8 @@
 ---
 title: "05 Slides Worked Examples Solutions"
+format:
+  html:
+    number-sections: false
 ---
 
 ```{r}
@@ -209,11 +212,12 @@ Therefore, the required probability is `r round(ans7, 4)`.
 
 ## Worked Example 8: Insurance Claims
 
-Insurance claims arrive according to a Poisson process with rate 5 claims per day.
+Insurance claims arrive according to a Poisson process with rate $\lambda=5$ claims per day.
 
 1. Calculate the probability that at least two claims are reported on a given day.
 2. Calculate the probability that another claim is reported within the next hour after a claim has just been reported.
-3. Calculate the expected time until the next claim, given that no claims have been reported during the previous two days.
+3. Calculate the expected **additional waiting time** until the next claim, given that no claims have been reported during the previous two days.
+4. Calculate the expected **total time from the beginning of the observation period** until the first claim, given that no claims have been reported during the first two days.
 
 ## Solution: Worked Example 8
 
@@ -224,25 +228,79 @@ lambda8 <- 5
 ans8_1 <- 1 - ppois(1, lambda8)
 ans8_2 <- 1 - exp(-lambda8 / 24)
 ans8_3 <- 1 / lambda8
+ans8_4 <- 2 + 1 / lambda8
 ```
 
-1\. Let $N(1)$ denote the number of claims reported during a day. Then $N(1) \sim \operatorname{Poisson}(5)$, so
+**1. Probability of at least two claims**
 
-$$\begin{aligned} P(N(1) \geq 2) &= 1 - P(N(1) \leq 1) \\ &= 1 - e^{-5}(1 + 5). \end{aligned}$$
+Let $N(1)$ denote the number of claims reported during a day. Then $N(1) \sim \operatorname{Poisson}(5)$, so
+
+$$
+\begin{aligned}
+P(N(1) \geq 2)
+&= 1-P(N(1)\leq 1)\\
+&= 1-e^{-5}(1+5).
+\end{aligned}
+$$
 
 Therefore, the probability is `r round(ans8_1, 4)`.
 
-2\. By the exponential distribution of inter-arrival times, the probability that another claim arrives within one hour ($1/24$ of a day) is
+**2. Probability of another claim within one hour**
 
-$$\begin{aligned} P(T \leq 1/24) &= 1 - e^{-5 / 24} \\ &\approx 1 - e^{-0.2083}. \end{aligned}$$
+By the exponential distribution of inter-arrival times, the probability that another claim arrives within one hour ($1/24$ of a day) is
+
+$$
+\begin{aligned}
+P(T\leq 1/24)
+&=1-e^{-5/24}\\
+&\approx 1-e^{-0.2083}.
+\end{aligned}
+$$
 
 Therefore, the probability is `r round(ans8_2, 4)`.
 
-3\. The exponential distribution has the memoryless property. Thus, the expected time until the next claim is unchanged by the absence of claims during the previous two days:
+**3. Expected additional waiting time**
 
-$$E[T] = \frac{1}{\lambda} = \frac{1}{5}\text{ days.}$$
+Let $T$ denote the time from the beginning of the observation period until the first claim. We require
 
-Therefore, the expected waiting time is `r round(ans8_3 * 24, 2)` hours.
+$$
+\mathrm{E}[T-2\mid T>2].
+$$
+
+The exponential distribution has the memoryless property. Hence,
+
+$$
+\begin{aligned}
+\mathrm{E}[T-2\mid T>2]
+&=\mathrm{E}[T]\\
+&=\frac{1}{\lambda}\\
+&=\frac{1}{5}\text{ days}.
+\end{aligned}
+$$
+
+Therefore, the expected additional waiting time is `r round(ans8_3 * 24, 2)` hours.
+
+**4. Expected total time until the first claim**
+
+Using the same notation, we require
+
+$$
+\mathrm{E}[T\mid T>2].
+$$
+
+Since the first two days have already elapsed, the expected total time is the sum of the elapsed time and the expected additional waiting time:
+
+$$
+\begin{aligned}
+\mathrm{E}[T\mid T>2]
+&=2+\mathrm{E}[T-2\mid T>2]\\
+&=2+\frac{1}{\lambda}\\
+&=2+\frac{1}{5}\\
+&=2.2\text{ days}.
+\end{aligned}
+$$
+
+Therefore, the expected total time until the first claim is `r round(ans8_4, 2)` days.
 
 ## Worked Example 9: Time Until the Second Arrival
 

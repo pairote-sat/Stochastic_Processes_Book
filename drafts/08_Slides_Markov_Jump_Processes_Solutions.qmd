@@ -1,0 +1,910 @@
+---
+title: "08_Slides_Markov_Jump_Processes_Worked_Example_Solution"
+---
+
+## Worked Example 1: A Four-State Health Model
+
+Consider a continuous-time Markov model for the health status of an individual, consisting of the following four states:
+
+- Healthy (H);
+- Sick (S);
+- Terminally Ill (T);
+- Dead (D), an absorbing state.
+
+The possible transitions between states and their corresponding transition intensities are shown in the transition-rate diagram below. All transition intensities are expressed on a yearly basis.
+
+![Transition-rate diagram of the H–S–T–D model]
+
+**Questions**
+
+1. Write down the generator matrix $Q$ for this four-state continuous-time Markov model.
+2. Calculate the expected holding time in state H.
+3. Calculate the probability that an individual in state S moves directly to state D when leaving state S.
+4. Calculate the expected future lifetime of an individual who is initially in state H.
+
+
+## Solution: Worked Example 1 — A Four-State Health Model
+
+### 1. Generator Matrix
+
+The generator matrix $Q$ contains the transition intensities between states. Its off-diagonal elements are the transition intensities, while each diagonal element is the negative sum of the transition intensities out of that state.
+
+Using the state ordering $(H,S,T,D)$, we obtain
+
+$$
+Q=
+\begin{pmatrix}
+-(\lambda_{HS}+\mu_H) & \lambda_{HS} & 0 & \mu_H\\
+\lambda_{SH} & -(\lambda_{SH}+\lambda_{ST}+\mu_S) & \lambda_{ST} & \mu_S\\
+0 & 0 & -\mu_T & \mu_T\\
+0 & 0 & 0 & 0
+\end{pmatrix}.
+$$
+
+The last row consists entirely of zeros because Death is an absorbing state.
+
+### 2. Expected Holding Time in State H
+
+The holding time in a state follows an exponential distribution, with parameter equal to the total transition intensity out of that state.
+
+For state H, the total transition intensity is
+
+$$
+\lambda_H=\lambda_{HS}+\mu_H.
+$$
+
+Therefore, the expected holding time in state H is
+
+$$
+\boxed{
+\mathrm{E}[T_H]
+=\frac{1}{\lambda_{HS}+\mu_H}.
+}
+$$
+
+### 3. Probability of Moving from S to D
+
+When an individual leaves state S, the probability of moving to a particular state is proportional to the transition intensity to that state.
+
+The total transition intensity out of state S is
+
+$$
+\lambda_S=\lambda_{SH}+\lambda_{ST}+\mu_S.
+$$
+
+Hence, the probability that an individual moves directly from S to D when leaving S is
+
+$$
+\boxed{
+p_{SD}^*
+=
+\frac{\mu_S}
+{\lambda_{SH}+\lambda_{ST}+\mu_S}.
+}
+$$
+
+### 4. Expected Future Lifetime of a Healthy Individual
+
+Let $m_H$, $m_S$ and $m_T$ denote the expected future lifetimes of individuals currently in states H, S and T, respectively.
+
+Since Death is the target state,
+
+$$
+m_D=0.
+$$
+
+Using the first-step recursion, the expected future lifetime from each non-absorbing state is the expected holding time in that state plus the expected future lifetime after the next transition.
+
+For state H,
+
+$$
+m_H
+=
+\frac{1}{\lambda_{HS}+\mu_H}
++
+\frac{\lambda_{HS}}{\lambda_{HS}+\mu_H}m_S.
+$$
+
+For state S,
+
+$$
+m_S
+=
+\frac{1}{\lambda_{SH}+\lambda_{ST}+\mu_S}
++
+\frac{\lambda_{SH}}{\lambda_{SH}+\lambda_{ST}+\mu_S}m_H
++
+\frac{\lambda_{ST}}{\lambda_{SH}+\lambda_{ST}+\mu_S}m_T.
+$$
+
+For state T, the only possible transition is to Death. Therefore,
+
+$$
+m_T=\frac{1}{\mu_T}.
+$$
+
+Solving these three simultaneous equations gives the expected future lifetime of an individual initially in state H, $m_H$.
+
+The numerical value is calculated in the next section.
+
+
+
+## Numerical Solution: Worked Example 1
+
+Suppose the transition intensities are given as follows:
+
+| Transition | Intensity (per year) |
+|:---|---:|
+| H $\rightarrow$ S | 0.10 |
+| S $\rightarrow$ H | 0.90 |
+| H $\rightarrow$ D | 0.01 |
+| S $\rightarrow$ T | 0.18 |
+| S $\rightarrow$ D | 0.06 |
+| T $\rightarrow$ D | 0.50 |
+
+We use R to construct the generator matrix and calculate the required quantities.
+
+```{r}
+#| echo: false
+
+# Transition intensities
+rate_HS <- 0.10
+rate_SH <- 0.90
+rate_HD <- 0.01
+rate_ST <- 0.18
+rate_SD <- 0.06
+rate_TD <- 0.50
+
+# Generator matrix: state ordering H, S, T, D
+Q <- matrix(c(
+  -(rate_HS + rate_HD), rate_HS, 0, rate_HD,
+  rate_SH, -(rate_SH + rate_ST + rate_SD), rate_ST, rate_SD,
+  0, 0, -rate_TD, rate_TD,
+  0, 0, 0, 0
+), nrow = 4, byrow = TRUE)
+
+# Total transition intensities
+lambda <- -diag(Q)[1:3]
+
+# Expected holding time in state H
+holding_H <- 1 / lambda[1]
+
+# Probability of moving from S to D
+prob_SD <- rate_SD / lambda[2]
+
+# Transition matrix of the jump chain
+P_star <- matrix(0, nrow = 4, ncol = 4)
+
+for (i in 1:3) {
+  P_star[i, ] <- Q[i, ] / lambda[i]
+  P_star[i, i] <- 0  # Set diagonal to 0 for jump chain
+}
+P_star[4, 4] <- 1    # Absorbing state
+
+# Expected future lifetimes
+P_transient <- P_star[1:3, 1:3]
+A <- diag(3) - P_transient
+m <- solve(A, 1 / lambda)
+
+m_H <- m[1]
+m_S <- m[2]
+m_T <- m[3]
+
+```
+
+### 1. Generator Matrix
+
+The generator matrix is
+
+$$
+Q=
+\begin{pmatrix}
+-0.11 & 0.10 & 0 & 0.01\\
+0.90 & -1.14 & 0.18 & 0.06\\
+0 & 0 & -0.50 & 0.50\\
+0 & 0 & 0 & 0
+\end{pmatrix}.
+$$
+
+### 2. Expected Holding Time in State H
+
+The total transition intensity out of state H is
+
+$$
+\lambda_H=0.10+0.01=0.11.
+$$
+
+Therefore, the expected holding time in state H is
+
+$$
+\begin{aligned}
+\mathrm{E}[T_H]
+&=\frac{1}{\lambda_H}\\
+&=\frac{1}{0.11}\\
+&=\texttt{`r round(holding_H, 4)`}\text{ years}.
+\end{aligned}
+$$
+
+### 3. Probability of Moving from S to D
+
+The total transition intensity out of state S is
+
+$$
+\lambda_S = 0.90 + 0.18 + 0.06 = 1.14.
+$$
+
+Therefore, the probability that an individual moves directly from S to D when leaving S is
+
+$$
+\begin{aligned}
+p_{SD}^*
+&= \frac{\mu_{SD}}{\lambda_S} \\
+&= \frac{0.06}{1.14} \\
+&= \texttt{`r round(prob_SD, 4)`}.
+\end{aligned}
+$$
+
+
+Thus, the probability is approximately $5.26\%$.
+
+### 4. Expected Future Lifetime of a Healthy Individual
+
+Let $m_H$, $m_S$ and $m_T$ denote the expected future lifetimes of individuals currently in states H, S and T, respectively.
+
+Since Death is the target state, $m_D=0$.
+
+Using the recursive equations derived earlier, we obtain
+
+$$
+\begin{aligned}
+m_H
+&=\frac{1}{0.11}+\frac{0.10}{0.11}m_S,\\[5pt]
+m_S
+&=\frac{1}{1.14}
++\frac{0.90}{1.14}m_H
++\frac{0.18}{1.14}m_T,\\[5pt]
+m_T&=\frac{1}{0.50}.
+\end{aligned}
+$$
+
+Solving this system gives
+
+$$
+\begin{aligned}
+m_H&=\texttt{`r round(m_H, 4)`}\text{ years},\\
+m_S&=\texttt{`r round(m_S, 4)`}\text{ years},\\
+m_T&=\texttt{`r round(m_T, 4)`}\text{ years}.
+\end{aligned}
+$$
+
+Hence, the expected future lifetime of an individual who is initially Healthy is
+
+$$
+\boxed{
+m_H=\texttt{`r round(m_H, 4)`}\text{ years}.
+}
+$$
+
+### Remark: Expected Holding Time versus Expected Future Lifetime
+
+The expected holding time in state H is the expected duration of a single stay in the Healthy state before the individual makes the next transition to another state.
+
+This is different from the expected future lifetime of an individual currently in state H.
+
+After leaving state H, an individual may move to state S and subsequently recover to state H. This process may occur several times before the individual eventually reaches Death.
+
+Therefore:
+
+- The **expected holding time in state H** is the expected duration of a single stay in the Healthy state before the next transition.
+- The **expected future lifetime from state H**, denoted by $m_H$, is the expected total time until Death, starting from H. It accounts for all possible transitions, including repeated returns to the Healthy state.
+
+Consequently, the expected future lifetime from H is generally different from the expected holding time in H. The former accounts for the entire future path of the individual, whereas the latter considers only the time until the first transition out of H.
+
+
+
+
+:::{#exm-numerical-future-lifetime-hstd}
+**Numerical Illustration: Expected Future Lifetime in a Four-State Health Model**
+
+Consider the four-state Health–Sickness–Terminally Ill–Death (H–S–T–D) model introduced earlier. Suppose the transition intensities are given as follows:
+
+| Transition | Intensity (per year) |
+|:---|---:|
+| H $\rightarrow$ S | 0.10 |
+| S $\rightarrow$ H | 0.90 |
+| H $\rightarrow$ D | 0.01 |
+| S $\rightarrow$ T | 0.18 |
+| S $\rightarrow$ D | 0.06 |
+| T $\rightarrow$ D | 0.50 |
+
+Using these transition intensities, answer the following questions:
+
+1. Construct the generator matrix $Q$.
+2. Calculate the expected holding time in state $H$.
+3. Calculate the probability that an individual in state $S$ moves directly to state $D$ when leaving state $S$.
+4. Calculate the expected future lifetime for an individual initially in each of the four states $H$, $S$, $T$ and $D$.
+
+We use R to construct the generator matrix and calculate the required quantities.
+
+```{r}
+#| echo: false
+
+# Transition intensities
+rate_HS <- 0.10
+rate_SH <- 0.90
+rate_HD <- 0.01
+rate_ST <- 0.18
+rate_SD <- 0.06
+rate_TD <- 0.50
+
+# Generator matrix: state ordering H, S, T, D
+Q <- matrix(c(
+  -(rate_HS + rate_HD), rate_HS, 0, rate_HD,
+  rate_SH, -(rate_SH + rate_ST + rate_SD), rate_ST, rate_SD,
+  0, 0, -rate_TD, rate_TD,
+  0, 0, 0, 0
+), nrow = 4, byrow = TRUE)
+
+# Total transition intensities
+lambda <- -diag(Q)[1:3]
+
+# Expected holding time in state H
+holding_H <- 1 / lambda[1]
+
+# Probability of moving from S to D
+prob_SD <- rate_SD / lambda[2]
+
+# Transition matrix of the jump chain
+P_star <- matrix(0, nrow = 4, ncol = 4)
+
+for (i in 1:3) {
+  P_star[i, ] <- Q[i, ] / lambda[i]
+  P_star[i, i] <- 0
+}
+P_star[4, 4] <- 1
+
+# Expected future lifetimes
+P_transient <- P_star[1:3, 1:3]
+A <- diag(3) - P_transient
+m <- solve(A, 1 / lambda)
+
+m_H <- m[1]
+m_S <- m[2]
+m_T <- m[3]
+m_D <- 0
+```
+
+**Solution**
+
+**1. Generator Matrix**
+
+The generator matrix contains the transition intensities as its off-diagonal elements. Each diagonal element is the negative sum of the transition intensities out of the corresponding state.
+
+Using the state ordering $(H,S,T,D)$, we obtain
+
+$$
+Q=
+\begin{pmatrix}
+-0.11 & 0.10 & 0 & 0.01\\
+0.90 & -1.14 & 0.18 & 0.06\\
+0 & 0 & -0.50 & 0.50\\
+0 & 0 & 0 & 0
+\end{pmatrix}.
+$$
+
+The last row consists entirely of zeros because Death is an absorbing state.
+
+**2. Expected Holding Time in State H**
+
+The total transition intensity out of state $H$ is
+
+$$
+\lambda_H=0.10+0.01=0.11.
+$$
+
+The holding time in state $H$ follows an exponential distribution with parameter $\lambda_H$. Therefore,
+
+$$
+\begin{aligned}
+\mathrm{E}[T_H]
+&=\frac{1}{\lambda_H}\\
+&=\frac{1}{0.11}\\
+&=\texttt{`r round(holding_H, 4)`}\text{ years}.
+\end{aligned}
+$$
+
+**3. Probability of Moving Directly from S to D**
+
+The total transition intensity out of state $S$ is
+
+$$
+\lambda_S=0.90+0.18+0.06=1.14.
+$$
+
+Therefore, the probability that an individual moves directly from $S$ to $D$ when leaving $S$ is
+
+$$
+\begin{aligned}
+p_{SD}^*
+&=\frac{\mu_S}{\lambda_S}\\
+&=\frac{0.06}{1.14}\\
+&=\texttt{`r round(prob_SD, 4)`}.
+\end{aligned}
+$$
+
+Thus, the probability is approximately $5.26\%$.
+
+**4. Expected Future Lifetime from Each Initial State**
+
+Let $m_H$, $m_S$, $m_T$ and $m_D$ denote the expected future lifetimes of individuals currently in states $H$, $S$, $T$ and $D$, respectively.
+
+Since Death is an absorbing state,
+
+$$
+m_D=0.
+$$
+
+Using the first-step recursion developed earlier, we obtain
+
+$$
+\begin{aligned}
+m_H
+&=\frac{1}{0.11}+\frac{0.10}{0.11}m_S,\\[5pt]
+m_S
+&=\frac{1}{1.14}
++\frac{0.90}{1.14}m_H
++\frac{0.18}{1.14}m_T,\\[5pt]
+m_T&=\frac{1}{0.50}.
+\end{aligned}
+$$
+
+Solving these simultaneous equations gives the expected future lifetime from each initial state:
+
+$$
+\begin{aligned}
+m_H&=\texttt{`r round(m_H, 4)`}\text{ years},\\
+m_S&=\texttt{`r round(m_S, 4)`}\text{ years},\\
+m_T&=\texttt{`r round(m_T, 4)`}\text{ years},\\
+m_D&=0\text{ years}.
+\end{aligned}
+$$
+
+Therefore, the expected future lifetime depends on the individual's initial health state.
+
+**Remark: Expected Holding Time versus Expected Future Lifetime**
+
+The expected holding time in state $H$ is the expected duration of a single stay in the Healthy state before the individual makes the next transition.
+
+In contrast, the expected future lifetime from state $H$, denoted by $m_H$, is the expected total time until Death, starting from $H$.
+
+After leaving state $H$, an individual may move to state $S$ and subsequently recover to state $H$. This process may occur several times before the individual eventually reaches Death.
+
+Therefore:
+
+- The **expected holding time in state H** considers only the duration until the first transition out of $H$.
+- The **expected future lifetime from state H** accounts for the entire future path of the individual, including all possible transitions and repeated returns to $H$, until Death occurs.
+
+Consequently, the expected future lifetime from $H$ is generally different from the expected holding time in $H$.
+:::
+
+
+---
+
+## Worked Example 2: The Jump Chain of a Four-State Health Model
+
+Consider the four-state Health–Sickness–Terminally Ill–Death (H–S–T–D) model described in Worked Example 1.
+
+Using the given transition intensities:
+
+1. Write down the generator matrix $Q$ for the continuous-time Markov model.
+2. Obtain the transition matrix $P^*$ of the associated jump chain, using
+
+   $$
+   p_{ij}^*=\frac{q_{ij}}{-q_{ii}},
+   \qquad i\neq j.
+   $$
+
+
+3. Determine the probability that an individual starting in state S reaches state D without first returning to state H.
+
+
+## Solution: Worked Example 2 — The Jump Chain of a Four-State Health Model
+
+### 1. Generator Matrix
+
+Using the state ordering $(H,S,T,D)$, the generator matrix is
+
+$$
+Q=
+\begin{pmatrix}
+-(\lambda_{HS}+\mu_H) & \lambda_{HS} & 0 & \mu_H\\
+\lambda_{SH} & -(\lambda_{SH}+\lambda_{ST}+\mu_S) & \lambda_{ST} & \mu_S\\
+0 & 0 & -\mu_T & \mu_T\\
+0 & 0 & 0 & 0
+\end{pmatrix}.
+$$
+
+The diagonal elements are the negatives of the total transition intensities out of the corresponding states.
+
+### 2. Transition Matrix of the Associated Jump Chain
+
+The transition probabilities of the associated jump chain are obtained by dividing each off-diagonal transition intensity by the total transition intensity out of the current state:
+
+$$
+p_{ij}^*=\frac{q_{ij}}{-q_{ii}},
+\qquad i\neq j.
+$$
+
+For state H, the total transition intensity is
+
+$$
+\lambda_H=\lambda_{HS}+\mu_H.
+$$
+
+Hence,
+
+$$
+p_{HS}^*=\frac{\lambda_{HS}}{\lambda_{HS}+\mu_H},
+\qquad
+p_{HD}^*=\frac{\mu_H}{\lambda_{HS}+\mu_H}.
+$$
+
+For state S, the total transition intensity is
+
+$$
+\lambda_S=\lambda_{SH}+\lambda_{ST}+\mu_S.
+$$
+
+Hence,
+
+$$
+\begin{aligned}
+p_{SH}^*&=\frac{\lambda_{SH}}{\lambda_{SH}+\lambda_{ST}+\mu_S},\\
+p_{ST}^*&=\frac{\lambda_{ST}}{\lambda_{SH}+\lambda_{ST}+\mu_S},\\
+p_{SD}^*&=\frac{\mu_S}{\lambda_{SH}+\lambda_{ST}+\mu_S}.
+\end{aligned}
+$$
+
+For state T, the only possible transition is to Death. Therefore,
+
+$$
+p_{TD}^*=1.
+$$
+
+Since Death is absorbing in the continuous-time model, we use the convention that the jump chain remains in D once it reaches D:
+
+$$
+p_{DD}^*=1.
+$$
+
+Thus, the transition matrix of the associated jump chain is
+
+$$
+\boxed{
+P^*=
+\begin{pmatrix}
+0 &
+\displaystyle\frac{\lambda_{HS}}{\lambda_{HS}+\mu_H} &
+0 &
+\displaystyle\frac{\mu_H}{\lambda_{HS}+\mu_H}
+\\[12pt]
+\displaystyle\frac{\lambda_{SH}}{\lambda_{SH}+\lambda_{ST}+\mu_S} &
+0 &
+\displaystyle\frac{\lambda_{ST}}{\lambda_{SH}+\lambda_{ST}+\mu_S} &
+\displaystyle\frac{\mu_S}{\lambda_{SH}+\lambda_{ST}+\mu_S}
+\\[12pt]
+0 & 0 & 0 & 1\\
+0 & 0 & 0 & 1
+\end{pmatrix}.
+}
+$$
+
+### 3. Probability of Reaching Death Before Returning to Healthy
+
+Let $r_S$ denote the probability that an individual currently in state S reaches Death before returning to state H.
+
+From state S, the next transition can be to:
+
+- H, with probability $p_{SH}^*$, in which case the event of interest does not occur;
+- T, with probability $p_{ST}^*$, in which case the individual subsequently moves to D with probability 1;
+- D, with probability $p_{SD}^*$, in which case the event of interest occurs immediately.
+
+Therefore, using a first-step argument,
+
+$$
+r_S=p_{SD}^*+p_{ST}^*.
+$$
+
+Substituting the transition probabilities gives
+
+$$
+\begin{aligned}
+r_S
+&=\frac{\mu_S}{\lambda_{SH}+\lambda_{ST}+\mu_S}
++\frac{\lambda_{ST}}{\lambda_{SH}+\lambda_{ST}+\mu_S}\\[5pt]
+&=\boxed{
+\frac{\lambda_{ST}+\mu_S}
+{\lambda_{SH}+\lambda_{ST}+\mu_S}
+}.
+\end{aligned}
+$$
+
+This is the required probability.
+
+The result includes two possible paths:
+
+1. S $\rightarrow$ D;
+2. S $\rightarrow$ T $\rightarrow$ D.
+
+The event excludes any path that returns to H before reaching D.
+
+
+**Remark: Direct Transition Probability versus Probability of Reaching Death Before Returning to Healthy**
+
+It is important to distinguish between the probability of making a direct transition from S to D and the probability of reaching D before returning to H.
+
+The first probability concerns only the next transition out of S:
+
+$$
+\boxed{
+p_{SD}^*
+=
+\frac{\mu_S}
+{\lambda_{SH}+\lambda_{ST}+\mu_S}.
+}
+$$
+
+It is the probability that the individual moves directly from S to D, without passing through another state.
+
+The second probability considers all possible paths from S that reach D before returning to H. These include both
+
+$$
+S\longrightarrow D
+$$
+
+and
+
+$$
+S\longrightarrow T\longrightarrow D.
+$$
+
+Consequently,
+
+$$
+\boxed{
+\Pr(\text{reach D before returning to H}\mid X_0=S)
+=
+p_{SD}^*+p_{ST}^*.
+}
+$$
+
+The second probability is therefore greater than or equal to the first. The difference is the probability of following the path S $\rightarrow$ T $\rightarrow$ D.
+
+The distinction is that a direct transition probability considers only the next jump, whereas a probability of reaching a target state considers all possible paths that satisfy the specified condition.
+
+
+## Numerical Solution: Worked Example 2 — The Jump Chain of a Four-State Health Model
+
+Using the transition intensities specified in the numerical application of Worked Example 1, we construct the generator matrix and the transition matrix of the associated jump chain.
+
+```{r}
+#| echo: false
+
+# Transition intensities
+rate_HS <- 0.10
+rate_SH <- 0.90
+rate_HD <- 0.01
+rate_ST <- 0.18
+rate_SD <- 0.06
+rate_TD <- 0.50
+
+# Generator matrix: state ordering H, S, T, D
+Q <- matrix(c(
+  -(rate_HS + rate_HD), rate_HS, 0, rate_HD,
+  rate_SH, -(rate_SH + rate_ST + rate_SD), rate_ST, rate_SD,
+  0, 0, -rate_TD, rate_TD,
+  0, 0, 0, 0
+), nrow = 4, byrow = TRUE)
+
+# Total transition intensities
+lambda <- -diag(Q)[1:3]
+
+# Transition matrix of the associated jump chain
+P_star <- matrix(0, nrow = 4, ncol = 4)
+
+for (i in 1:3) {
+  P_star[i, ] <- Q[i, ] / lambda[i]
+}
+
+# Convention for the absorbing state D
+P_star[4, 4] <- 1
+
+# Probability of moving directly from S to D
+prob_direct <- P_star[2, 4]
+
+# Probability of reaching D before returning to H
+prob_reach_D <- P_star[2, 3] + P_star[2, 4]
+```
+
+### 1. Generator Matrix
+
+The generator matrix is
+
+$$
+Q=
+\begin{pmatrix}
+-0.11 & 0.10 & 0 & 0.01\\
+0.90 & -1.14 & 0.18 & 0.06\\
+0 & 0 & -0.50 & 0.50\\
+0 & 0 & 0 & 0
+\end{pmatrix}.
+$$
+
+### 2. Transition Matrix of the Associated Jump Chain
+
+The total transition intensities out of the three non-absorbing states are
+
+$$
+\begin{aligned}
+\lambda_H&=0.10+0.01=0.11,\\
+\lambda_S&=0.90+0.18+0.06=1.14,\\
+\lambda_T&=0.50.
+\end{aligned}
+$$
+
+Using
+
+$$
+p_{ij}^*=\frac{q_{ij}}{-q_{ii}},
+\qquad i\neq j,
+$$
+
+we obtain
+
+$$
+\boxed{
+P^*=
+\begin{pmatrix}
+0 & \texttt{`r round(P_star[1,2], 4)`} & 0 & \texttt{`r round(P_star[1,4], 4)`}\\
+\texttt{`r round(P_star[2,1], 4)`} & 0 & \texttt{`r round(P_star[2,3], 4)`} & \texttt{`r round(P_star[2,4], 4)`}\\
+0 & 0 & 0 & 1\\
+0 & 0 & 0 & 1
+\end{pmatrix}.
+}
+$$
+
+### 3. Probability of Reaching Death Before Returning to Healthy
+
+Let $r_S$ denote the probability that an individual starting in state S reaches D before returning to H.
+
+There are two possible paths that satisfy this condition:
+
+1. S $\rightarrow$ D;
+2. S $\rightarrow$ T $\rightarrow$ D.
+
+Since T can only transition to D, we have
+
+$$
+\begin{aligned}
+r_S
+&=p_{SD}^*+p_{ST}^*\\
+&=\frac{0.06}{1.14}+\frac{0.18}{1.14}\\
+&=\texttt{`r round(prob_reach_D, 4)`}.
+\end{aligned}
+$$
+
+Therefore,
+
+$$
+\boxed{r_S=\texttt{`r round(prob_reach_D, 4)`}.}
+$$
+
+Thus, the probability that an individual starting in S reaches Death before returning to H is approximately $21.05\%$.
+
+
+
+### 3. Probability of Reaching Death Before Returning to Healthy
+
+Let $h_i$ denote the probability that an individual starting in state $i$ reaches Death before returning to Healthy.
+
+Since Healthy is the state we wish to avoid returning to, and Death is the target state, the boundary conditions are
+
+$$
+h_H=0,\qquad h_D=1.
+$$
+
+For the other states, apply the first-step equations:
+
+$$
+h_i=\sum_j p_{ij}^*h_j.
+$$
+
+**For state T:**
+
+Since the only possible transition from T is to D,
+
+$$
+h_T=p_{TD}^*h_D=1.
+$$
+
+**For state S:**
+
+The possible next states are H, T and D. Therefore,
+
+$$
+h_S=p_{SH}^*h_H+p_{ST}^*h_T+p_{SD}^*h_D.
+$$
+
+Substituting the boundary conditions gives
+
+$$
+\begin{aligned}
+h_S
+&=p_{SH}^*(0)+p_{ST}^*(1)+p_{SD}^*(1)\\
+&=p_{ST}^*+p_{SD}^*.
+\end{aligned}
+$$
+
+Using the transition probabilities of the jump chain,
+
+$$
+\begin{aligned}
+h_S
+&=\frac{\lambda_{ST}}{\lambda_{SH}+\lambda_{ST}+\mu_S}
++\frac{\mu_S}{\lambda_{SH}+\lambda_{ST}+\mu_S}\\[5pt]
+&=\boxed{
+\frac{\lambda_{ST}+\mu_S}
+{\lambda_{SH}+\lambda_{ST}+\mu_S}
+}.
+\end{aligned}
+$$
+
+This is the required probability.
+
+
+
+## Connection with First-Step Analysis for Absorption Probabilities in a DTMC
+
+Yes. The method is exactly the same as applying **first-step analysis to absorption probabilities in a discrete-time Markov chain (DTMC)**.
+
+The key point is that the jump chain of a Markov jump process is itself a DTMC. We can therefore use the familiar first-step analysis.
+
+For example, let $h_i$ be the probability of reaching Death before returning to Healthy, starting from state $i$. Conditioning on the first transition gives
+
+$$
+h_i=\sum_j p_{ij}^*h_j,
+$$
+
+where $p_{ij}^*$ is the transition probability of the jump chain.
+
+For the HSTD model, the boundary conditions are
+
+$$
+h_H=0,\qquad h_D=1.
+$$
+
+Since the only possible next state from T is D,
+
+$$
+h_T=1.
+$$
+
+Thus, applying first-step analysis in state S gives
+
+$$
+\begin{aligned}
+h_S
+&=p_{SH}^*h_H+p_{ST}^*h_T+p_{SD}^*h_D\\
+&=p_{ST}^*+p_{SD}^*.
+\end{aligned}
+$$
+
+This is precisely the same approach used to calculate absorption probabilities in a DTMC.
+
+### Difference in interpretation
+
+- In a DTMC, first-step analysis is applied directly to its one-step transition probabilities.
+- In a Markov jump process, we first construct the associated jump chain, whose transition probabilities describe the state reached at the next jump. We then apply the same DTMC techniques.
+
+The holding times do not enter this particular calculation because we are interested in *which state is reached first*, rather than *when it is reached*.
+

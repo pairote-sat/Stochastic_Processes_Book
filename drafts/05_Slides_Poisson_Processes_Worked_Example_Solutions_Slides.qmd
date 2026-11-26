@@ -430,7 +430,7 @@ $$
 Therefore,
 
 $$
-\Pr(T>60)=e^{-60/40}=\Sexpr{round(exp(-60/40), 4)}.
+\Pr(T>60)=e^{-60/40}=`r round(exp(-60/40), 4)`.
 $$
 
 ### (2) Conditional probability given that 40 minutes have elapsed
@@ -449,7 +449,7 @@ $$
 &=\frac{\Pr(T>60)}{\Pr(T>40)}\\
 &=\frac{e^{-60/40}}{e^{-40/40}}\\
 &=e^{-(60-40)/40}\\
-&=\Sexpr{round(exp(-(60-40)/40), 4)}.
+&= `r round(exp(-(60-40)/40), 4)`. 
 \end{aligned}
 $$
 

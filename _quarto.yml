@@ -9,6 +9,7 @@ book:
     - chapters/01_Introduction_to_Stochastic_Processes.qmd
     - chapters/02_Discrete_Time_Stochastic_Processes.qmd
     - chapters/05_Poisson_Processes.qmd
+    - chapters/08_Markov_Jump_Processes.qmd
     
 bibliography: references.bib
 

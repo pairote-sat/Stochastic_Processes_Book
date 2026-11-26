@@ -1,0 +1,2697 @@
+---
+title: "Solution_Tutorial5_337_2026"
+---
+
+## Worked Example 1: The Transition Probability Matrix of a Two-State Markov Model
+
+```{r}
+#| echo: false
+mu <- 0.02
+t <- 5
+
+p <- exp(-mu*t)
+q <- 1-p
+
+P5 <- matrix(c(p, q, 0, 1), nrow=2, byrow=TRUE)
+
+P2 <- matrix(c(exp(-mu*2), 1-exp(-mu*2), 0, 1),
+             nrow=2, byrow=TRUE)
+
+P3 <- matrix(c(exp(-mu*3), 1-exp(-mu*3), 0, 1),
+             nrow=2, byrow=TRUE)
+
+P23 <- P2 %*% P3
+```
+
+Consider a continuous-time Markov model for the mortality of a life. The model has two possible states:
+
+- State 1: Alive
+- State 2: Dead
+
+Assume that the force of mortality is constant at $\mu=0.02$ per year and that death is an absorbing state.
+
+**(a)** Define the following terms in the context of this model:
+
+1. State space.
+
+2. Transition probability.
+
+3. Transition probability matrix.
+
+4. Transition intensity.
+
+5. Absorbing state.
+
+**(b)** Let $X(t)$ denote the state occupied by the life at time $t$. Write down the transition probability $p_{ij}(t)$ in terms of conditional probability. Explain the meaning of each subscript and the time argument.
+
+**(c)** The transition intensity from state $i$ to state $j$ ($i\neq j$) is defined by the instantaneous rate
+
+$$
+q_{ij}=\lim_{h\to 0^+}
+\frac{P(X(t+h)=j\mid X(t)=i)}{h}.
+$$
+
+Write down the transition intensity matrix $Q$ for this specific model and explain the meaning of each entry.
+
+**(d)** For a time-homogeneous continuous-time Markov model, the transition probability matrix is related to the transition intensity matrix by $P(t)=e^{Qt}$.
+
+1. Use this relationship to derive the general transition probability matrix $P(t)$ in terms of $\mu$ and $t$.
+
+2. Based on your structural derivation, explain why each row of the matrix must sum to one, and why the second row is $(0,1)$.
+
+**(e)** Calculate the numerical transition probability matrix over a period of five years ($t=5$) and interpret the practical meaning of its entries.
+
+**(f)** State the Chapman--Kolmogorov equation, verify mathematically that $P(5)=P(2)P(3)$, and explain the actuarial interpretation of this relationship.
+
+**Hint:** Recall that the matrix exponential is defined by
+
+$$
+e^{Qt}=I+Qt+\frac{Q^2t^2}{2!}
++\frac{Q^3t^3}{3!}+\cdots.
+$$
+
+For this two-state model, first calculate $Q^2$ and identify a pattern in the higher powers of $Q$. Then substitute these results into the matrix exponential series to obtain $P(t)$.
+
+You may find it useful to note that
+
+$$
+Q=
+\begin{pmatrix}
+-\mu&\mu\\
+0&0
+\end{pmatrix}.
+$$
+
+
+
+
+
+
+
+## Solution: Worked Example 1
+
+**(a)**
+
+1. **State space**
+
+The state space is the set of all possible states that the life can occupy:
+
+$$
+S=\{1,2\}=\{\text{Alive},\text{Dead}\}.
+$$
+
+2. **Transition probability**
+
+A transition probability is the probability that the life moves from one state to another over a specified period of time.
+
+3. **Transition probability matrix**
+
+The transition probability matrix contains all transition probabilities between the possible states. Its $(i,j)$ entry gives the probability of being in state $j$ after time $t$, conditional on starting in state $i$.
+
+4. **Transition intensity**
+
+A transition intensity is the instantaneous rate of transition from one state to another. In this model, $\mu$ is the constant force of mortality, which measures the instantaneous rate at which a living life moves to the Dead state.
+
+5. **Absorbing state**
+
+An absorbing state is a state that cannot be left once it has been entered. In this model, Dead is an absorbing state because a life cannot return to the Alive state.
+
+**(b)** Transition probability
+
+The transition probability is defined as
+
+$$
+p_{ij}(t)=P(X(t)=j\mid X(0)=i),
+$$
+
+where:
+
+- $i$ denotes the initial state at time $0$;
+- $j$ denotes the state occupied at time $t$;
+- $t$ is the length of the observation period.
+
+For example, $p_{11}(t)$ is the probability that a life remains alive for at least $t$ years, given that it is alive initially. Similarly, $p_{12}(t)$ is the probability that a life dies within $t$ years, given that it is alive initially.
+
+**(c)** Transition intensity matrix
+
+The transition intensity matrix is
+
+$$
+Q=
+\begin{pmatrix}
+-\mu & \mu\\
+0 & 0
+\end{pmatrix}
+=
+\begin{pmatrix}
+-0.02 & 0.02\\
+0 & 0
+\end{pmatrix}.
+$$
+
+The entries have the following interpretations:
+
+- $q_{12}=\mu=0.02$ is the constant force of mortality, representing the instantaneous rate of transition from Alive to Dead.
+- $q_{21}=0$ because a dead life cannot return to the Alive state.
+- $q_{11}=-\mu=-0.02$ is the negative of the total transition intensity out of the Alive state.
+- $q_{22}=0$ because there are no transitions out of the Dead state.
+
+**(d)** Derivation of the transition probability matrix
+
+1. **Derivation using the matrix exponential**
+
+For a time-homogeneous continuous-time Markov model,
+
+$$
+P(t)=e^{Qt}.
+$$
+
+Using
+
+$$
+Q=
+\begin{pmatrix}
+-\mu & \mu\\
+0 & 0
+\end{pmatrix},
+$$
+
+we first calculate the powers of $Q$:
+
+$$
+Q^2=
+\begin{pmatrix}
+\mu^2 & -\mu^2\\
+0 & 0
+\end{pmatrix}
+=-\mu Q.
+$$
+
+Similarly,
+
+$$
+Q^3=-\mu Q^2=\mu^2Q.
+$$
+
+Continuing this pattern, for $n\geq 1$,
+
+$$
+Q^n=(-\mu)^{n-1}Q.
+$$
+
+Substituting into the matrix exponential series gives
+
+$$
+\begin{aligned}
+P(t)
+&=I+Qt+\frac{Q^2t^2}{2!}
++\frac{Q^3t^3}{3!}+\cdots\\
+&=I+Qt\left(
+1-\frac{\mu t}{2!}
++\frac{(\mu t)^2}{3!}
+-\frac{(\mu t)^3}{4!}+\cdots
+\right).
+\end{aligned}
+$$
+
+The expression in parentheses is
+
+$$
+\frac{1-e^{-\mu t}}{\mu t}.
+$$
+
+Therefore,
+
+$$
+\begin{aligned}
+P(t)
+&=I+\frac{1-e^{-\mu t}}{\mu}Q\\
+&=
+\begin{pmatrix}
+1&0\\
+0&1
+\end{pmatrix}
++
+\frac{1-e^{-\mu t}}{\mu}
+\begin{pmatrix}
+-\mu&\mu\\
+0&0
+\end{pmatrix}\\
+&=
+\boxed{
+\begin{pmatrix}
+e^{-\mu t}&1-e^{-\mu t}\\
+0&1
+\end{pmatrix}.
+}
+\end{aligned}
+$$
+
+2. **Interpretation of the matrix structure**
+
+Each row of a transition probability matrix must sum to one because the life must occupy one of the possible states at time $t$.
+
+For the first row,
+
+$$
+p_{11}(t)+p_{12}(t)
+=e^{-\mu t}+1-e^{-\mu t}=1.
+$$
+
+The second row is $(0,1)$ because Dead is an absorbing state. Once a life has died, it remains dead with probability one.
+
+**(e)** Numerical transition probability matrix over five years
+
+Given $\mu=0.02$ and $t=5$,
+
+$$
+\begin{aligned}
+p_{11}(5)&=e^{-0.02(5)}=`r round(p,4)`,\\
+p_{12}(5)&=1-e^{-0.02(5)}=`r round(q,4)`.
+\end{aligned}
+$$
+
+Therefore,
+
+$$
+\boxed{
+P(5)=
+\begin{pmatrix}
+`r round(P5[1,1],4)`&`r round(P5[1,2],4)`\\
+0&1
+\end{pmatrix}.
+}
+$$
+
+The entries can be interpreted as follows:
+
+- $p_{11}(5)$ is the probability that a life initially alive remains alive after five years.
+- $p_{12}(5)$ is the probability that a life initially alive dies within five years.
+- $p_{21}(5)=0$ because a dead life cannot return to the Alive state.
+- $p_{22}(5)=1$ because a dead life remains dead.
+
+**(f)** Chapman–Kolmogorov equation
+
+**Statement**
+
+For a time-homogeneous continuous-time Markov model, the Chapman–Kolmogorov equation states that
+
+$$
+P(s+t)=P(s)P(t).
+$$
+
+It expresses the transition probabilities over a combined period as the product of the transition probability matrices over the two consecutive periods.
+
+**Verification**
+
+Taking $s=2$ and $t=3$,
+
+$$
+P(5)=P(2)P(3).
+$$
+
+From the general transition probability matrix,
+
+$$
+P(2)=
+\begin{pmatrix}
+e^{-2\mu}&1-e^{-2\mu}\\
+0&1
+\end{pmatrix}
+$$
+
+and
+
+$$
+P(3)=
+\begin{pmatrix}
+e^{-3\mu}&1-e^{-3\mu}\\
+0&1
+\end{pmatrix}.
+$$
+
+Multiplying the two matrices gives
+
+$$
+\begin{aligned}
+P(2)P(3)
+&=
+\begin{pmatrix}
+e^{-2\mu}&1-e^{-2\mu}\\
+0&1
+\end{pmatrix}
+\begin{pmatrix}
+e^{-3\mu}&1-e^{-3\mu}\\
+0&1
+\end{pmatrix}\\[4pt]
+&=
+\begin{pmatrix}
+e^{-5\mu}&
+e^{-2\mu}(1-e^{-3\mu})+1-e^{-2\mu}\\
+0&1
+\end{pmatrix}\\[4pt]
+&=
+\begin{pmatrix}
+e^{-5\mu}&1-e^{-5\mu}\\
+0&1
+\end{pmatrix}\\[4pt]
+&=P(5).
+\end{aligned}
+$$
+
+The numerical calculation also confirms this result:
+
+$$
+P(2)P(3)=
+\begin{pmatrix}
+`r round(P23[1,1],4)`&`r round(P23[1,2],4)`\\
+0&1
+\end{pmatrix}
+=P(5).
+$$
+
+**Actuarial interpretation**
+
+The probability of a life being alive or dead after five years can be calculated in two stages:
+
+1. Determine the state probabilities after the first two years.
+2. Apply the three-year transition probability matrix to those probabilities.
+
+The result is the same as calculating the transition probabilities directly over the full five-year period. This is the Markov property: conditional on the state occupied after two years, the future transition probabilities depend only on that state, not on the previous history.
+
+
+
+
+
+## Worked Example 1: The Transition Probability Matrix of a Two-State Markov Model
+
+```{r} 
+#| echo: false
+mu <- 0.02
+t <- 5
+
+p <- exp(-mu*t)
+q <- 1-p
+
+P5 <- matrix(c(p, q, 0, 1), nrow=2, byrow=TRUE)
+
+P2 <- matrix(c(exp(-mu*2), 1-exp(-mu*2), 0, 1),
+             nrow=2, byrow=TRUE)
+
+P3 <- matrix(c(exp(-mu*3), 1-exp(-mu*3), 0, 1),
+             nrow=2, byrow=TRUE)
+
+P23 <- P2 %*% P3
+```
+
+Consider a continuous-time Markov model for the mortality of a life. The model has two possible states:
+
+- State 1: Alive
+- State 2: Dead
+
+Assume that the force of mortality is constant at $\mu=0.02$ per year and that death is an absorbing state.
+
+**(a)** Define the following terms in the context of this model:
+
+1. State space.
+2. Transition probability.
+3. Transition probability matrix.
+4. Transition intensity.
+5. Absorbing state.
+
+**(b)** Let $X(t)$ denote the state occupied by the life at time $t$. Write down the transition probability $p_{ij}(t)$ in terms of conditional probability. Explain the meaning of each subscript and the time argument.
+
+**(c)** Write down the transition probability matrix $P(t)$ for this model. Explain why:
+
+1. Each row of the matrix sums to one.
+2. The second row is $(0,1)$.
+
+**(d)** Write down the transition intensity matrix $Q$ for the model. Explain the meaning of each entry.
+
+**(e)** Derive the transition probability matrix $P(t)$ in terms of $\mu$ and $t$. Hence, calculate the transition probability matrix over five years and interpret its entries.
+
+**(f)** State the Chapman–Kolmogorov equation and verify that
+
+$$
+P(5)=P(2)P(3).
+$$
+
+Explain the actuarial interpretation of this relationship.
+
+## Solution: Worked Example 1
+
+**(a)**
+
+1. **State space:** The set of all possible states that the process can occupy. In this model,
+
+$$
+S=\{\text{Alive},\text{Dead}\}.
+$$
+
+2. **Transition probability:** The probability that the process moves from one state to another over a specified period.
+
+3. **Transition probability matrix:** A matrix containing all transition probabilities over a specified period. Its $(i,j)$ entry is the probability of being in state $j$ after the specified period, given that the process starts in state $i$.
+
+4. **Transition intensity:** The instantaneous rate of transition from one state to another. For example, the force of mortality $\mu$ is the instantaneous rate at which a life moves from Alive to Dead.
+
+5. **Absorbing state:** A state that, once entered, cannot be left. In this model, Dead is an absorbing state.
+
+**(b)**
+
+The transition probability from state $i$ to state $j$ over a period of $t$ years is
+
+$$
+\boxed{
+p_{ij}(t)=P(X(t)=j\mid X(0)=i).
+}
+$$
+
+Here:
+
+- $i$ denotes the initial state.
+- $j$ denotes the state occupied after $t$ years.
+- $t$ denotes the length of the observation period.
+- $X(0)$ and $X(t)$ denote the states occupied at the initial time and after $t$ years, respectively.
+
+For example,
+
+$$
+p_{12}(t)=P(X(t)=\text{Dead}\mid X(0)=\text{Alive})
+$$
+
+is the probability that a life initially alive dies within $t$ years.
+
+**(c)**
+
+The transition probability matrix is
+
+$$
+P(t)=
+\begin{pmatrix}
+p_{11}(t)&p_{12}(t)\\
+p_{21}(t)&p_{22}(t)
+\end{pmatrix}.
+$$
+
+Each row sums to one because the process must occupy one of the two possible states after $t$ years.
+
+Since death is an absorbing state,
+
+$$
+p_{21}(t)=0,\qquad p_{22}(t)=1.
+$$
+
+Therefore,
+
+$$
+\boxed{
+P(t)=
+\begin{pmatrix}
+p_{11}(t)&p_{12}(t)\\
+0&1
+\end{pmatrix}.
+}
+$$
+
+**(d)**
+
+The transition intensity matrix is
+
+$$
+Q=
+\begin{pmatrix}
+-\mu&\mu\\
+0&0
+\end{pmatrix}.
+$$
+
+For $\mu=0.02$,
+
+$$
+\boxed{
+Q=
+\begin{pmatrix}
+-0.02&0.02\\
+0&0
+\end{pmatrix}.
+}
+$$
+
+The off-diagonal entry $q_{12}=\mu$ is the transition intensity from Alive to Dead. The entry $q_{21}=0$ reflects the fact that a dead life cannot return to the Alive state.
+
+The diagonal entries are the negatives of the sums of the other entries in their respective rows. Hence, each row of $Q$ sums to zero.
+
+**(e)**
+
+For a constant force of mortality $\mu$,
+
+$$
+p_{11}(t)={}_tp_x=e^{-\mu t},
+$$
+
+and
+
+$$
+p_{12}(t)={}_tq_x=1-e^{-\mu t}.
+$$
+
+Therefore,
+
+$$
+\boxed{
+P(t)=
+\begin{pmatrix}
+e^{-\mu t}&1-e^{-\mu t}\\
+0&1
+\end{pmatrix}.
+}
+$$
+
+For $\mu=0.02$ and $t=5$,
+
+$$
+P(5)=
+\begin{pmatrix}
+e^{-0.02(5)}&1-e^{-0.02(5)}\\
+0&1
+\end{pmatrix}.
+$$
+
+Thus,
+
+$$
+\boxed{
+P(5)=
+\begin{pmatrix}
+`r round(P5[1,1],4)`&
+`r round(P5[1,2],4)`\\
+0&1
+\end{pmatrix}.
+}
+$$
+
+The entries have the following interpretations:
+
+- $p_{11}(5)=`r round(P5[1,1],4)`$ is the probability that a life initially alive remains alive after five years.
+- $p_{12}(5)=`r round(P5[1,2],4)`$ is the probability that a life initially alive dies within five years.
+- $p_{21}(5)=0$ is the probability that a life initially dead becomes alive after five years.
+- $p_{22}(5)=1$ is the probability that a life initially dead remains dead after five years.
+
+**(f)**
+
+The Chapman–Kolmogorov equation states that
+
+$$
+\boxed{P(s+t)=P(s)P(t).}
+$$
+
+For $s=2$ and $t=3$,
+
+$$
+P(5)=P(2)P(3).
+$$
+
+We have
+
+$$
+P(2)=
+\begin{pmatrix}
+e^{-0.04}&1-e^{-0.04}\\
+0&1
+\end{pmatrix}
+$$
+
+and
+
+$$
+P(3)=
+\begin{pmatrix}
+e^{-0.06}&1-e^{-0.06}\\
+0&1
+\end{pmatrix}.
+$$
+
+Multiplying the matrices gives
+
+$$
+\begin{aligned}
+P(2)P(3)
+&=
+\begin{pmatrix}
+e^{-0.04}&1-e^{-0.04}\\
+0&1
+\end{pmatrix}
+\begin{pmatrix}
+e^{-0.06}&1-e^{-0.06}\\
+0&1
+\end{pmatrix}\\
+&=
+\begin{pmatrix}
+e^{-0.10}&1-e^{-0.10}\\
+0&1
+\end{pmatrix}\\
+&=P(5).
+\end{aligned}
+$$
+
+Numerically,
+
+$$
+P(2)P(3)=
+\begin{pmatrix}
+`r round(P23[1,1],4)`&
+`r round(P23[1,2],4)`\\
+0&1
+\end{pmatrix}.
+$$
+
+This verifies the Chapman–Kolmogorov equation.
+
+The actuarial interpretation is that the transition probabilities over five years can be obtained by combining the transition probabilities over the first two years and the following three years. The Markov property means that the future transition probabilities depend only on the state occupied at the intermediate time.
+
+
+---
+
+## Worked Example 1: Constructing the Transition Probability Matrix
+
+```{r}
+#| echo: false
+mu <- 0.02
+t <- 5
+
+p <- exp(-mu*t)
+q <- 1-p
+
+P <- matrix(c(p, q, 0, 1), nrow=2, byrow=TRUE)
+```
+
+Consider a two-state Markov model with states $\{\text{Alive},\text{Dead}\}$. Suppose the force of mortality is constant at $\mu=0.02$ per year.
+
+1. Write down the transition intensity matrix $Q$.
+2. Derive the transition probability matrix $P(t)$.
+3. Calculate the transition probability matrix over a five-year period.
+4. Interpret the entries of the resulting matrix.
+
+## Solution: Worked Example 1
+
+The transition intensity matrix is
+
+$$
+Q=
+\begin{pmatrix}
+-\mu & \mu\\
+0 & 0
+\end{pmatrix}
+=
+\begin{pmatrix}
+-0.02 & 0.02\\
+0 & 0
+\end{pmatrix}.
+$$
+
+Since the force of mortality is constant, the transition probability matrix is
+
+$$
+P(t)=e^{Qt}
+=
+\begin{pmatrix}
+e^{-\mu t} & 1-e^{-\mu t}\\
+0 & 1
+\end{pmatrix}.
+$$
+
+For $t=5$,
+
+$$
+P(5)=
+\begin{pmatrix}
+e^{-0.02(5)} & 1-e^{-0.02(5)}\\
+0 & 1
+\end{pmatrix}.
+$$
+
+Therefore,
+
+$$
+P(5)=
+\begin{pmatrix}
+`r round(p, 4)` & `r round(q, 4)`\\
+0 & 1
+\end{pmatrix}.
+$$
+
+The entry in row 1, column 1 is the probability that a life initially alive remains alive after five years. The entry in row 1, column 2 is the probability that the life dies within five years. The second row reflects the assumption that death is an absorbing state.
+
+---
+
+## Worked Example 2: The Chapman–Kolmogorov Equation
+
+```{r}
+#| echo: false
+mu <- 0.025
+
+P <- function(t) {
+  matrix(c(exp(-mu*t), 1-exp(-mu*t), 0, 1),
+         nrow=2, byrow=TRUE)
+}
+
+P2 <- P(2)
+P3 <- P(3)
+P5 <- P(5)
+
+product <- P2 %*% P3
+```
+
+A two-state Markov model has a constant force of mortality of $\mu=0.025$ per year.
+
+1. Calculate the transition probability matrices $P(2)$, $P(3)$ and $P(5)$.
+2. Verify that
+
+$$
+P(5)=P(2)P(3).
+$$
+
+3. Explain the actuarial interpretation of this relationship.
+
+## Solution: Worked Example 2
+
+The transition probability matrix is
+
+$$
+P(t)=
+\begin{pmatrix}
+e^{-0.025t} & 1-e^{-0.025t}\\
+0 & 1
+\end{pmatrix}.
+$$
+
+Hence,
+
+$$
+P(2)=
+\begin{pmatrix}
+`r round(P2[1,1],4)` &
+`r round(P2[1,2],4)`\\
+0&1
+\end{pmatrix},
+$$
+
+$$
+P(3)=
+\begin{pmatrix}
+`r round(P3[1,1],4)` &
+`r round(P3[1,2],4)`\\
+0&1
+\end{pmatrix},
+$$
+
+and
+
+$$
+P(5)=
+\begin{pmatrix}
+`r round(P5[1,1],4)` &
+`r round(P5[1,2],4)`\\
+0&1
+\end{pmatrix}.
+$$
+
+Multiplying the first two matrices gives
+
+$$
+P(2)P(3)=
+\begin{pmatrix}
+`r round(product[1,1],4)` &
+`r round(product[1,2],4)`\\
+0&1
+\end{pmatrix}.
+$$
+
+Thus,
+
+$$
+\boxed{P(5)=P(2)P(3).}
+$$
+
+This is the Chapman–Kolmogorov equation. It states that the transition probabilities over five years can be obtained by combining the transition probabilities over the first two years and the subsequent three years.
+
+The relationship is a consequence of the Markov property: conditional on being alive after two years, the future transition probabilities depend on the state at that time, rather than on the earlier history.
+
+---
+
+## Worked Example 3: Distribution of a Group of Lives Across the States
+
+```{r}
+#| echo: false
+mu <- 0.015
+t <- 5
+
+initial <- c(1000, 100)
+
+P <- matrix(c(exp(-mu*t), 1-exp(-mu*t), 0, 1),
+            nrow=2, byrow=TRUE)
+
+final <- initial %*% P
+```
+
+An insurance portfolio initially consists of 1,000 lives in the Alive state and 100 individuals in the Dead state. The portfolio is modelled using a two-state Markov model with a constant force of mortality of $\mu=0.015$ per year.
+
+1. Write down the initial state distribution.
+2. Calculate the transition probability matrix over five years.
+3. Determine the expected number of lives in each state after five years.
+4. Explain why the number of individuals in the Dead state includes those who were already dead at the initial time.
+
+## Solution: Worked Example 3
+
+The initial state distribution, expressed as a row vector, is
+
+$$
+\boldsymbol{n}(0)=
+\begin{pmatrix}
+1000&100
+\end{pmatrix}.
+$$
+
+The transition probability matrix over five years is
+
+$$
+P(5)=
+\begin{pmatrix}
+e^{-0.015(5)}&1-e^{-0.015(5)}\\
+0&1
+\end{pmatrix}.
+$$
+
+Therefore,
+
+$$
+P(5)=
+\begin{pmatrix}
+`r round(P[1,1],4)`&
+`r round(P[1,2],4)`\\
+0&1
+\end{pmatrix}.
+$$
+
+The expected state distribution after five years is
+
+$$
+\begin{aligned}
+\boldsymbol{n}(5)
+&=\boldsymbol{n}(0)P(5)\\
+&=
+\begin{pmatrix}1000&100\end{pmatrix}
+P(5)\\
+&=
+\begin{pmatrix}
+`r round(final[1],2)`&
+`r round(final[2],2)`
+\end{pmatrix}.
+\end{aligned}
+$$
+
+Thus, the expected number of individuals alive after five years is approximately $`r round(final[1])`$, while the expected number in the Dead state is approximately $`r round(final[2])`$. 
+
+The initial 100 individuals in the Dead state remain in that state because death is absorbing. The expected number of individuals in the Dead state therefore includes both those already dead at time zero and those who die during the five-year period.
+
+---
+
+## Worked Example 4: Time-Dependent Transition Intensities
+
+```{r}
+#| echo: false
+mu1 <- 0.01
+mu2 <- 0.025
+
+P1 <- matrix(c(exp(-mu1*2), 1-exp(-mu1*2), 0, 1),
+             nrow=2, byrow=TRUE)
+
+P2 <- matrix(c(exp(-mu2*3), 1-exp(-mu2*3), 0, 1),
+             nrow=2, byrow=TRUE)
+
+P_total <- P1 %*% P2
+p_survive <- P_total[1,1]
+q_die <- P_total[1,2]
+```
+
+Consider a two-state Markov model in which the force of mortality depends on the attained age:
+
+- From age 60 to age 62, the force of mortality is $\mu_1=0.01$ per year.
+- From age 62 to age 65, the force of mortality is $\mu_2=0.025$ per year.
+
+1. Write down the transition probability matrix for each period.
+2. Calculate the transition probability matrix from age 60 to age 65.
+3. Determine the probability that a life aged 60 survives to age 65.
+4. Determine the probability that a life aged 60 dies before age 65.
+
+## Solution: Worked Example 4
+
+For the first two-year period, the transition probability matrix is
+
+$$
+P_1=
+\begin{pmatrix}
+e^{-0.01(2)}&1-e^{-0.01(2)}\\
+0&1
+\end{pmatrix}.
+$$
+
+For the subsequent three-year period, the transition probability matrix is
+
+$$
+P_2=
+\begin{pmatrix}
+e^{-0.025(3)}&1-e^{-0.025(3)}\\
+0&1
+\end{pmatrix}.
+$$
+
+By the Chapman–Kolmogorov equation, the transition probability matrix from age 60 to age 65 is
+
+$$
+P(0,5)=P_1P_2.
+$$
+
+Therefore,
+
+$$
+P(0,5)=
+\begin{pmatrix}
+e^{-0.01(2)-0.025(3)}
+&
+1-e^{-0.01(2)-0.025(3)}\\
+0&1
+\end{pmatrix}.
+$$
+
+Numerically,
+
+$$
+P(0,5)=
+\begin{pmatrix}
+`r round(p_survive,4)`&
+`r round(q_die,4)`\\
+0&1
+\end{pmatrix}.
+$$
+
+Hence, the probability that a life aged 60 survives to age 65 is $`r round(p_survive,4)`$, while the probability that the life dies before age 65 is $`r round(q_die,4)`$.
+
+This example illustrates how transition probability matrices can be combined when the transition intensity changes over time.
+
+---
+
+## Worked Example 5: Estimating the Transition Intensity from Observed Data
+
+```{r}
+#| echo: false
+V <- 240
+D <- 6
+
+mu_hat <- D/V
+p_hat <- exp(-mu_hat)
+q_hat <- 1-p_hat
+
+n <- 1000
+expected_deaths <- n*q_hat
+```
+
+An insurer observes a group of policyholders under a two-state Markov model. During the observation period:
+
+- The total exposure to risk while alive is 240 life-years.
+- A total of 6 deaths are observed.
+- The force of mortality is assumed to be constant throughout the observation period.
+
+Assume that the number of deaths follows a Poisson model with mean $\mu V$, where $V$ is the total exposure and $\mu$ is the force of mortality.
+
+1. Write down the likelihood function for $\mu$.
+2. Derive the maximum likelihood estimator of $\mu$.
+3. Estimate the one-year transition probability matrix.
+4. Using the estimated model, calculate the expected number of deaths over the next year among 1,000 lives initially alive.
+
+## Solution: Worked Example 5
+
+Let $D$ denote the observed number of deaths and $V$ the total exposure to risk. Under the Poisson model,
+
+$$
+D\sim\operatorname{Poisson}(\mu V).
+$$
+
+The likelihood function is
+
+$$
+L(\mu)=\frac{(\mu V)^D e^{-\mu V}}{D!}.
+$$
+
+The log-likelihood function, ignoring terms that do not depend on $\mu$, is
+
+$$
+\ell(\mu)=D\log\mu-\mu V.
+$$
+
+Differentiating with respect to $\mu$ gives
+
+$$
+\frac{d\ell(\mu)}{d\mu}
+=\frac{D}{\mu}-V.
+$$
+
+Setting the derivative equal to zero,
+
+$$
+\frac{D}{\hat{\mu}}-V=0.
+$$
+
+Therefore, the maximum likelihood estimator is
+
+$$
+\boxed{\hat{\mu}=\frac{D}{V}.}
+$$
+
+For the observed data,
+
+$$
+\hat{\mu}=\frac{6}{240}
+=`r round(mu_hat,4)`.
+$$
+
+The estimated one-year transition probability matrix is
+
+$$
+\hat{P}(1)=
+\begin{pmatrix}
+e^{-\hat{\mu}}&1-e^{-\hat{\mu}}\\
+0&1
+\end{pmatrix}
+=
+\begin{pmatrix}
+`r round(p_hat,4)`&
+`r round(q_hat,4)`\\
+0&1
+\end{pmatrix}.
+$$
+
+For 1,000 lives initially alive, the expected number of deaths over the next year is
+
+$$
+1000(1-e^{-\hat{\mu}})
+=`r round(expected_deaths,2)`.
+$$
+
+Thus, the estimated model predicts approximately $`r round(expected_deaths)`$ deaths over the next year.
+
+
+
+
+---
+
+## Worked Example 2: Applying the Chapman–Kolmogorov Equation to a Group of Lives
+
+```{r}
+#| echo: false
+mu <- 0.03
+
+P <- function(t) {
+  matrix(c(exp(-mu*t), 1-exp(-mu*t), 0, 1),
+         nrow=2, byrow=TRUE)
+}
+
+P2 <- P(2)
+P3 <- P(3)
+P5 <- P(5)
+
+P_product <- P2 %*% P3
+
+initial <- c(1200, 0)
+n2 <- initial %*% P2
+n5 <- initial %*% P5
+
+deaths_2_5 <- n2[1]*P3[1,2]
+```
+
+An insurance portfolio initially consists of 1,200 lives, all of whom are in the Alive state. The mortality of each life is modelled using a time-homogeneous two-state continuous-time Markov model with a constant force of mortality of $\mu=0.03$ per year.
+
+**(a)** Write down the transition intensity matrix $Q$ and the transition probability matrix $P(t)$.
+
+**(b)** Calculate the transition probability matrices $P(2)$, $P(3)$ and $P(5)$.
+
+**(c)** Verify the Chapman–Kolmogorov equation
+
+$$
+P(5)=P(2)P(3).
+$$
+
+Explain why this relationship holds for a time-homogeneous Markov model.
+
+**(d)** Determine the expected number of lives in each state after:
+
+1. Two years.
+2. Five years.
+
+**(e)** Calculate the expected number of additional deaths between years 2 and 5.
+
+**(f)** Calculate the probability that a life initially alive survives for two years and then dies within the following three years. Explain the difference between this probability and the conditional probability of dying during years 2 to 5, given survival to year 2.
+
+## Solution: Worked Example 2
+
+**(a)** The transition intensity matrix is
+
+$$
+\boxed{
+Q=
+\begin{pmatrix}
+-0.03&0.03\\
+0&0
+\end{pmatrix}.
+}
+$$
+
+Since the force of mortality is constant, the transition probability matrix is
+
+$$
+\boxed{
+P(t)=
+\begin{pmatrix}
+e^{-0.03t}&1-e^{-0.03t}\\
+0&1
+\end{pmatrix}.
+}
+$$
+
+**(b)** For $t=2$,
+
+$$
+P(2)=
+\begin{pmatrix}
+e^{-0.06}&1-e^{-0.06}\\
+0&1
+\end{pmatrix}
+=
+\begin{pmatrix}
+`r round(P2[1,1],4)`&
+`r round(P2[1,2],4)`\\
+0&1
+\end{pmatrix}.
+$$
+
+For $t=3$,
+
+$$
+P(3)=
+\begin{pmatrix}
+e^{-0.09}&1-e^{-0.09}\\
+0&1
+\end{pmatrix}
+=
+\begin{pmatrix}
+`r round(P3[1,1],4)`&
+`r round(P3[1,2],4)`\\
+0&1
+\end{pmatrix}.
+$$
+
+For $t=5$,
+
+$$
+P(5)=
+\begin{pmatrix}
+e^{-0.15}&1-e^{-0.15}\\
+0&1
+\end{pmatrix}
+=
+\begin{pmatrix}
+`r round(P5[1,1],4)`&
+`r round(P5[1,2],4)`\\
+0&1
+\end{pmatrix}.
+$$
+
+**(c)** The Chapman–Kolmogorov equation states that
+
+$$
+P(2+3)=P(2)P(3).
+$$
+
+Multiplying the matrices,
+
+$$
+\begin{aligned}
+P(2)P(3)
+&=
+\begin{pmatrix}
+e^{-0.06}&1-e^{-0.06}\\
+0&1
+\end{pmatrix}
+\begin{pmatrix}
+e^{-0.09}&1-e^{-0.09}\\
+0&1
+\end{pmatrix}\\
+&=
+\begin{pmatrix}
+e^{-0.15}&1-e^{-0.15}\\
+0&1
+\end{pmatrix}\\
+&=P(5).
+\end{aligned}
+$$
+
+Therefore,
+
+$$
+P(2)P(3)=
+\begin{pmatrix}
+`r round(P_product[1,1],4)`&
+`r round(P_product[1,2],4)`\\
+0&1
+\end{pmatrix}.
+$$
+
+This verifies the Chapman–Kolmogorov equation.
+
+For a time-homogeneous model, the transition probabilities depend only on the length of the time interval, not on the starting time. Therefore, the transition probabilities over two successive periods can be combined by matrix multiplication.
+
+**(d)** The initial state distribution is
+
+$$
+\boldsymbol{n}(0)=
+\begin{pmatrix}
+1200&0
+\end{pmatrix}.
+$$
+
+After two years,
+
+$$
+\begin{aligned}
+\boldsymbol{n}(2)
+&=\boldsymbol{n}(0)P(2)\\
+&=
+\begin{pmatrix}
+1200&0
+\end{pmatrix}P(2)\\
+&=
+\begin{pmatrix}
+`r round(n2[1],2)`&
+`r round(n2[2],2)`
+\end{pmatrix}.
+\end{aligned}
+$$
+
+After five years,
+
+$$
+\begin{aligned}
+\boldsymbol{n}(5)
+&=\boldsymbol{n}(0)P(5)\\
+&=
+\begin{pmatrix}
+`r round(n5[1],2)`&
+`r round(n5[2],2)`
+\end{pmatrix}.
+\end{aligned}
+$$
+
+**(e)** The expected number of additional deaths between years 2 and 5 is the expected number alive at year 2 multiplied by the probability of dying during the following three years.
+
+Thus,
+
+$$
+\begin{aligned}
+E[\text{additional deaths}]
+&=1200e^{-0.06}(1-e^{-0.09})\\
+&=`r round(deaths_2_5,2)`.
+\end{aligned}
+$$
+
+**(f)** The probability that a life initially alive survives for two years and then dies within the following three years is
+
+$$
+\begin{aligned}
+P(\text{survive 2 years, then die in the next 3})
+&=p_{11}(2)p_{12}(3)\\
+&=e^{-0.06}(1-e^{-0.09})\\
+&=`r round(P2[1,1]*P3[1,2],4)`.
+\end{aligned}
+$$
+
+In contrast, the conditional probability of dying during years 2 to 5, given survival to year 2, is
+
+$$
+P(\text{die during years 2 to 5}\mid\text{alive at year 2})
+=p_{12}(3)
+=`r round(P3[1,2],4)`.
+$$
+
+The first probability is unconditional, whereas the second is conditional on being alive at year 2.
+
+---
+
+## Worked Example 3: Estimating the Transition Intensity from a Transition Probability Matrix
+
+```{r} 
+#| echo: false
+p4 <- 0.8869
+t_obs <- 4
+
+mu_hat <- -log(p4)/t_obs
+
+Q_hat <- matrix(c(-mu_hat, mu_hat, 0, 0),
+                nrow=2, byrow=TRUE)
+
+P1_hat <- matrix(c(exp(-mu_hat), 1-exp(-mu_hat), 0, 1),
+                 nrow=2, byrow=TRUE)
+
+P6_hat <- matrix(c(exp(-mu_hat*6), 1-exp(-mu_hat*6), 0, 1),
+                 nrow=2, byrow=TRUE)
+
+P2_hat <- matrix(c(exp(-mu_hat*2), 1-exp(-mu_hat*2), 0, 1),
+                 nrow=2, byrow=TRUE)
+
+P4_hat <- matrix(c(exp(-mu_hat*4), 1-exp(-mu_hat*4), 0, 1),
+                 nrow=2, byrow=TRUE)
+
+P4_product <- P2_hat %*% P2_hat
+
+q_next2 <- 1-exp(-mu_hat*2)
+```
+
+An insurer uses a time-homogeneous two-state Markov model to describe the mortality of its policyholders. The estimated transition probability matrix over a four-year period is
+
+$$
+P(4)=
+\begin{pmatrix}
+0.8869&0.1131\\
+0&1
+\end{pmatrix}.
+$$
+
+Assume that the force of mortality is constant over time.
+
+**(a)** Interpret each entry of the given transition probability matrix.
+
+**(b)** Estimate the constant force of mortality $\mu$.
+
+**(c)** Write down the estimated transition intensity matrix $\hat{Q}$.
+
+**(d)** Derive the estimated transition probability matrix $\hat{P}(t)$ for an arbitrary period of $t$ years.
+
+**(e)** Calculate the estimated transition probability matrices over one year and six years.
+
+**(f)** Verify the Chapman–Kolmogorov equation
+
+$$
+\hat{P}(4)=\hat{P}(2)\hat{P}(2).
+$$
+
+**(g)** Calculate the probability that a life alive at the end of year 4 dies within the following two years.
+
+**(h)** Explain why the estimated transition probability matrix over six years is not obtained by multiplying $P(4)$ by itself.
+
+## Solution: Worked Example 3
+
+**(a)** The entries have the following interpretations:
+
+- $p_{11}(4)=0.8869$ is the probability that a life initially alive remains alive after four years.
+- $p_{12}(4)=0.1131$ is the probability that a life initially alive dies within four years.
+- $p_{21}(4)=0$ is the probability that a life initially dead becomes alive after four years.
+- $p_{22}(4)=1$ is the probability that a life initially dead remains dead after four years.
+
+**(b)** Under a constant force of mortality,
+
+$$
+p_{11}(t)=e^{-\mu t}.
+$$
+
+Using the given four-year survival probability,
+
+$$
+0.8869=e^{-4\mu}.
+$$
+
+Taking logarithms,
+
+$$
+\begin{aligned}
+\hat{\mu}
+&=-\frac{1}{4}\ln(0.8869)\\
+&=`r round(mu_hat,5)`.
+\end{aligned}
+$$
+
+**(c)** The estimated transition intensity matrix is
+
+$$
+\boxed{
+\hat{Q}=
+\begin{pmatrix}
+-\hat{\mu}&\hat{\mu}\\
+0&0
+\end{pmatrix}
+=
+\begin{pmatrix}
+-`r round(mu_hat,5)`&
+`r round(mu_hat,5)`\\
+0&0
+\end{pmatrix}.
+}
+$$
+
+**(d)** The estimated transition probability matrix for an arbitrary period of $t$ years is
+
+$$
+\boxed{
+\hat{P}(t)=
+\begin{pmatrix}
+e^{-\hat{\mu}t}&1-e^{-\hat{\mu}t}\\
+0&1
+\end{pmatrix}.
+}
+$$
+
+**(e)** Over one year,
+
+$$
+\hat{P}(1)=
+\begin{pmatrix}
+`r round(P1_hat[1,1],4)`&
+`r round(P1_hat[1,2],4)`\\
+0&1
+\end{pmatrix}.
+$$
+
+Over six years,
+
+$$
+\hat{P}(6)=
+\begin{pmatrix}
+`r round(P6_hat[1,1],4)`&
+`r round(P6_hat[1,2],4)`\\
+0&1
+\end{pmatrix}.
+$$
+
+**(f)** By the Chapman–Kolmogorov equation,
+
+$$
+\hat{P}(4)=\hat{P}(2)\hat{P}(2).
+$$
+
+Indeed,
+
+$$
+\begin{aligned}
+\hat{P}(2)\hat{P}(2)
+&=
+\begin{pmatrix}
+e^{-2\hat{\mu}}&1-e^{-2\hat{\mu}}\\
+0&1
+\end{pmatrix}^2\\
+&=
+\begin{pmatrix}
+e^{-4\hat{\mu}}&1-e^{-4\hat{\mu}}\\
+0&1
+\end{pmatrix}\\
+&=\hat{P}(4).
+\end{aligned}
+$$
+
+Numerically,
+
+$$
+\hat{P}(2)\hat{P}(2)=
+\begin{pmatrix}
+`r round(P4_product[1,1],4)`&
+`r round(P4_product[1,2],4)`\\
+0&1
+\end{pmatrix}.
+$$
+
+This agrees with the given transition probability matrix, up to rounding.
+
+**(g)** By the time-homogeneous Markov property, the probability of dying within the next two years, conditional on being alive at the end of year 4, is
+
+$$
+\begin{aligned}
+p_{12}(2)
+&=1-e^{-2\hat{\mu}}\\
+&=`r round(q_next2,4)`.
+\end{aligned}
+$$
+
+**(h)** The Chapman–Kolmogorov equation requires the transition matrices to correspond to the appropriate time intervals.
+
+For a four-year period,
+
+$$
+P(4)=P(2)P(2).
+$$
+
+However, multiplying $P(4)$ by itself gives
+
+$$
+P(4)P(4)=P(8),
+$$
+
+not $P(6)$. To obtain the six-year transition probability matrix, we can use
+
+$$
+\boxed{P(6)=P(4)P(2).}
+$$
+
+This distinction is important when applying the Chapman–Kolmogorov equation.
+
+
+
+## Worked Example 4: Estimating the Force of Mortality Using Exposure and Death Data
+
+```{r}
+#| echo: false
+
+# Observed data from three groups of policyholders
+group <- c("A", "B", "C")
+exposure <- c(420, 580, 500)
+deaths <- c(5, 8, 7)
+
+total_exposure <- sum(exposure)
+total_deaths <- sum(deaths)
+
+mu_hat <- total_deaths / total_exposure
+
+P1 <- matrix(c(exp(-mu_hat), 1-exp(-mu_hat), 0, 1),
+             nrow=2, byrow=TRUE)
+
+P5 <- matrix(c(exp(-5*mu_hat), 1-exp(-5*mu_hat), 0, 1),
+             nrow=2, byrow=TRUE)
+
+P10 <- matrix(c(exp(-10*mu_hat), 1-exp(-10*mu_hat), 0, 1),
+              nrow=2, byrow=TRUE)
+```
+
+An insurance company models the mortality of its policyholders using a time-homogeneous two-state continuous-time Markov model. The states are Alive and Dead, with Dead being an absorbing state.
+
+The company collects the following data over an observation period.
+
+| Group | Total exposure (life-years) | Number of deaths |
+|:---:|---:|---:|
+| A | 420 | 5 |
+| B | 580 | 8 |
+| C | 500 | 7 |
+| Total | 1,500 | 20 |
+
+Assume that the force of mortality is constant across all groups and throughout the observation period.
+
+**(a)** Explain what is meant by exposure in life-years and why it is relevant to estimating the force of mortality.
+
+**(b)** Write down the likelihood function for the observed number of deaths, assuming that the number of deaths follows a Poisson distribution with mean $\mu E$, where $E$ is the total exposure.
+
+**(c)** Obtain the maximum likelihood estimator of the force of mortality, $\mu$.
+
+**(d)** Write down the estimated transition intensity matrix, $\hat{Q}$.
+
+**(e)** Calculate the estimated transition probability matrices for periods of one, five and ten years.
+
+**(f)** Interpret the estimated probability of death within five years for a life who is alive at the beginning of the period.
+
+## Solution: Worked Example 4
+
+**(a)** Exposure measures the total time that lives spend in the Alive state while under observation and at risk of death.
+
+For example, one life observed for two years contributes two life-years of exposure, while two lives each observed for one year also contribute two life-years.
+
+The total exposure is therefore
+
+$$
+E=420+580+500=1,500\text{ life-years}.
+$$
+
+Exposure is relevant because the number of deaths depends on both the force of mortality and the amount of time for which lives are exposed to the risk of death.
+
+
+**(b)** Consider an individual life $i$ who is initially in the Alive state. Let:
+
+- $D_i=1$ if the life dies during the observation period, and $D_i=0$ otherwise;
+- $V_i$ denote the time spent in the Alive state during the observation period, measured in years.
+
+Under the two-state continuous-time Markov model, the transition intensity from Alive to Dead is $\mu$, where $\mu$ is constant.
+
+The contribution to the likelihood from observing life $i$ is
+
+$$
+L_i(\mu)=e^{-\mu V_i}\mu^{D_i}.
+$$
+
+Assuming that the observations on different lives are independent, the likelihood function for all observed lives is
+
+$$
+\begin{aligned}
+L(\mu)
+&=\prod_{i=1}^{n}e^{-\mu V_i}\mu^{D_i}\\
+&=e^{-\mu\sum_{i=1}^{n}V_i}
+  \mu^{\sum_{i=1}^{n}D_i}.
+\end{aligned}
+$$
+
+Let
+
+$$
+D=\sum_{i=1}^{n}D_i
+\qquad\text{and}\qquad
+E=\sum_{i=1}^{n}V_i,
+$$
+
+where $D$ is the total number of observed deaths and $E$ is the total exposure in life-years.
+
+Hence, the likelihood function is
+
+$$
+\boxed{L(\mu)=\mu^D e^{-\mu E}.}
+$$
+
+**(c)** The log-likelihood function is
+
+$$
+\ell(\mu)=D\log\mu-\mu E.
+$$
+
+Differentiating with respect to $\mu$ gives
+
+$$
+\frac{d\ell(\mu)}{d\mu}
+=\frac{D}{\mu}-E.
+$$
+
+Setting this equal to zero,
+
+$$
+\frac{D}{\hat{\mu}}-E=0.
+$$
+
+Hence, the maximum likelihood estimator is
+
+$$
+\boxed{\hat{\mu}=\frac{D}{E}.}
+$$
+
+Using the observed data,
+
+$$
+\boxed{
+\hat{\mu}
+=\frac{20}{1,500}
+=0.01333
+\text{ per year}.
+}
+$$
+
+### Alternative derivation using the Poisson distribution
+
+The likelihood function can also be derived by modelling the total number of deaths using a Poisson distribution.
+
+Suppose that the total exposure is $E$ life-years and the total number of deaths is $D$. Under a constant force of mortality $\mu$, the number of deaths over the total exposure can be modelled as
+
+$$
+D\sim\operatorname{Poisson}(\mu E).
+$$
+
+The probability mass function is
+
+$$
+P(D=d)=\frac{(\mu E)^d e^{-\mu E}}{d!}.
+$$
+
+Treating the observed values of $D$ and $E$ as fixed, the likelihood function for $\mu$ is therefore
+
+$$
+\begin{aligned}
+L(\mu)
+&=\frac{(\mu E)^D e^{-\mu E}}{D!}\\
+&\propto \mu^D e^{-\mu E},
+\end{aligned}
+$$
+
+where the proportionality is with respect to $\mu$.
+
+Taking logarithms gives
+
+$$
+\ell(\mu)=D\log\mu-\mu E+C,
+$$
+
+where $C$ does not depend on $\mu$. Differentiating with respect to $\mu$,
+
+$$
+\frac{\mathrm d\ell(\mu)}{\mathrm d\mu}
+=\frac{D}{\mu}-E.
+$$
+
+Setting the derivative equal to zero gives the maximum likelihood estimator
+
+$$
+\boxed{\hat{\mu}=\frac{D}{E}.}
+$$
+
+This is the same likelihood kernel and maximum likelihood estimator obtained directly from the two-state Markov model.
+
+**Remark.** The two derivations are closely related. The direct Markov model approach uses the likelihood contributions from individual lives, while the Poisson approach models the aggregate number of deaths over the total exposure. Both lead to the same estimator under a constant force of mortality and the usual assumptions on independent lives and non-informative censoring. The Poisson formulation is an alternative way to obtain the likelihood; it does not require replacing the underlying two-state Markov model.
+
+<!-- **(b)** Let $D$ denote the total number of observed deaths and $E$ the total exposure in life-years. -->
+
+<!-- Under the Poisson model, -->
+
+<!-- $$ -->
+<!-- D\sim\operatorname{Poisson}(\mu E). -->
+<!-- $$ -->
+
+<!-- The likelihood function is -->
+
+<!-- $$ -->
+<!-- L(\mu)=\frac{(\mu E)^D e^{-\mu E}}{D!}. -->
+<!-- $$ -->
+
+<!-- The log-likelihood is -->
+
+<!-- $$ -->
+<!-- \ell(\mu)=D\log(\mu E)-\mu E-\log(D!). -->
+<!-- $$ -->
+
+<!-- **(c)** Differentiating the log-likelihood with respect to $\mu$ gives -->
+
+<!-- $$ -->
+<!-- \frac{d\ell(\mu)}{d\mu} -->
+<!-- =\frac{D}{\mu}-E. -->
+<!-- $$ -->
+
+<!-- Setting this equal to zero, -->
+
+<!-- $$ -->
+<!-- \frac{D}{\hat{\mu}}-E=0. -->
+<!-- $$ -->
+
+<!-- Hence, -->
+
+<!-- $$ -->
+<!-- \hat{\mu}=\frac{D}{E}. -->
+<!-- $$ -->
+
+<!-- Using the observed data, -->
+
+<!-- $$ -->
+<!-- \boxed{ -->
+<!-- \hat{\mu} -->
+<!-- =\frac{20}{1,500} -->
+<!-- =0.01333 -->
+<!-- \text{ per year}. -->
+<!-- } -->
+<!-- $$ -->
+
+**(d)** The estimated transition intensity matrix is
+
+$$
+\boxed{
+\hat{Q}=
+\begin{pmatrix}
+-0.01333&0.01333\\
+0&0
+\end{pmatrix}.
+}
+$$
+
+**(e)** Since the model is time-homogeneous,
+
+$$
+\hat{P}(t)=e^{\hat{Q}t}
+=
+\begin{pmatrix}
+e^{-\hat{\mu}t}&1-e^{-\hat{\mu}t}\\
+0&1
+\end{pmatrix}.
+$$
+
+For one year,
+
+$$
+\hat{P}(1)=
+\begin{pmatrix}
+0.9868&0.0132\\
+0&1
+\end{pmatrix}.
+$$
+
+For five years,
+
+$$
+\hat{P}(5)=
+\begin{pmatrix}
+0.9355&0.0645\\
+0&1
+\end{pmatrix}.
+$$
+
+For ten years,
+
+$$
+\hat{P}(10)=
+\begin{pmatrix}
+0.8752&0.1248\\
+0&1
+\end{pmatrix}.
+$$
+
+**(f)** The estimated probability that a life initially alive dies within five years is
+
+$$
+\begin{aligned}
+\hat{p}_{12}(5)
+&=1-e^{-5\hat{\mu}}\\
+&=0.0645.
+\end{aligned}
+$$
+
+Thus, the estimated probability of death within five years is approximately $6.45\%$.
+
+---
+
+## Worked Example 5: Estimating the Force of Mortality from Observed State Counts
+
+```{r}
+#| echo: false
+
+# Number of lives at the beginning and end of a four-year period
+initial_alive <- 1000
+initial_dead <- 0
+
+final_alive <- 920
+final_dead <- 80
+
+observation_period <- 4
+
+survival_observed <- final_alive / initial_alive
+
+mu_hat <- -log(survival_observed) / observation_period
+
+P1 <- matrix(c(exp(-mu_hat), 1-exp(-mu_hat), 0, 1),
+             nrow=2, byrow=TRUE)
+
+P4 <- matrix(c(exp(-4*mu_hat), 1-exp(-4*mu_hat), 0, 1),
+             nrow=2, byrow=TRUE)
+
+P8 <- matrix(c(exp(-8*mu_hat), 1-exp(-8*mu_hat), 0, 1),
+             nrow=2, byrow=TRUE)
+
+expected_alive_8 <- initial_alive * P8[1,1]
+expected_dead_8 <- initial_alive * P8[1,2]
+```
+
+An insurance company follows a portfolio of 1,000 lives over a four-year period. At the beginning of the observation period, all 1,000 lives are alive. At the end of the four years, the company records the following numbers:
+
+| State | Number of lives |
+|---|---:|
+| Alive | 920 |
+| Dead | 80 |
+| Total | 1,000 |
+
+Assume that the mortality of each life follows the same time-homogeneous two-state continuous-time Markov model, with a constant force of mortality.
+
+**(a)** Explain why the observed proportion of lives remaining alive after four years is an estimate of $p_{11}(4)$.
+
+**(b)** Estimate the constant force of mortality, $\mu$, using the observed data.
+
+**(c)** Write down the estimated transition intensity matrix, $\hat{Q}$.
+
+**(d)** Obtain the estimated transition probability matrix, $\hat{P}(t)$, for an arbitrary period of $t$ years.
+
+**(e)** Calculate the estimated transition probability matrices for one, four and eight years.
+
+**(f)** Estimate the expected numbers of lives in the Alive and Dead states after eight years, assuming the portfolio initially contains 1,000 lives.
+
+**(g)** Explain why the estimated probability of death over eight years is not twice the estimated probability of death over four years.
+
+## Solution: Worked Example 5
+
+**(a)** Since all 1,000 lives are initially alive, the observed proportion remaining alive after four years is
+
+$$
+\frac{920}{1,000}=0.92.
+$$
+
+This gives an estimate of the four-year survival probability:
+
+$$
+\hat{p}_{11}(4)=0.92.
+$$
+
+
+**Note on the type of observed data**
+
+In the following example, we observe a cohort of 1,000 lives over a fixed four-year period. The data consist of the numbers of lives in each state (Alive or Dead) at the beginning and at the end of the observation period. We therefore use **head-count data**, rather than individual waiting times or exposure times, to estimate the force of mortality.
+
+Since all lives are initially alive and are observed for four years, the proportion remaining alive at the end of the period provides an estimate of the four-year survival probability, $p_{11}(4)$. We can then use the relationship between $p_{11}(4)$ and the constant force of mortality $\mu$ to obtain an estimate of $\mu$.
+
+**(b)** Under a constant force of mortality,
+
+$$
+p_{11}(t)=e^{-\mu t}.
+$$
+
+Therefore,
+
+$$
+0.92=e^{-4\mu}.
+$$
+
+Taking logarithms,
+
+$$
+\begin{aligned}
+\hat{\mu}
+&=-\frac{1}{4}\log(0.92)\\
+&=0.02084.
+\end{aligned}
+$$
+
+Thus, the estimated force of mortality is approximately $0.02084$ per year.
+
+**(c)** The estimated transition intensity matrix is
+
+$$
+\boxed{
+\hat{Q}=
+\begin{pmatrix}
+-0.02084&0.02084\\
+0&0
+\end{pmatrix}.
+}
+$$
+
+**(d)** The estimated transition probability matrix is
+
+$$
+\boxed{
+\hat{P}(t)=
+\begin{pmatrix}
+e^{-\hat{\mu}t}&1-e^{-\hat{\mu}t}\\
+0&1
+\end{pmatrix}.
+}
+$$
+
+**(e)** For one year,
+
+$$
+\hat{P}(1)=
+\begin{pmatrix}
+0.9794&0.0206\\
+0&1
+\end{pmatrix}.
+$$
+
+For four years,
+
+$$
+\hat{P}(4)=
+\begin{pmatrix}
+0.92&0.08\\
+0&1
+\end{pmatrix}.
+$$
+
+For eight years,
+
+$$
+\hat{P}(8)=
+\begin{pmatrix}
+0.8464&0.1536\\
+0&1
+\end{pmatrix}.
+$$
+
+**(f)** The initial state distribution is
+
+$$
+\boldsymbol{n}(0)=
+\begin{pmatrix}
+1,000&0
+\end{pmatrix}.
+$$
+
+After eight years, the expected state distribution is
+
+$$
+\begin{aligned}
+\boldsymbol{n}(8)
+&=\boldsymbol{n}(0)\hat{P}(8)\\
+&=
+\begin{pmatrix}
+846.4&153.6
+\end{pmatrix}.
+\end{aligned}
+$$
+
+Therefore, the expected number of lives remaining alive is approximately $846.4$, while the expected number of deaths is approximately $153.6$.
+
+**(g)** The probability of death over eight years is
+
+$$
+\hat{p}_{12}(8)=1-e^{-8\hat{\mu}}.
+$$
+
+It is not twice the four-year probability of death because the probability of dying during the second four-year period is conditional on surviving the first four years.
+
+The Chapman–Kolmogorov equation gives
+
+$$
+\hat{P}(8)=\hat{P}(4)\hat{P}(4).
+$$
+
+In particular,
+
+$$
+\begin{aligned}
+\hat{p}_{12}(8)
+&=\hat{p}_{11}(4)\hat{p}_{12}(4)
+  +\hat{p}_{12}(4)\hat{p}_{22}(4)\\
+&=0.92(0.08)+0.08(1)\\
+&=0.1536.
+\end{aligned}
+$$
+
+The probability of death over eight years is therefore $0.1536$, rather than $2(0.08)=0.16$.
+
+
+
+
+
+
+
+
+
+## Worked Example 2: A Linearly Increasing Force of Mortality
+
+```{r} 
+#| echo: false
+mu0 <- 0.01
+beta <- 0.002
+
+H <- function(t) {
+  mu0*t + beta*t^2/2
+}
+
+P <- function(s, t) {
+  p <- exp(-(H(t)-H(s)))
+  matrix(c(p, 1-p, 0, 1), nrow=2, byrow=TRUE)
+}
+
+P05 <- P(0, 5)
+P25 <- P(2, 5)
+P02 <- P(0, 2)
+P23 <- P(2, 3)
+
+p_survive_5 <- P05[1,1]
+p_survive_2_to_5 <- P25[1,1]
+p_die_2_to_5 <- P25[1,2]
+p_survive_2_then_die <- P02[1,1]*P25[1,2]
+
+t90 <- (-mu0 + sqrt(mu0^2 + 2*beta*(-log(0.9))))/beta
+```
+
+Consider a continuous-time two-state Markov model with states $\{\text{Alive},\text{Dead}\}$. The force of mortality depends on time and is given by
+
+$$
+\mu(t)=0.01+0.002t,\qquad t\geq 0,
+$$
+
+where $t$ is measured in years from the initial observation time. Death is an absorbing state.
+
+**(a)** Write down the time-dependent transition intensity matrix $Q(t)$.
+
+**(b)** Derive the transition probability matrix $P(0,t)$ in terms of $t$.
+
+**(c)** Calculate the transition probability matrix over five years, $P(0,5)$. Interpret its entries.
+
+**(d)** Calculate the transition probability matrix from time 2 to time 5, $P(2,5)$. Hence, determine:
+
+1. The probability that a life alive at time 2 remains alive at time 5.
+2. The probability that a life alive at time 2 dies before time 5.
+3. The probability that a life initially alive survives for two years and then dies before time 5.
+
+**(e)** Verify the Chapman–Kolmogorov equation
+
+$$
+P(0,5)=P(0,2)P(2,5).
+$$
+
+**(f)** Determine the time at which the probability of survival from the initial observation time falls to 90%.
+
+## Solution: Worked Example 2
+
+**(a)** The transition intensity matrix is
+
+$$
+\boxed{
+Q(t)=
+\begin{pmatrix}
+-\mu(t)&\mu(t)\\
+0&0
+\end{pmatrix}
+=
+\begin{pmatrix}
+-(0.01+0.002t)&0.01+0.002t\\
+0&0
+\end{pmatrix}.
+}
+$$
+
+**(b)** For a time-dependent force of mortality, the probability of remaining alive from time 0 to time $t$ is
+
+$$
+\begin{aligned}
+p_{11}(0,t)
+&=\exp\left(-\int_0^t\mu(u)\,du\right)\\
+&=\exp\left(-\int_0^t(0.01+0.002u)\,du\right)\\
+&=\exp(-0.01t-0.001t^2).
+\end{aligned}
+$$
+
+Therefore,
+
+$$
+p_{12}(0,t)=1-\exp(-0.01t-0.001t^2).
+$$
+
+The transition probability matrix is
+
+$$
+\boxed{
+P(0,t)=
+\begin{pmatrix}
+e^{-0.01t-0.001t^2}
+&
+1-e^{-0.01t-0.001t^2}\\
+0&1
+\end{pmatrix}.
+}
+$$
+
+**(c)** For $t=5$,
+
+$$
+P(0,5)=
+\begin{pmatrix}
+e^{-0.01(5)-0.001(5)^2}
+&
+1-e^{-0.01(5)-0.001(5)^2}\\
+0&1
+\end{pmatrix}.
+$$
+
+Thus,
+
+$$
+\boxed{
+P(0,5)=
+\begin{pmatrix}
+`r round(P05[1,1],4)`&
+`r round(P05[1,2],4)`\\
+0&1
+\end{pmatrix}.
+}
+$$
+
+The first row gives the probabilities of being alive or dead after five years, given that the life was initially alive.
+
+**(d)** For the period from time 2 to time 5, the survival probability is
+
+$$
+\begin{aligned}
+p_{11}(2,5)
+&=\exp\left(-\int_2^5(0.01+0.002u)\,du\right)\\
+&=\exp\left[-0.01(5-2)-0.001(5^2-2^2)\right].
+\end{aligned}
+$$
+
+Hence,
+
+$$
+P(2,5)=
+\begin{pmatrix}
+e^{-0.039}&1-e^{-0.039}\\
+0&1
+\end{pmatrix}.
+$$
+
+Numerically,
+
+$$
+P(2,5)=
+\begin{pmatrix}
+`r round(P25[1,1],4)`&
+`r round(P25[1,2],4)`\\
+0&1
+\end{pmatrix}.
+$$
+
+Therefore:
+
+1. The probability of surviving from time 2 to time 5 is
+
+$$
+p_{11}(2,5)=`r round(p_survive_2_to_5,4)`.
+$$
+
+2. The probability of dying between time 2 and time 5, conditional on being alive at time 2, is
+
+$$
+p_{12}(2,5)=`r round(p_die_2_to_5,4)`.
+$$
+
+3. The probability of surviving the first two years and then dying before time 5 is
+
+$$
+\begin{aligned}
+p_{11}(0,2)p_{12}(2,5)
+&={}_2p_x\,p_{12}(2,5)\\
+&=`r round(p_survive_2_then_die,4)`.
+\end{aligned}
+$$
+
+**(e)** The Chapman–Kolmogorov equation gives
+
+$$
+P(0,5)=P(0,2)P(2,5).
+$$
+
+The survival probability on the right-hand side is
+
+$$
+\begin{aligned}
+p_{11}(0,2)p_{11}(2,5)
+&=\exp\left(-\int_0^2\mu(u)\,du\right)
+\exp\left(-\int_2^5\mu(u)\,du\right)\\
+&=\exp\left(-\int_0^5\mu(u)\,du\right)\\
+&=p_{11}(0,5).
+\end{aligned}
+$$
+
+The same relationship holds for the other entries of the matrices. Thus,
+
+$$
+\boxed{P(0,5)=P(0,2)P(2,5).}
+$$
+
+This confirms that transition probabilities over successive periods can be combined even when the force of mortality depends on time.
+
+**(f)** We require
+
+$$
+p_{11}(0,t)=0.9.
+$$
+
+Therefore,
+
+$$
+e^{-0.01t-0.001t^2}=0.9.
+$$
+
+Taking logarithms,
+
+$$
+0.001t^2+0.01t+\ln(0.9)=0.
+$$
+
+Taking the positive root gives
+
+$$
+\boxed{
+t=
+\frac{-0.01+\sqrt{0.01^2-4(0.001)\ln(0.9)}}{0.002}
+\approx `r round(t90,4)`\text{ years}.
+}
+$$
+
+Thus, the probability of remaining alive falls to 90% approximately $`r round(t90,2)`$ years after the initial observation time.
+
+---
+
+## Worked Example 3: A Piecewise Time-Dependent Force of Mortality
+
+```{r} 
+#| echo: false
+H <- function(t) {
+  ifelse(t <= 3,
+         0.01*t + 0.001*t^2,
+         0.039 + 0.016*(t-3) + 0.002*(t-3)^2)
+}
+
+P <- function(s, t) {
+  p <- exp(-(H(t)-H(s)))
+  matrix(c(p, 1-p, 0, 1), nrow=2, byrow=TRUE)
+}
+
+P03 <- P(0, 3)
+P36 <- P(3, 6)
+P06 <- P(0, 6)
+P16 <- P(1, 6)
+
+P06_product <- P03 %*% P36
+
+p_survive_1_to_6 <- P16[1,1]
+p_die_1_to_6 <- P16[1,2]
+p_survive_0_to_6 <- P06[1,1]
+
+n_alive <- 800
+n_dead <- 200
+initial <- c(n_alive, n_dead)
+final <- initial %*% P06
+```
+
+Consider a two-state continuous-time Markov model for mortality. The force of mortality varies with time according to
+
+$$
+\mu(t)=
+\begin{cases}
+0.01+0.002t, & 0\leq t<3,\\
+0.016+0.004(t-3), & t\geq 3.
+\end{cases}
+$$
+
+Time is measured in years from the initial observation time. Death is an absorbing state.
+
+**(a)** Explain why this is a time-inhomogeneous Markov model. Write down the transition intensity matrix $Q(t)$.
+
+**(b)** Derive the cumulative force of mortality
+
+$$
+H(t)=\int_0^t\mu(u)\,du
+$$
+
+for both time intervals. Show that the cumulative force of mortality is continuous at $t=3$.
+
+**(c)** Derive the transition probability matrix $P(0,t)$ for:
+
+1. $0\leq t<3$;
+2. $t\geq 3$.
+
+**(d)** Calculate the transition probability matrices $P(0,3)$ and $P(3,6)$. Hence, calculate $P(0,6)$ using matrix multiplication.
+
+**(e)** Calculate the probability that a life initially alive:
+
+1. Survives to time 6.
+2. Survives to time 1 and then dies before time 6.
+3. Survives from time 1 to time 6, conditional on being alive at time 1.
+
+**(f)** Verify the Chapman–Kolmogorov equation
+
+$$
+P(0,6)=P(0,3)P(3,6).
+$$
+
+**(g)** An insurance portfolio initially contains 800 lives in the Alive state and 200 individuals in the Dead state. Using the transition probability matrix, calculate the expected number of individuals in each state after six years.
+
+## Solution: Worked Example 3
+
+**(a)** This is a time-inhomogeneous Markov model because the transition intensity depends explicitly on time. In particular, the force of mortality changes at time $t=3$.
+
+The transition intensity matrix is
+
+$$
+\boxed{
+Q(t)=
+\begin{pmatrix}
+-\mu(t)&\mu(t)\\
+0&0
+\end{pmatrix}.
+}
+$$
+
+**(b)** For $0\leq t<3$,
+
+$$
+\begin{aligned}
+H(t)
+&=\int_0^t(0.01+0.002u)\,du\\
+&=0.01t+0.001t^2.
+\end{aligned}
+$$
+
+For $t\geq 3$,
+
+$$
+\begin{aligned}
+H(t)
+&=\int_0^3(0.01+0.002u)\,du\\
+&\quad+\int_3^t[0.016+0.004(u-3)]\,du\\
+&=0.039+0.016(t-3)+0.002(t-3)^2.
+\end{aligned}
+$$
+
+Therefore,
+
+$$
+\boxed{
+H(t)=
+\begin{cases}
+0.01t+0.001t^2, & 0\leq t<3,\\
+0.039+0.016(t-3)+0.002(t-3)^2, & t\geq 3.
+\end{cases}
+}
+$$
+
+At $t=3$, the first expression gives
+
+$$
+H(3)=0.01(3)+0.001(3)^2=0.039.
+$$
+
+The second expression also gives $H(3)=0.039$. Hence, $H(t)$ is continuous at $t=3$.
+
+**(c)** For $0\leq t<3$,
+
+$$
+\boxed{
+P(0,t)=
+\begin{pmatrix}
+e^{-0.01t-0.001t^2}
+&
+1-e^{-0.01t-0.001t^2}\\
+0&1
+\end{pmatrix}.
+}
+$$
+
+For $t\geq 3$,
+
+$$
+\boxed{
+P(0,t)=
+\begin{pmatrix}
+e^{-0.039-0.016(t-3)-0.002(t-3)^2}
+&
+1-e^{-0.039-0.016(t-3)-0.002(t-3)^2}\\
+0&1
+\end{pmatrix}.
+}
+$$
+
+**(d)** At time 3,
+
+$$
+P(0,3)=
+\begin{pmatrix}
+e^{-0.039}&1-e^{-0.039}\\
+0&1
+\end{pmatrix}.
+$$
+
+From time 3 to time 6, the cumulative force of mortality is
+
+$$
+\begin{aligned}
+\int_3^6\mu(u)\,du
+&=0.016(6-3)+0.002(6-3)^2\\
+&=0.066.
+\end{aligned}
+$$
+
+Thus,
+
+$$
+P(3,6)=
+\begin{pmatrix}
+e^{-0.066}&1-e^{-0.066}\\
+0&1
+\end{pmatrix}.
+$$
+
+Numerically,
+
+$$
+P(0,3)=
+\begin{pmatrix}
+`r round(P03[1,1],4)`&
+`r round(P03[1,2],4)`\\
+0&1
+\end{pmatrix},
+$$
+
+and
+
+$$
+P(3,6)=
+\begin{pmatrix}
+`r round(P36[1,1],4)`&
+`r round(P36[1,2],4)`\\
+0&1
+\end{pmatrix}.
+$$
+
+Therefore,
+
+$$
+\begin{aligned}
+P(0,6)
+&=P(0,3)P(3,6)\\
+&=
+\begin{pmatrix}
+e^{-0.039}&1-e^{-0.039}\\
+0&1
+\end{pmatrix}
+\begin{pmatrix}
+e^{-0.066}&1-e^{-0.066}\\
+0&1
+\end{pmatrix}\\
+&=
+\begin{pmatrix}
+e^{-0.105}&1-e^{-0.105}\\
+0&1
+\end{pmatrix}.
+\end{aligned}
+$$
+
+Hence,
+
+$$
+\boxed{
+P(0,6)=
+\begin{pmatrix}
+`r round(P06[1,1],4)`&
+`r round(P06[1,2],4)`\\
+0&1
+\end{pmatrix}.
+}
+$$
+
+**(e)**
+
+1. The probability of surviving to time 6 is
+
+$$
+p_{11}(0,6)=e^{-0.105}
+=`r round(p_survive_0_to_6,4)`.
+$$
+
+2. The probability of surviving to time 1 and then dying before time 6 is
+
+$$
+\begin{aligned}
+p_{11}(0,1)p_{12}(1,6)
+&=p_{11}(0,1)\left[1-p_{11}(1,6)\right].
+\end{aligned}
+$$
+
+Since $H(1)=0.011$ and $H(6)=0.105$,
+
+$$
+\begin{aligned}
+p_{11}(0,1)p_{12}(1,6)
+&=e^{-0.011}(1-e^{-0.094})\\
+&=e^{-0.011}-e^{-0.105}\\
+&\approx `r round(exp(-0.011)-exp(-0.105),4)`.
+\end{aligned}
+$$
+
+3. The conditional probability of surviving from time 1 to time 6, given that the life is alive at time 1, is
+
+$$
+\begin{aligned}
+p_{11}(1,6)
+&=\exp\left(-\int_1^6\mu(u)\,du\right)\\
+&=e^{-[H(6)-H(1)]}\\
+&=e^{-0.094}\\
+&\approx `r round(p_survive_1_to_6,4)`.
+\end{aligned}
+$$
+
+**(f)** The Chapman–Kolmogorov equation gives
+
+$$
+P(0,6)=P(0,3)P(3,6).
+$$
+
+From part (d),
+
+$$
+P(0,3)P(3,6)=
+\begin{pmatrix}
+`r round(P06_product[1,1],4)`&
+`r round(P06_product[1,2],4)`\\
+0&1
+\end{pmatrix}.
+$$
+
+This is equal to $P(0,6)$, verifying the Chapman–Kolmogorov equation.
+
+**(g)** The initial state distribution is
+
+$$
+\boldsymbol{n}(0)=
+\begin{pmatrix}
+800&200
+\end{pmatrix}.
+$$
+
+The expected state distribution after six years is
+
+$$
+\begin{aligned}
+\boldsymbol{n}(6)
+&=\boldsymbol{n}(0)P(0,6)\\
+&=
+\begin{pmatrix}800&200\end{pmatrix}
+\begin{pmatrix}
+e^{-0.105}&1-e^{-0.105}\\
+0&1
+\end{pmatrix}\\
+&=
+\begin{pmatrix}
+800e^{-0.105}&
+800(1-e^{-0.105})+200
+\end{pmatrix}.
+\end{aligned}
+$$
+
+Therefore,
+
+$$
+\boxed{
+\boldsymbol{n}(6)=
+\begin{pmatrix}
+`r round(final[1],2)`&
+`r round(final[2],2)`
+\end{pmatrix}.
+}
+$$
+
+The expected number of individuals alive after six years is approximately $`r round(final[1])`$, while the expected number in the Dead state is approximately $`r round(final[2])`$. The latter includes the 200 individuals who were already dead at the initial time.
+
+
+
+
+
+
+
+
+
+
+
+
+
